@@ -5,7 +5,7 @@
 [![Dependency Status](http://img.shields.io/david/d3plus/d3plus-plot.svg?style=flat)](https://david-dm.org/d3plus/d3plus-plot)
 [![Slack](https://img.shields.io/badge/Slack-Click%20to%20Join!-green.svg?style=social)](https://goo.gl/forms/ynrKdvusekAwRMPf2)
 
-A reusable plot built on D3
+A reusable javascript x/y plot built on D3.
 
 ## Installing
 
@@ -87,4 +87,4 @@ If *value* is specified, sets the y accessor to the specified function or number
 
 
 
-###### <sub>Documentation generated on Fri, 19 Aug 2016 02:53:52 GMT</sub>
+###### <sub>Documentation generated on Fri, 19 Aug 2016 02:57:36 GMT</sub>
