@@ -87,4 +87,4 @@ If *value* is specified, sets the y accessor to the specified function or number
 
 
 
-###### <sub>Documentation generated on Fri, 19 Aug 2016 02:51:08 GMT</sub>
+###### <sub>Documentation generated on Fri, 19 Aug 2016 02:53:52 GMT</sub>

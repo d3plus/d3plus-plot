@@ -1,6 +1,6 @@
 {
   "name": "d3plus-plot",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A reusable plot built on D3",
   "main": "build/d3plus-plot.js",
   "jsnext:main": "index",
