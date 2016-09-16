@@ -53,7 +53,7 @@ export default class Plot extends Viz {
   }
 
   /**
-      The inner return object and draw function that gets assigned the public methods.
+      Extends the render behavior of the abstract Viz class.
       @private
   */
   render(callback) {
