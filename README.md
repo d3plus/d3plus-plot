@@ -38,9 +38,9 @@ new d3plus.Plot()
 ```
 
 
-[Click here](https://d3plus.org/examples/d3plus-plot/getting-started/) to view this example live on the web.
+[<kbd><img src="/example/getting-started.png" width="990px" /></kbd>](https://d3plus.org/examples/d3plus-plot/getting-started/)
 
-[![Getting Started](/example/getting-started.png)](https://d3plus.org/examples/d3plus-plot/getting-started/)
+[Click here](https://d3plus.org/examples/d3plus-plot/getting-started/) to view this example live on the web.
 
 
 
@@ -87,4 +87,4 @@ If *value* is specified, sets the y accessor to the specified function or number
 
 
 
-###### <sub>Documentation generated on Fri, 19 Aug 2016 02:57:36 GMT</sub>
+###### <sub>Documentation generated on Fri, 16 Sep 2016 17:39:14 GMT</sub>
