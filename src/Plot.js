@@ -119,7 +119,7 @@ export default class Plot extends Viz {
     this._yAxis
       .domain(y.domain())
       .height(height)
-      .range([this._xAxis.outerBounds().y, height - this._xTest.outerBounds().height])
+      .range([this._xAxis.outerBounds().y, this._xTest.outerBounds().y])
       .select(elem("g.d3plus-plot-y-axis", {parent, transition, enter: {transform}, update: {transform}}).node())
       .width(x.range()[1] + this._xAxis.padding())
       .config(this._yConfig)
