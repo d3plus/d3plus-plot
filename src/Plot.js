@@ -3,6 +3,7 @@ import {nest} from "d3-collection";
 import * as scales from "d3-scale";
 
 import {AxisBottom, AxisLeft} from "d3plus-axis";
+import {assign} from "d3plus-color";
 import {accessor, constant, elem} from "d3plus-common";
 import * as shapes from "d3plus-shape";
 import {Viz} from "d3plus-viz";
@@ -13,10 +14,15 @@ import {default as RectBuffer} from "./buffers/Rect.js";
 /**
     @class Plot
     @extends Viz
-    @desc Creates an x/y plot based on an array of data. If *data* is specified, immediately draws the tree map based on the specified array and returns this generator. If *data* is not specified on instantiation, it can be passed/updated after instantiation using the [data](#treemap.data) method. See [this example](https://d3plus.org/examples/d3plus-treemap/getting-started/) for help getting started using the treemap generator.
+    @desc Creates an x/y plot based on an array of data.
 */
 export default class Plot extends Viz {
 
+  /**
+      @memberof Plot
+      @desc Invoked when creating a new class instance, and sets any default parameters.
+      @private
+  */
   constructor() {
 
     super();
@@ -30,7 +36,10 @@ export default class Plot extends Viz {
         r: constant(5)
       },
       Line: {
-        label: false
+        fill: constant("none"),
+        label: false,
+        stroke: (d, i) => assign(this._id(d, i)),
+        strokeWidth: constant(1)
       },
       Rect: {
         height: constant(10),
@@ -90,6 +99,7 @@ export default class Plot extends Viz {
       .domain(y.domain())
       .height(height)
       .select(elem("g.d3plus-plot-test", {enter: {opacity: 0}, parent: this._select}).node())
+      .ticks(this._discrete === "y" ? Array.from(new Set(data.map(d => d.y))) : undefined)
       .width(width)
       .config(this._yConfig)
       .render();
@@ -101,6 +111,7 @@ export default class Plot extends Viz {
       .height(height)
       .range([xOffset, undefined])
       .select(elem("g.d3plus-plot-test", {enter: {opacity: 0}, parent: this._select}).node())
+      .ticks(this._discrete === "x" ? Array.from(new Set(data.map(d => d.x))) : undefined)
       .width(width)
       .config(this._xConfig)
       .render();
@@ -110,6 +121,7 @@ export default class Plot extends Viz {
       .height(height)
       .range([xOffset, undefined])
       .select(elem("g.d3plus-plot-x-axis", {parent, transition, enter: {transform}, update: {transform}}).node())
+      .ticks(this._discrete === "x" ? Array.from(new Set(data.map(d => d.x))) : undefined)
       .width(width)
       .config(this._xConfig)
       .render();
@@ -121,6 +133,7 @@ export default class Plot extends Viz {
       .height(height)
       .range([this._xAxis.outerBounds().y, this._xTest.outerBounds().y])
       .select(elem("g.d3plus-plot-y-axis", {parent, transition, enter: {transform}, update: {transform}}).node())
+      .ticks(this._discrete === "y" ? Array.from(new Set(data.map(d => d.y))) : undefined)
       .width(x.range()[1] + this._xAxis.padding())
       .config(this._yConfig)
       .render();
