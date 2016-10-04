@@ -1,10 +1,11 @@
-import {extent} from "d3-array";
+import {extent, min, max} from "d3-array";
 import {nest} from "d3-collection";
 import * as scales from "d3-scale";
+import {mouse} from "d3-selection";
 
 import {AxisBottom, AxisLeft} from "d3plus-axis";
 import {assign} from "d3plus-color";
-import {accessor, constant, elem} from "d3plus-common";
+import {accessor, closest, constant, elem} from "d3plus-common";
 import * as shapes from "d3plus-shape";
 import {Viz} from "d3plus-viz";
 
@@ -79,12 +80,20 @@ export default class Plot extends Viz {
           })),
           height = this._height - this._margin.top - this._margin.bottom,
           parent = this._select,
+          that = this,
           transform = `translate(${this._margin.left}, ${this._margin.top})`,
           transition = this._transition,
           width = this._width - this._margin.left - this._margin.right;
 
-    let x = scales.scaleLinear().domain(extent(data, d => d.x)).range([0, width]),
-        y = scales.scaleLinear().domain(extent(data, d => d.y).reverse()).range([0, height]);
+    const xDomain = this._xDomain || extent(data, d => d.x);
+    if (xDomain[0] === void 0) xDomain[0] = min(data, d => d.x);
+    if (xDomain[1] === void 0) xDomain[1] = max(data, d => d.x);
+    const yDomain = this._yDomain || extent(data, d => d.y);
+    if (yDomain[0] === void 0) yDomain[0] = min(data, d => d.y);
+    if (yDomain[1] === void 0) yDomain[1] = max(data, d => d.y);
+
+    let x = scales.scaleLinear().domain(xDomain).range([0, width]),
+        y = scales.scaleLinear().domain(yDomain.reverse()).range([0, height]);
 
     const shapeData = nest().key(d => d.shape).entries(data);
     shapeData.forEach(d => {
@@ -149,8 +158,22 @@ export default class Plot extends Viz {
       stroke: d => this._shapeConfig.stroke(d.data, d.i),
       strokeWidth: d => this._shapeConfig.strokeWidth(d.data, d.i),
       x: d => x(d.x),
-      y: d => y(d.y)
+      x0: this._discrete === "x" ? d => x(d.x) : x(0),
+      x1: this._discrete === "x" ? null : d => x(d.x),
+      y: d => y(d.y),
+      y0: this._discrete === "y" ? d => y(d.y) : d => y(d.y),
+      y1: this._discrete === "y" ? null : y(0)
     };
+
+    function mouseEvent(d) {
+      if (d.nested && d.values) {
+        const axis = that._discrete,
+              cursor = mouse(that._select.node())[axis === "x" ? 0 : 1],
+              values = d.values.map(d => shapeConfig[axis](d));
+        d = d.values[values.indexOf(closest(cursor, values))];
+      }
+      return this(d.data, d.i);
+    }
 
     const events = Object.keys(this._on);
     shapeData.forEach(d => {
@@ -159,9 +182,9 @@ export default class Plot extends Viz {
       const classEvents = events.filter(e => e.includes(`.${d.key}`)),
             globalEvents = events.filter(e => !e.includes(".")),
             shapeEvents = events.filter(e => e.includes(".shape"));
-      for (let e = 0; e < globalEvents.length; e++) s.on(globalEvents[e], d => this._on[globalEvents[e]](d.data, d.i));
-      for (let e = 0; e < shapeEvents.length; e++) s.on(shapeEvents[e], d => this._on[shapeEvents[e]](d.data, d.i));
-      for (let e = 0; e < classEvents.length; e++) s.on(classEvents[e], d => this._on[classEvents[e]](d.data, d.i));
+      for (let e = 0; e < globalEvents.length; e++) s.on(globalEvents[e], mouseEvent.bind(this._on[globalEvents[e]]));
+      for (let e = 0; e < shapeEvents.length; e++) s.on(shapeEvents[e], mouseEvent.bind(this._on[shapeEvents[e]]));
+      for (let e = 0; e < classEvents.length; e++) s.on(classEvents[e], mouseEvent.bind(this._on[classEvents[e]]));
       s.config(this._shapeConfig[d.key] || {}).render();
       this._shapes.push(s);
 
@@ -182,11 +205,29 @@ export default class Plot extends Viz {
 
   /**
       @memberof Plot
+      @desc If *value* is specified, sets the x domain to the specified array and returns the current class instance. If *value* is not specified, returns the current x domain. Additionally, if either value of the array is undefined, it will be calculated from the data.
+      @param {Array} [*value*]
+  */
+  xDomain(_) {
+    return arguments.length ? (this._xDomain = _, this) : this._xDomain;
+  }
+
+  /**
+      @memberof Plot
       @desc If *value* is specified, sets the y accessor to the specified function or number and returns the current class instance. If *value* is not specified, returns the current y accessor.
       @param {Function|Number} [*value*]
   */
   y(_) {
     return arguments.length ? (this._y = typeof _ === "function" ? _ : constant(_), this) : this._y;
+  }
+
+  /**
+      @memberof Plot
+      @desc If *value* is specified, sets the y domain to the specified array and returns the current class instance. If *value* is not specified, returns the current y domain. Additionally, if either value of the array is undefined, it will be calculated from the data.
+      @param {Array} [*value*]
+  */
+  yDomain(_) {
+    return arguments.length ? (this._yDomain = _, this) : this._yDomain;
   }
 
 }
