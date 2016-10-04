@@ -1,6 +1,7 @@
 import {extent, min, max} from "d3-array";
 import {nest} from "d3-collection";
 import * as scales from "d3-scale";
+import {stack} from "d3-shape";
 import {mouse} from "d3-selection";
 
 import {AxisBottom, AxisLeft} from "d3plus-axis";
@@ -79,21 +80,46 @@ export default class Plot extends Viz {
             y: this._y(d, i)
           })),
           height = this._height - this._margin.top - this._margin.bottom,
+          opp = this._discrete ? this._discrete === "x" ? "y" : "x" : undefined,
           parent = this._select,
           that = this,
           transform = `translate(${this._margin.left}, ${this._margin.top})`,
           transition = this._transition,
           width = this._width - this._margin.left - this._margin.right;
 
-    const xDomain = this._xDomain ? this._xDomain.slice() : extent(data, d => d.x);
-    if (xDomain[0] === void 0) xDomain[0] = min(data, d => d.x);
-    if (xDomain[1] === void 0) xDomain[1] = max(data, d => d.x);
-    const yDomain = this._yDomain ? this._yDomain.slice() : extent(data, d => d.y);
-    if (yDomain[0] === void 0) yDomain[0] = min(data, d => d.y);
-    if (yDomain[1] === void 0) yDomain[1] = max(data, d => d.y);
+    let domains, stackData, stackKeys;
+    if (this._stacked) {
 
-    let x = scales.scaleLinear().domain(xDomain).range([0, width]),
-        y = scales.scaleLinear().domain(yDomain.reverse()).range([0, height]);
+      stackKeys = Array.from(new Set(data.map(d => d.id)));
+      stackData = stack()
+        .keys(stackKeys)
+        .value((group, key) => group.filter(d => d.id === key)[0][opp])
+        (nest().key(d => d[this._discrete]).entries(data).map(d => d.values));
+
+      domains = {
+        [this._discrete]: extent(data, d => d[this._discrete]),
+        [opp]: [min(stackData.map(g => min(g.map(p => p[1])))), max(stackData.map(g => max(g.map(p => p[1]))))]
+      };
+
+    }
+    else domains = {x: extent(data, d => d.x), y: extent(data, d => d.y)};
+
+    const xDomain = this._xDomain ? this._xDomain.slice() : domains.x;
+    if (xDomain[0] === void 0) xDomain[0] = domains.x[0];
+    if (xDomain[1] === void 0) xDomain[1] = domains.x[1];
+    const yDomain = this._yDomain ? this._yDomain.slice() : domains.y;
+    if (yDomain[0] === void 0) yDomain[0] = domains.y[0];
+    if (yDomain[1] === void 0) yDomain[1] = domains.y[1];
+    domains = {x: xDomain, y: yDomain};
+
+    if (opp && this._baseline !== void 0) {
+      const b = this._baseline;
+      if (domains[opp][0] > b) domains[opp][0] = b;
+      else if (domains[opp][1] < b) domains[opp][1] = b;
+    }
+
+    let x = scales.scaleLinear().domain(domains.x).range([0, width]),
+        y = scales.scaleLinear().domain(domains.y.reverse()).range([0, height]);
 
     const shapeData = nest().key(d => d.shape).entries(data);
     shapeData.forEach(d => {
@@ -161,12 +187,19 @@ export default class Plot extends Viz {
       y: d => y(d.y)
     };
 
-    shapeConfig = Object.assign(shapeConfig, {
+    const positions = {
       x0: this._discrete === "x" ? shapeConfig.x : x(0),
       x1: this._discrete === "x" ? null : shapeConfig.x,
       y0: this._discrete === "y" ? shapeConfig.y : y(0),
       y1: this._discrete === "y" ? null : shapeConfig.y
-    });
+    };
+
+    if (this._stacked) {
+      positions[`${opp}0`] = (d, i) => (opp === "x" ? x : y)(stackData[stackKeys.indexOf(d.id)][i][0]);
+      positions[`${opp}1`] = (d, i) => (opp === "x" ? x : y)(stackData[stackKeys.indexOf(d.id)][i][1]);
+    }
+
+    shapeConfig = Object.assign(shapeConfig, positions);
 
     function mouseEvent(d) {
       if (d.nested && d.values) {
@@ -195,6 +228,24 @@ export default class Plot extends Viz {
 
     return this;
 
+  }
+
+  /**
+      @memberof Plot
+      @desc If *value* is specified, sets the baseline for the x/y plot and returns the current class instance. If *value* is not specified, returns the current baseline.
+      @param {Number} [*value*]
+  */
+  baseline(_) {
+    return arguments.length ? (this._baseline = _, this) : this._baseline;
+  }
+
+  /**
+      @memberof Plot
+      @desc If *value* is specified, toggles shape stacking and returns the current class instance. If *value* is not specified, returns the current stack value.
+      @param {Boolean} [*value* = false]
+  */
+  stacked(_) {
+    return arguments.length ? (this._stacked = _, this) : this._stacked;
   }
 
   /**

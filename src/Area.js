@@ -35,8 +35,7 @@ export default class Area extends Plot {
   discrete(_) {
     if (arguments.length) {
       this._discrete = _;
-      this[`${_ === "x" ? "y" : "x"}Domain`]([0, void 0]);
-      this[`${_}Domain`](void 0);
+      this._baseline = 0;
       return this;
     }
     return this._discrete;
