@@ -85,10 +85,10 @@ export default class Plot extends Viz {
           transition = this._transition,
           width = this._width - this._margin.left - this._margin.right;
 
-    const xDomain = this._xDomain || extent(data, d => d.x);
+    const xDomain = this._xDomain ? this._xDomain.slice() : extent(data, d => d.x);
     if (xDomain[0] === void 0) xDomain[0] = min(data, d => d.x);
     if (xDomain[1] === void 0) xDomain[1] = max(data, d => d.x);
-    const yDomain = this._yDomain || extent(data, d => d.y);
+    const yDomain = this._yDomain ? this._yDomain.slice() : extent(data, d => d.y);
     if (yDomain[0] === void 0) yDomain[0] = min(data, d => d.y);
     if (yDomain[1] === void 0) yDomain[1] = max(data, d => d.y);
 
@@ -149,7 +149,7 @@ export default class Plot extends Viz {
 
     y = this._yAxis._d3Scale;
 
-    const shapeConfig = {
+    let shapeConfig = {
       duration: this._duration,
       fill: d => this._shapeConfig.fill(d.data, d.i),
       label: d => this._drawLabel(d.data, d.i),
@@ -158,12 +158,15 @@ export default class Plot extends Viz {
       stroke: d => this._shapeConfig.stroke(d.data, d.i),
       strokeWidth: d => this._shapeConfig.strokeWidth(d.data, d.i),
       x: d => x(d.x),
-      x0: this._discrete === "x" ? d => x(d.x) : x(0),
-      x1: this._discrete === "x" ? null : d => x(d.x),
-      y: d => y(d.y),
-      y0: this._discrete === "y" ? d => y(d.y) : d => y(d.y),
-      y1: this._discrete === "y" ? null : y(0)
+      y: d => y(d.y)
     };
+
+    shapeConfig = Object.assign(shapeConfig, {
+      x0: this._discrete === "x" ? shapeConfig.x : x(0),
+      x1: this._discrete === "x" ? null : shapeConfig.x,
+      y0: this._discrete === "y" ? shapeConfig.y : y(0),
+      y1: this._discrete === "y" ? null : shapeConfig.y
+    });
 
     function mouseEvent(d) {
       if (d.nested && d.values) {

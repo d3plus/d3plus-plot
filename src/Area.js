@@ -28,14 +28,15 @@ export default class Area extends Plot {
   }
 
   /**
-      @memberof Viz
+      @memberof Area
       @desc If *value* is specified, sets the discrete axis to the specified method name and returns the current class instance. If *value* is not specified, returns the current discrete axis.
       @param {String} [*value*]
   */
   discrete(_) {
     if (arguments.length) {
       this._discrete = _;
-      this[`${_ === "x" ? "y" : _}Domain`]([0, undefined]);
+      this[`${_ === "x" ? "y" : "x"}Domain`]([0, void 0]);
+      this[`${_}Domain`](void 0);
       return this;
     }
     return this._discrete;
