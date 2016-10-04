@@ -12,7 +12,7 @@ A reusable javascript x/y plot built on D3.
 If you use NPM, `npm install d3plus-plot`. Otherwise, download the [latest release](https://github.com/d3plus/d3plus-plot/releases/latest). The released bundle supports AMD, CommonJS, and vanilla environments. Create a [custom bundle using Rollup](https://github.com/rollup/rollup) or your preferred bundler. You can also load directly from [d3plus.org](https://d3plus.org):
 
 ```html
-<script src="https://d3plus.org/js/d3plus-plot.v0.1.full.min.js"></script>
+<script src="https://d3plus.org/js/d3plus-plot.v0.2.full.min.js"></script>
 ```
 
 
@@ -22,13 +22,13 @@ d3plus-plot combines the abstract Viz class found in [d3plus-viz](https://github
 
 ```js
 var data = [
-  {id: "alpha", x: 4, y: 7},
-  {id: "beta", x: 5, y: 2},
+  {id: "alpha", x: 4, y:  7},
+  {id: "beta",  x: 5, y:  2},
   {id: "gamma", x: 6, y: 13}
 ];
 ```
 
-Given some data points, we can create a scatter plot very easily:
+Given some data points, we can create a plot very easily:
 
 ```js
 new d3plus.Plot()
@@ -37,16 +37,84 @@ new d3plus.Plot()
   .render();
 ```
 
+This creates an x/y plot using the default shape ([Circle](https://github.com/d3plus/d3plus-shape#Circle)). The default shape can be overridden using the [.shape( )](https://github.com/d3plus/d3plus-viz#Viz.shape) accessor method, as well as using the many shorthand Classes for specific types of charts (see examples below).
+
 
 [<kbd><img src="/example/getting-started.png" width="990px" /></kbd>](https://d3plus.org/examples/d3plus-plot/getting-started/)
 
 [Click here](https://d3plus.org/examples/d3plus-plot/getting-started/) to view this example live on the web.
 
 
+### More Examples
 
-
+ * [Flipping a Stacked Area Chart](http://d3plus.org/examples/d3plus-plot/stacked-area-flip/)<sup> ***New***</sup>
+ * [Stacked Area Chart](http://d3plus.org/examples/d3plus-plot/stacked-area/)<sup> ***New***</sup>
+ * [Area Chart](http://d3plus.org/examples/d3plus-plot/area/)<sup> ***New***</sup>
+ * [Line Plot](http://d3plus.org/examples/d3plus-plot/line-plot/)<sup> ***New***</sup>
 
 ## API Reference
+### Classes
+
+<dl>
+<dt><a href="#Area">Area</a> ⇐ <code><a href="#Plot">Plot</a></code></dt>
+<dd></dd>
+<dt><a href="#LinePlot">LinePlot</a> ⇐ <code><a href="#Plot">Plot</a></code></dt>
+<dd></dd>
+<dt><a href="#Plot">Plot</a> ⇐ <code>Viz</code></dt>
+<dd></dd>
+<dt><a href="#StackedArea">StackedArea</a> ⇐ <code><a href="#Area">Area</a></code></dt>
+<dd></dd>
+</dl>
+
+<a name="Area"></a>
+
+### Area ⇐ <code>[Plot](#Plot)</code>
+**Kind**: global class  
+**Extends:** <code>[Plot](#Plot)</code>  
+
+* [Area](#Area) ⇐ <code>[Plot](#Plot)</code>
+    * [new Area()](#new_Area_new)
+    * [.discrete([*value*])](#Area.discrete)
+
+<a name="new_Area_new"></a>
+
+#### new Area()
+Creates an area plot based on an array of data.
+
+**Example** *(the equivalent of calling:)*  
+```js
+new d3plus.Plot()
+  .discrete("x")
+  .shape("Area")
+  .xDomain([0, undefined])
+```
+<a name="Area.discrete"></a>
+
+#### Area.discrete([*value*])
+If *value* is specified, sets the discrete axis to the specified method name and returns the current class instance. If *value* is not specified, returns the current discrete axis.
+
+**Kind**: static method of <code>[Area](#Area)</code>  
+
+| Param | Type |
+| --- | --- |
+| [*value*] | <code>String</code> | 
+
+<a name="LinePlot"></a>
+
+### LinePlot ⇐ <code>[Plot](#Plot)</code>
+**Kind**: global class  
+**Extends:** <code>[Plot](#Plot)</code>  
+<a name="new_LinePlot_new"></a>
+
+#### new LinePlot()
+Creates a line plot based on an array of data.
+
+**Example** *(the equivalent of calling:)*  
+```js
+new d3plus.Plot()
+  .discrete("x")
+  .shape("Line")
+```
 <a name="Plot"></a>
 
 ### Plot ⇐ <code>Viz</code>
@@ -55,13 +123,39 @@ new d3plus.Plot()
 
 * [Plot](#Plot) ⇐ <code>Viz</code>
     * [new Plot()](#new_Plot_new)
+    * [.baseline([*value*])](#Plot.baseline)
+    * [.stacked([*value*])](#Plot.stacked)
     * [.x([*value*])](#Plot.x)
+    * [.xDomain([*value*])](#Plot.xDomain)
     * [.y([*value*])](#Plot.y)
+    * [.yDomain([*value*])](#Plot.yDomain)
 
 <a name="new_Plot_new"></a>
 
 #### new Plot()
-Creates an x/y plot based on an array of data. If *data* is specified, immediately draws the tree map based on the specified array and returns this generator. If *data* is not specified on instantiation, it can be passed/updated after instantiation using the [data](#treemap.data) method. See [this example](https://d3plus.org/examples/d3plus-treemap/getting-started/) for help getting started using the treemap generator.
+Creates an x/y plot based on an array of data.
+
+<a name="Plot.baseline"></a>
+
+#### Plot.baseline([*value*])
+If *value* is specified, sets the baseline for the x/y plot and returns the current class instance. If *value* is not specified, returns the current baseline.
+
+**Kind**: static method of <code>[Plot](#Plot)</code>  
+
+| Param | Type |
+| --- | --- |
+| [*value*] | <code>Number</code> | 
+
+<a name="Plot.stacked"></a>
+
+#### Plot.stacked([*value*])
+If *value* is specified, toggles shape stacking and returns the current class instance. If *value* is not specified, returns the current stack value.
+
+**Kind**: static method of <code>[Plot](#Plot)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [*value*] | <code>Boolean</code> | <code>false</code> | 
 
 <a name="Plot.x"></a>
 
@@ -74,6 +168,17 @@ If *value* is specified, sets the x accessor to the specified function or number
 | --- | --- |
 | [*value*] | <code>function</code> &#124; <code>Number</code> | 
 
+<a name="Plot.xDomain"></a>
+
+#### Plot.xDomain([*value*])
+If *value* is specified, sets the x domain to the specified array and returns the current class instance. If *value* is not specified, returns the current x domain. Additionally, if either value of the array is undefined, it will be calculated from the data.
+
+**Kind**: static method of <code>[Plot](#Plot)</code>  
+
+| Param | Type |
+| --- | --- |
+| [*value*] | <code>Array</code> | 
+
 <a name="Plot.y"></a>
 
 #### Plot.y([*value*])
@@ -85,6 +190,32 @@ If *value* is specified, sets the y accessor to the specified function or number
 | --- | --- |
 | [*value*] | <code>function</code> &#124; <code>Number</code> | 
 
+<a name="Plot.yDomain"></a>
+
+#### Plot.yDomain([*value*])
+If *value* is specified, sets the y domain to the specified array and returns the current class instance. If *value* is not specified, returns the current y domain. Additionally, if either value of the array is undefined, it will be calculated from the data.
+
+**Kind**: static method of <code>[Plot](#Plot)</code>  
+
+| Param | Type |
+| --- | --- |
+| [*value*] | <code>Array</code> | 
+
+<a name="StackedArea"></a>
+
+### StackedArea ⇐ <code>[Area](#Area)</code>
+**Kind**: global class  
+**Extends:** <code>[Area](#Area)</code>  
+<a name="new_StackedArea_new"></a>
+
+#### new StackedArea()
+Creates a stacked area plot based on an array of data.
+
+**Example** *(the equivalent of calling:)*  
+```js
+new d3plus.Area()
+  .stacked(true)
+```
 
 
-###### <sub>Documentation generated on Fri, 16 Sep 2016 17:39:14 GMT</sub>
+###### <sub>Documentation generated on Tue, 04 Oct 2016 16:14:13 GMT</sub>
