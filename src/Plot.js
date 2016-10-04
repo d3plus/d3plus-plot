@@ -201,6 +201,10 @@ export default class Plot extends Viz {
 
     shapeConfig = Object.assign(shapeConfig, positions);
 
+    /**
+        @desc Handles mouse events for nested shapes, finding the closest discrete data point to send to the defined event function.
+        @private
+    */
     function mouseEvent(d) {
       if (d.nested && d.values) {
         const axis = that._discrete,
