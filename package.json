@@ -35,6 +35,7 @@
     "d3plus-viz": "^0.2.4"
   },
   "scripts": {
+    "build": "d3plus-build",
     "dev": "d3plus-dev",
     "docs": "d3plus-docs",
     "env": "d3plus-env",

@@ -4,13 +4,13 @@ d3plus-plot combines the abstract Viz class found in [d3plus-viz](https://github
 
 ```js
 var data = [
-  {id: "alpha", x: 4, y: 7},
-  {id: "beta", x: 5, y: 2},
+  {id: "alpha", x: 4, y:  7},
+  {id: "beta",  x: 5, y:  2},
   {id: "gamma", x: 6, y: 13}
 ];
 ```
 
-Given some data points, we can create a scatter plot very easily:
+Given some data points, we can create a plot very easily:
 
 ```js
 new d3plus.Plot()
@@ -18,3 +18,5 @@ new d3plus.Plot()
   .groupBy("id")
   .render();
 ```
+
+This creates an x/y plot using the default shape ([Circle](https://github.com/d3plus/d3plus-shape#Circle)). The default shape can be overridden using the [.shape( )](https://github.com/d3plus/d3plus-viz#Viz.shape) accessor method, as well as using the many shorthand Classes for specific types of charts (see examples below).
