@@ -22,23 +22,10 @@ export default class Area extends Plot {
   constructor() {
 
     super();
-    this.discrete("x");
+    this._baseline = 0;
+    this._discrete = "x";
     this._shape = constant("Area");
 
-  }
-
-  /**
-      @memberof Area
-      @desc If *value* is specified, sets the discrete axis to the specified method name and returns the current class instance. If *value* is not specified, returns the current discrete axis.
-      @param {String} [*value*]
-  */
-  discrete(_) {
-    if (arguments.length) {
-      this._discrete = _;
-      this._baseline = 0;
-      return this;
-    }
-    return this._discrete;
   }
 
 }
