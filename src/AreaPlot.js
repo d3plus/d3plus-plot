@@ -3,7 +3,7 @@ import {constant} from "d3plus-common";
 import {default as Plot} from "./Plot";
 
 /**
-    @class Area
+    @class AreaPlot
     @extends Plot
     @desc Creates an area plot based on an array of data.
     @example <caption>the equivalent of calling:</caption>
@@ -12,10 +12,10 @@ new d3plus.Plot()
   .shape("Area")
   .xDomain([0, undefined])
 */
-export default class Area extends Plot {
+export default class AreaPlot extends Plot {
 
   /**
-      @memberof Area
+      @memberof AreaPlot
       @desc Invoked when creating a new class instance, and overrides any default parameters inherited from Plot.
       @private
   */
