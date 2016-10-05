@@ -1,4 +1,4 @@
-import {default as Area} from "./Area";
+import {default as AreaPlot} from "./AreaPlot";
 
 /**
     @class StackedArea
@@ -8,7 +8,7 @@ import {default as Area} from "./Area";
 new d3plus.Area()
   .stacked(true)
 */
-export default class StackedArea extends Area {
+export default class StackedArea extends AreaPlot {
 
   /**
       @memberof StackedArea
