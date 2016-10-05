@@ -8,9 +8,9 @@ import {default as Plot} from "./Plot";
     @desc Creates an area plot based on an array of data.
     @example <caption>the equivalent of calling:</caption>
 new d3plus.Plot()
+  .baseline(0)
   .discrete("x")
   .shape("Area")
-  .xDomain([0, undefined])
 */
 export default class AreaPlot extends Plot {
 
