@@ -4,7 +4,7 @@ import * as scales from "d3-scale";
 import {stack} from "d3-shape";
 import {mouse} from "d3-selection";
 
-import {AxisBottom, AxisLeft} from "d3plus-axis";
+import {AxisBottom, AxisLeft, date} from "d3plus-axis";
 import {assign} from "d3plus-color";
 import {accessor, closest, constant, elem} from "d3plus-common";
 import * as shapes from "d3plus-shape";
@@ -104,12 +104,26 @@ export default class Plot extends Viz {
     }
     else domains = {x: extent(data, d => d.x), y: extent(data, d => d.y)};
 
-    const xDomain = this._xDomain ? this._xDomain.slice() : domains.x;
+    const xTime = this._time && this._x(data[0], 0) === this._time(data[0], 0),
+          yTime = this._time && this._y(data[0], 0) === this._time(data[0], 0);
+
+    if (xTime || yTime) {
+      data.forEach(d => {
+        if (xTime) d.x = date(d.x);
+        if (yTime) d.y = date(d.y);
+      });
+    }
+
+    let xDomain = this._xDomain ? this._xDomain.slice() : domains.x;
     if (xDomain[0] === void 0) xDomain[0] = domains.x[0];
     if (xDomain[1] === void 0) xDomain[1] = domains.x[1];
-    const yDomain = this._yDomain ? this._yDomain.slice() : domains.y;
+    if (xTime) xDomain = xDomain.map(date);
+
+    let yDomain = this._yDomain ? this._yDomain.slice() : domains.y;
     if (yDomain[0] === void 0) yDomain[0] = domains.y[0];
     if (yDomain[1] === void 0) yDomain[1] = domains.y[1];
+    if (yTime) yDomain = yDomain.map(date);
+
     domains = {x: xDomain, y: yDomain};
 
     if (opp && this._baseline !== void 0) {
@@ -118,8 +132,8 @@ export default class Plot extends Viz {
       else if (domains[opp][1] < b) domains[opp][1] = b;
     }
 
-    let x = scales.scaleLinear().domain(domains.x).range([0, width]),
-        y = scales.scaleLinear().domain(domains.y.reverse()).range([0, height]);
+    let x = scales[`scale${xTime ? "Time" : "Linear"}`]().domain(domains.x).range([0, width]),
+        y = scales[`scale${yTime ? "Time" : "Linear"}`]().domain(domains.y.reverse()).range([0, height]);
 
     const shapeData = nest().key(d => d.shape).entries(data);
     shapeData.forEach(d => {
@@ -130,14 +144,13 @@ export default class Plot extends Viz {
       }
     });
 
-    const xTicks = this._discrete === "x" && (!this._time || this._x(data[0], 0) !== this._time(data[0], 0))
-                 ? Array.from(new Set(data.map(d => d.x))) : undefined,
-          yTicks = this._discrete === "y" && (!this._time || this._y(data[0], 0) !== this._time(data[0], 0))
-                 ? Array.from(new Set(data.map(d => d.y))) : undefined;
+    const xTicks = this._discrete === "x" && !xTime ? Array.from(new Set(data.map(d => d.x))) : undefined,
+          yTicks = this._discrete === "y" && !yTime ? Array.from(new Set(data.map(d => d.y))) : undefined;
 
     this._yTest
-      .domain(y.domain())
+      .domain(yDomain)
       .height(height)
+      .scale(yTime ? "time" : "linear")
       .select(elem("g.d3plus-plot-test", {enter: {opacity: 0}, parent: this._select}).node())
       .ticks(yTicks)
       .width(width)
@@ -147,9 +160,10 @@ export default class Plot extends Viz {
     const xOffset = this._yTest.outerBounds().width + this._yTest.padding();
 
     this._xTest
-      .domain(x.domain())
+      .domain(xDomain)
       .height(height)
       .range([xOffset, undefined])
+      .scale(xTime ? "time" : "linear")
       .select(elem("g.d3plus-plot-test", {enter: {opacity: 0}, parent: this._select}).node())
       .ticks(xTicks)
       .width(width)
@@ -157,9 +171,10 @@ export default class Plot extends Viz {
       .render();
 
     this._xAxis
-      .domain(x.domain())
+      .domain(xDomain)
       .height(height)
       .range([xOffset, undefined])
+      .scale(xTime ? "time" : "linear")
       .select(elem("g.d3plus-plot-x-axis", {parent, transition, enter: {transform}, update: {transform}}).node())
       .ticks(xTicks)
       .width(width)
@@ -169,9 +184,10 @@ export default class Plot extends Viz {
     x = this._xAxis._d3Scale;
 
     this._yAxis
-      .domain(y.domain())
+      .domain(yDomain)
       .height(height)
       .range([this._xAxis.outerBounds().y, this._xTest.outerBounds().y])
+      .scale(yTime ? "time" : "linear")
       .select(elem("g.d3plus-plot-y-axis", {parent, transition, enter: {transform}, update: {transform}}).node())
       .ticks(yTicks)
       .width(x.range()[1] + this._xAxis.padding())
