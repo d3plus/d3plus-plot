@@ -12,6 +12,7 @@ import {Viz} from "d3plus-viz";
 
 import {default as CircleBuffer} from "./buffers/Circle.js";
 import {default as RectBuffer} from "./buffers/Rect.js";
+import {default as LineBuffer} from "./buffers/Line.js";
 
 /**
     @class Plot
@@ -30,6 +31,7 @@ export default class Plot extends Viz {
     super();
     this._buffer = {
       Circle: CircleBuffer,
+      Line: LineBuffer,
       Rect: RectBuffer
     };
     this._shape = constant("Circle");
@@ -138,11 +140,13 @@ export default class Plot extends Viz {
     const shapeData = nest().key(d => d.shape).entries(data);
     shapeData.forEach(d => {
       if (this._buffer[d.key]) {
-        const res = this._buffer[d.key](d.values, x, y, this._shapeConfig[d.key]);
+        const res = this._buffer[d.key].bind(this)(d.values, x, y, this._shapeConfig[d.key]);
         x = res[0];
         y = res[1];
       }
     });
+    xDomain = x.domain();
+    yDomain = y.domain();
 
     const xTicks = this._discrete === "x" && !xTime ? Array.from(new Set(data.map(d => d.x))) : undefined,
           yTicks = this._discrete === "y" && !yTime ? Array.from(new Set(data.map(d => d.y))) : undefined;
