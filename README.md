@@ -49,7 +49,7 @@ This creates an x/y plot using the default shape ([Circle](https://github.com/d3
 
  * [Flipping a Stacked Area Chart](http://d3plus.org/examples/d3plus-plot/stacked-area-flip/)
  * [Stacked Area Chart](http://d3plus.org/examples/d3plus-plot/stacked-area/)
- * [Area Chart](http://d3plus.org/examples/d3plus-plot/area/)
+ * [Area Chart](http://d3plus.org/examples/d3plus-plot/area/)<sup> ***New***</sup>
  * [Line Plot](http://d3plus.org/examples/d3plus-plot/line-plot/)
 
 ## API Reference
@@ -202,4 +202,4 @@ new d3plus.Area()
 ```
 
 
-###### <sub>Documentation generated on Tue, 11 Oct 2016 20:33:28 GMT</sub>
+###### <sub>Documentation generated on Tue, 11 Oct 2016 20:46:21 GMT</sub>

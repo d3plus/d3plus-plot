@@ -1,6 +1,6 @@
 # Area Chart
 
-When constructing data to be used with an Area Chart, there must be a unique data point for each point on the discrete axis (defaults to the X axis). Given this data array:
+When constructing data to be used with an Area Plot, there must be a unique data point for each point on the discrete axis (defaults to the X axis). Given this data array:
 
 ```js
 var data = [
@@ -13,10 +13,10 @@ var data = [
 ];
 ```
 
-We can create a simple Area Chart:
+We can create a simple Area Plot:
 
 ```js
-new d3plus.Area()
+new d3plus.AreaPlot()
   .data(data)
   .groupBy("id")
   .render();
