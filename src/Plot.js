@@ -130,11 +130,16 @@ export default class Plot extends Viz {
       }
     });
 
+    const xTicks = this._discrete === "x" && (!this._time || this._x(data[0], 0) !== this._time(data[0], 0))
+                 ? Array.from(new Set(data.map(d => d.x))) : undefined,
+          yTicks = this._discrete === "y" && (!this._time || this._y(data[0], 0) !== this._time(data[0], 0))
+                 ? Array.from(new Set(data.map(d => d.y))) : undefined;
+
     this._yTest
       .domain(y.domain())
       .height(height)
       .select(elem("g.d3plus-plot-test", {enter: {opacity: 0}, parent: this._select}).node())
-      .ticks(this._discrete === "y" ? Array.from(new Set(data.map(d => d.y))) : undefined)
+      .ticks(yTicks)
       .width(width)
       .config(this._yConfig)
       .render();
@@ -146,7 +151,7 @@ export default class Plot extends Viz {
       .height(height)
       .range([xOffset, undefined])
       .select(elem("g.d3plus-plot-test", {enter: {opacity: 0}, parent: this._select}).node())
-      .ticks(this._discrete === "x" ? Array.from(new Set(data.map(d => d.x))) : undefined)
+      .ticks(xTicks)
       .width(width)
       .config(this._xConfig)
       .render();
@@ -156,7 +161,7 @@ export default class Plot extends Viz {
       .height(height)
       .range([xOffset, undefined])
       .select(elem("g.d3plus-plot-x-axis", {parent, transition, enter: {transform}, update: {transform}}).node())
-      .ticks(this._discrete === "x" ? Array.from(new Set(data.map(d => d.x))) : undefined)
+      .ticks(xTicks)
       .width(width)
       .config(this._xConfig)
       .render();
@@ -168,7 +173,7 @@ export default class Plot extends Viz {
       .height(height)
       .range([this._xAxis.outerBounds().y, this._xTest.outerBounds().y])
       .select(elem("g.d3plus-plot-y-axis", {parent, transition, enter: {transform}, update: {transform}}).node())
-      .ticks(this._discrete === "y" ? Array.from(new Set(data.map(d => d.y))) : undefined)
+      .ticks(yTicks)
       .width(x.range()[1] + this._xAxis.padding())
       .config(this._yConfig)
       .render();
