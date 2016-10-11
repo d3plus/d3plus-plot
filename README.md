@@ -12,7 +12,7 @@ A reusable javascript x/y plot built on D3.
 If you use NPM, `npm install d3plus-plot`. Otherwise, download the [latest release](https://github.com/d3plus/d3plus-plot/releases/latest). The released bundle supports AMD, CommonJS, and vanilla environments. Create a [custom bundle using Rollup](https://github.com/rollup/rollup) or your preferred bundler. You can also load directly from [d3plus.org](https://d3plus.org):
 
 ```html
-<script src="https://d3plus.org/js/d3plus-plot.v0.2.full.min.js"></script>
+<script src="https://d3plus.org/js/d3plus-plot.v0.3.full.min.js"></script>
 ```
 
 
@@ -47,58 +47,42 @@ This creates an x/y plot using the default shape ([Circle](https://github.com/d3
 
 ### More Examples
 
- * [Flipping a Stacked Area Chart](http://d3plus.org/examples/d3plus-plot/stacked-area-flip/)<sup> ***New***</sup>
- * [Stacked Area Chart](http://d3plus.org/examples/d3plus-plot/stacked-area/)<sup> ***New***</sup>
- * [Area Chart](http://d3plus.org/examples/d3plus-plot/area/)<sup> ***New***</sup>
- * [Line Plot](http://d3plus.org/examples/d3plus-plot/line-plot/)<sup> ***New***</sup>
+ * [Flipping a Stacked Area Chart](http://d3plus.org/examples/d3plus-plot/stacked-area-flip/)
+ * [Stacked Area Chart](http://d3plus.org/examples/d3plus-plot/stacked-area/)
+ * [Area Chart](http://d3plus.org/examples/d3plus-plot/area/)
+ * [Line Plot](http://d3plus.org/examples/d3plus-plot/line-plot/)
 
 ## API Reference
 ### Classes
 
 <dl>
-<dt><a href="#Area">Area</a> ⇐ <code><a href="#Plot">Plot</a></code></dt>
+<dt><a href="#AreaPlot">AreaPlot</a> ⇐ <code><a href="#Plot">Plot</a></code></dt>
 <dd></dd>
 <dt><a href="#LinePlot">LinePlot</a> ⇐ <code><a href="#Plot">Plot</a></code></dt>
 <dd></dd>
 <dt><a href="#Plot">Plot</a> ⇐ <code>Viz</code></dt>
 <dd></dd>
-<dt><a href="#StackedArea">StackedArea</a> ⇐ <code><a href="#Area">Area</a></code></dt>
+<dt><a href="#StackedArea">StackedArea</a> ⇐ <code>Area</code></dt>
 <dd></dd>
 </dl>
 
-<a name="Area"></a>
+<a name="AreaPlot"></a>
 
-### Area ⇐ <code>[Plot](#Plot)</code>
+### AreaPlot ⇐ <code>[Plot](#Plot)</code>
 **Kind**: global class  
 **Extends:** <code>[Plot](#Plot)</code>  
+<a name="new_AreaPlot_new"></a>
 
-* [Area](#Area) ⇐ <code>[Plot](#Plot)</code>
-    * [new Area()](#new_Area_new)
-    * [.discrete([*value*])](#Area.discrete)
-
-<a name="new_Area_new"></a>
-
-#### new Area()
+#### new AreaPlot()
 Creates an area plot based on an array of data.
 
 **Example** *(the equivalent of calling:)*  
 ```js
 new d3plus.Plot()
+  .baseline(0)
   .discrete("x")
   .shape("Area")
-  .xDomain([0, undefined])
 ```
-<a name="Area.discrete"></a>
-
-#### Area.discrete([*value*])
-If *value* is specified, sets the discrete axis to the specified method name and returns the current class instance. If *value* is not specified, returns the current discrete axis.
-
-**Kind**: static method of <code>[Area](#Area)</code>  
-
-| Param | Type |
-| --- | --- |
-| [*value*] | <code>String</code> | 
-
 <a name="LinePlot"></a>
 
 ### LinePlot ⇐ <code>[Plot](#Plot)</code>
@@ -203,9 +187,9 @@ If *value* is specified, sets the y domain to the specified array and returns th
 
 <a name="StackedArea"></a>
 
-### StackedArea ⇐ <code>[Area](#Area)</code>
+### StackedArea ⇐ <code>Area</code>
 **Kind**: global class  
-**Extends:** <code>[Area](#Area)</code>  
+**Extends:** <code>Area</code>  
 <a name="new_StackedArea_new"></a>
 
 #### new StackedArea()
@@ -218,4 +202,4 @@ new d3plus.Area()
 ```
 
 
-###### <sub>Documentation generated on Tue, 04 Oct 2016 16:14:13 GMT</sub>
+###### <sub>Documentation generated on Tue, 11 Oct 2016 20:33:28 GMT</sub>
