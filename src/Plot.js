@@ -202,15 +202,23 @@ export default class Plot extends Viz {
 
     let shapeConfig = {
       duration: this._duration,
-      fill: d => this._shapeConfig.fill(d.data, d.i),
       label: d => this._drawLabel(d.data, d.i),
-      opacity: d => this._shapeConfig.opacity(d.data, d.i),
       select: elem("g.d3plus-plot-shapes", {parent, transition}).node(),
-      stroke: d => this._shapeConfig.stroke(d.data, d.i),
-      strokeWidth: d => this._shapeConfig.strokeWidth(d.data, d.i),
       x: d => x(d.x),
       y: d => y(d.y)
     };
+
+    function wrapConfig(config) {
+      const obj = {};
+      for (const k in config) {
+        if ({}.hasOwnProperty.call(config, k) && !shapes[k]) {
+          obj[k] = typeof config[k] === "function" ? d => config[k](d.data, d.i) : config[k];
+        }
+      }
+      return obj;
+    }
+
+    shapeConfig = Object.assign(shapeConfig, wrapConfig(this._shapeConfig));
 
     const positions = {
       x0: this._discrete === "x" ? shapeConfig.x : x(0),
@@ -250,7 +258,7 @@ export default class Plot extends Viz {
       for (let e = 0; e < globalEvents.length; e++) s.on(globalEvents[e], mouseEvent.bind(this._on[globalEvents[e]]));
       for (let e = 0; e < shapeEvents.length; e++) s.on(shapeEvents[e], mouseEvent.bind(this._on[shapeEvents[e]]));
       for (let e = 0; e < classEvents.length; e++) s.on(classEvents[e], mouseEvent.bind(this._on[classEvents[e]]));
-      s.config(this._shapeConfig[d.key] || {}).render();
+      s.config(this._shapeConfig[d.key] ? wrapConfig(this._shapeConfig[d.key]) : {}).render();
       this._shapes.push(s);
 
     });
