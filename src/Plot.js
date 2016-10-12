@@ -288,6 +288,15 @@ export default class Plot extends Viz {
 
   /**
       @memberof Plot
+      @desc If *value* is specified, sets the config method for the x-axis and returns the current class instance. If *value* is not specified, returns the current x-axis configuration.
+      @param {Object} [*value*]
+  */
+  xConfig(_) {
+    return arguments.length ? (this._xConfig = Object.assign(this._xConfig, _), this) : this._xConfig;
+  }
+
+  /**
+      @memberof Plot
       @desc If *value* is specified, sets the x domain to the specified array and returns the current class instance. If *value* is not specified, returns the current x domain. Additionally, if either value of the array is undefined, it will be calculated from the data.
       @param {Array} [*value*]
   */
@@ -302,6 +311,15 @@ export default class Plot extends Viz {
   */
   y(_) {
     return arguments.length ? (this._y = typeof _ === "function" ? _ : constant(_), this) : this._y;
+  }
+
+  /**
+      @memberof Plot
+      @desc If *value* is specified, sets the config method for the y-axis and returns the current class instance. If *value* is not specified, returns the current y-axis configuration.
+      @param {Object} [*value*]
+  */
+  yConfig(_) {
+    return arguments.length ? (this._yConfig = Object.assign(this._yConfig, _), this) : this._yConfig;
   }
 
   /**
