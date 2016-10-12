@@ -47,6 +47,7 @@ This creates an x/y plot using the default shape ([Circle](https://github.com/d3
 
 ### More Examples
 
+ * [Getting Started](http://d3plus.org/examples/d3plus-plot/axis-config/)<sup> ***New***</sup>
  * [Flipping a Stacked Area Chart](http://d3plus.org/examples/d3plus-plot/stacked-area-flip/)
  * [Stacked Area Chart](http://d3plus.org/examples/d3plus-plot/stacked-area/)
  * [Area Chart](http://d3plus.org/examples/d3plus-plot/area/)<sup> ***New***</sup>
@@ -110,8 +111,10 @@ new d3plus.Plot()
     * [.baseline([*value*])](#Plot.baseline)
     * [.stacked([*value*])](#Plot.stacked)
     * [.x([*value*])](#Plot.x)
+    * [.xConfig([*value*])](#Plot.xConfig)
     * [.xDomain([*value*])](#Plot.xDomain)
     * [.y([*value*])](#Plot.y)
+    * [.yConfig([*value*])](#Plot.yConfig)
     * [.yDomain([*value*])](#Plot.yDomain)
 
 <a name="new_Plot_new"></a>
@@ -152,6 +155,17 @@ If *value* is specified, sets the x accessor to the specified function or number
 | --- | --- |
 | [*value*] | <code>function</code> &#124; <code>Number</code> | 
 
+<a name="Plot.xConfig"></a>
+
+#### Plot.xConfig([*value*])
+If *value* is specified, sets the config method for the x-axis and returns the current class instance. If *value* is not specified, returns the current x-axis configuration.
+
+**Kind**: static method of <code>[Plot](#Plot)</code>  
+
+| Param | Type |
+| --- | --- |
+| [*value*] | <code>Object</code> | 
+
 <a name="Plot.xDomain"></a>
 
 #### Plot.xDomain([*value*])
@@ -173,6 +187,17 @@ If *value* is specified, sets the y accessor to the specified function or number
 | Param | Type |
 | --- | --- |
 | [*value*] | <code>function</code> &#124; <code>Number</code> | 
+
+<a name="Plot.yConfig"></a>
+
+#### Plot.yConfig([*value*])
+If *value* is specified, sets the config method for the y-axis and returns the current class instance. If *value* is not specified, returns the current y-axis configuration.
+
+**Kind**: static method of <code>[Plot](#Plot)</code>  
+
+| Param | Type |
+| --- | --- |
+| [*value*] | <code>Object</code> | 
 
 <a name="Plot.yDomain"></a>
 
@@ -202,4 +227,4 @@ new d3plus.Area()
 ```
 
 
-###### <sub>Documentation generated on Tue, 11 Oct 2016 20:46:21 GMT</sub>
+###### <sub>Documentation generated on Wed, 12 Oct 2016 14:49:21 GMT</sub>
