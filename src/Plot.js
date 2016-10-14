@@ -1,7 +1,7 @@
 import {extent, min, max} from "d3-array";
 import {nest} from "d3-collection";
 import * as scales from "d3-scale";
-import {stack} from "d3-shape";
+import * as d3Shape from "d3-shape";
 import {mouse} from "d3-selection";
 
 import {AxisBottom, AxisLeft, date} from "d3plus-axis";
@@ -50,6 +50,8 @@ export default class Plot extends Viz {
         width: constant(10)
       }
     });
+    this._stackOffset = d3Shape.stackOffsetNone;
+    this._stackOrder = d3Shape.stackOrderNone;
     this._x = accessor("x");
     this._xAxis = new AxisBottom().align("end");
     this._xTest = new AxisBottom().align("end").gridSize(0);
@@ -121,8 +123,10 @@ export default class Plot extends Viz {
 
       data = data.sort((a, b) => a[this._discrete] - b[this._discrete]);
 
-      stackData = stack()
+      stackData = d3Shape.stack()
         .keys(stackKeys)
+        .offset(this._stackOffset)
+        .order(this._stackOrder)
         .value((group, key) => {
           const d = group.filter(g => g.id === key);
           return d.length ? d[0][opp] : 0;
@@ -259,7 +263,7 @@ export default class Plot extends Viz {
 
     if (this._stacked) {
       const scale = opp === "x" ? x : y;
-      positions[`${opp}0`] = (d, i) => {
+      positions[`${opp}`] = positions[`${opp}0`] = (d, i) => {
         const index = stackKeys.indexOf(d.id);
         return index >= 0 ? scale(stackData[index][i][0]) : scale(0);
       };
@@ -320,6 +324,24 @@ export default class Plot extends Viz {
   */
   stacked(_) {
     return arguments.length ? (this._stacked = _, this) : this._stacked;
+  }
+
+  /**
+      @memberof Plot
+      @desc If *value* is specified, sets the stack offset and returns the current class instance. If *value* is not specified, returns the current stack offset function.
+      @param {Function|String} [*value* = "none"]
+  */
+  stackOffset(_) {
+    return arguments.length ? (this._stackOffset = typeof _ === "function" ? _ : d3Shape[`stackOffset${_.charAt(0).toUpperCase() + _.slice(1)}`], this) : this._stackOffset;
+  }
+
+  /**
+      @memberof Plot
+      @desc If *value* is specified, sets the stack order and returns the current class instance. If *value* is not specified, returns the current stack order function.
+      @param {Function|String} [*value* = "none"]
+  */
+  stackOrder(_) {
+    return arguments.length ? (this._stackOrder = typeof _ === "function" ? _ : d3Shape[`stackOrder${_.charAt(0).toUpperCase() + _.slice(1)}`], this) : this._stackOrder;
   }
 
   /**
