@@ -95,7 +95,10 @@ export default class Plot extends Viz {
       stackKeys = Array.from(new Set(data.map(d => d.id)));
       stackData = stack()
         .keys(stackKeys)
-        .value((group, key) => group.filter(d => d.id === key)[0][opp])
+        .value((group, key) => {
+          const d = group.filter(g => g.id === key);
+          return d.length ? d[0][opp] : 0;
+        })
         (nest().key(d => d[this._discrete]).entries(data).map(d => d.values));
 
       domains = {
