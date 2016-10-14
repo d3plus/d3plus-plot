@@ -73,15 +73,16 @@ export default class Plot extends Viz {
 
     super.render(callback);
 
-    const data = this._filteredData.map((d, i) => ({
-            data: d,
-            i,
-            id: this._id(d, i),
-            shape: this._shape(d, i),
-            x: this._x(d, i),
-            y: this._y(d, i)
-          })),
-          height = this._height - this._margin.top - this._margin.bottom,
+    let data = this._filteredData.map((d, i) => ({
+      data: d,
+      i,
+      id: this._id(d, i),
+      shape: this._shape(d, i),
+      x: this._x(d, i),
+      y: this._y(d, i)
+    }));
+
+    const height = this._height - this._margin.top - this._margin.bottom,
           opp = this._discrete ? this._discrete === "x" ? "y" : "x" : undefined,
           parent = this._select,
           that = this,
@@ -93,13 +94,39 @@ export default class Plot extends Viz {
     if (this._stacked) {
 
       stackKeys = Array.from(new Set(data.map(d => d.id)));
+
+      stackData = nest().key(d => d[this._discrete]).entries(data).map(d => d.values);
+
+      stackData.forEach((g, i) => {
+        const ids = Array.from(new Set(g.map(d => d.id)));
+        if (ids.length < stackKeys.length) {
+          stackKeys.forEach(k => {
+            if (!ids.includes(k)) {
+              const d = data.filter(d => d.id === k)[0];
+              if (d.shape === "Area") {
+                const fillerPoint = {
+                  data: d.data,
+                  id: k,
+                  shape: d.shape,
+                  [this._discrete]: g[0][this._discrete],
+                  [opp]: 0
+                };
+                stackData[i].push(fillerPoint);
+                data.push(fillerPoint);
+              }
+            }
+          });
+        }
+      });
+
+      data = data.sort((a, b) => a[this._discrete] - b[this._discrete]);
+
       stackData = stack()
         .keys(stackKeys)
         .value((group, key) => {
           const d = group.filter(g => g.id === key);
           return d.length ? d[0][opp] : 0;
-        })
-        (nest().key(d => d[this._discrete]).entries(data).map(d => d.values));
+        })(stackData);
 
       domains = {
         [this._discrete]: extent(data, d => d[this._discrete]),
