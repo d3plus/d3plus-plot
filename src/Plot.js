@@ -298,7 +298,20 @@ export default class Plot extends Viz {
       @param {Function|Number} [*value*]
   */
   x(_) {
-    return arguments.length ? (this._x = typeof _ === "function" ? _ : constant(_), this) : this._x;
+    if (arguments.length) {
+      if (typeof _ === "function") this._x = _;
+      else {
+        this._x = accessor(_);
+        if (!this._aggs[_] && this._discrete === "x") {
+          this._aggs[_] = a => {
+            const v = Array.from(new Set(a));
+            return v.length === 1 ? v[0] : v;
+          };
+        }
+      }
+      return this;
+    }
+    else return this._x;
   }
 
   /**
@@ -325,7 +338,20 @@ export default class Plot extends Viz {
       @param {Function|Number} [*value*]
   */
   y(_) {
-    return arguments.length ? (this._y = typeof _ === "function" ? _ : constant(_), this) : this._y;
+    if (arguments.length) {
+      if (typeof _ === "function") this._y = _;
+      else {
+        this._y = accessor(_);
+        if (!this._aggs[_] && this._discrete === "y") {
+          this._aggs[_] = a => {
+            const v = Array.from(new Set(a));
+            return v.length === 1 ? v[0] : v;
+          };
+        }
+      }
+      return this;
+    }
+    else return this._y;
   }
 
   /**
