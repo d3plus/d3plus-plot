@@ -203,7 +203,7 @@ export default class Plot extends Viz {
     let shapeConfig = {
       duration: this._duration,
       label: d => this._drawLabel(d.data, d.i),
-      select: elem("g.d3plus-plot-shapes", {parent, transition}).node(),
+      select: elem("g.d3plus-plot-shapes", {parent, transition, enter: {transform}, update: {transform}}).node(),
       x: d => x(d.x),
       y: d => y(d.y)
     };
@@ -228,8 +228,15 @@ export default class Plot extends Viz {
     };
 
     if (this._stacked) {
-      positions[`${opp}0`] = (d, i) => (opp === "x" ? x : y)(stackData[stackKeys.indexOf(d.id)][i][0]);
-      positions[`${opp}1`] = (d, i) => (opp === "x" ? x : y)(stackData[stackKeys.indexOf(d.id)][i][1]);
+      const scale = opp === "x" ? x : y;
+      positions[`${opp}0`] = (d, i) => {
+        const index = stackKeys.indexOf(d.id);
+        return index >= 0 ? scale(stackData[index][i][0]) : scale(0);
+      };
+      positions[`${opp}1`] = (d, i) => {
+        const index = stackKeys.indexOf(d.id);
+        return index >= 0 ? scale(stackData[index][i][1]) : scale(0);
+      };
     }
 
     shapeConfig = Object.assign(shapeConfig, positions);
