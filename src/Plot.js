@@ -280,6 +280,7 @@ export default class Plot extends Viz {
         @private
     */
     function mouseEvent(d) {
+      if (!this) return false;
       if (d.nested && d.values) {
         const axis = that._discrete,
               cursor = mouse(that._select.node())[axis === "x" ? 0 : 1],
