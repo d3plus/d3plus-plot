@@ -195,7 +195,8 @@ export default class Plot extends Viz {
       .config(this._yConfig)
       .render();
 
-    const xOffset = this._yTest.outerBounds().width + this._yTest.padding();
+    const yBounds = this._yTest.outerBounds();
+    const xOffset = yBounds.width ? yBounds.width + this._yTest.padding() : undefined;
 
     this._xTest
       .domain(xDomain)
