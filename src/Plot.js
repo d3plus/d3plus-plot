@@ -140,8 +140,8 @@ export default class Plot extends Viz {
     }
     else domains = {x: extent(data, d => d.x), y: extent(data, d => d.y)};
 
-    const xTime = this._time && this._x(data[0], 0) === this._time(data[0], 0),
-          yTime = this._time && this._y(data[0], 0) === this._time(data[0], 0);
+    const xTime = this._time && data[0].x === this._time(data[0].data, data[0].i),
+          yTime = this._time && data[0].y === this._time(data[0].data, data[0].i);
 
     if (xTime || yTime) {
       data.forEach(d => {
