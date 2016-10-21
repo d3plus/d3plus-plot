@@ -107,9 +107,13 @@ export default class Plot extends Viz {
 
       stackKeys = Array.from(new Set(data.map(d => d.id)));
 
-      stackData = nest().key(d => d[this._discrete]).entries(data).map(d => d.values);
+      stackData = nest()
+        .key(d => Number(d[this._discrete]))
+        .entries(data)
+        .sort((a, b) => a.key - b.key)
+        .map(d => d.values);
 
-      stackData.forEach((g, i) => {
+      stackData.forEach(g => {
         const ids = Array.from(new Set(g.map(d => d.id)));
         if (ids.length < stackKeys.length) {
           stackKeys.forEach(k => {
@@ -123,7 +127,6 @@ export default class Plot extends Viz {
                   [this._discrete]: g[0][this._discrete],
                   [opp]: 0
                 };
-                stackData[i].push(fillerPoint);
                 data.push(fillerPoint);
               }
             }
