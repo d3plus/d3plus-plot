@@ -75,7 +75,7 @@ export default class Plot extends Viz {
 
     super.render(callback);
 
-    let data = this._filteredData.map((d, i) => ({
+    const data = this._filteredData.map((d, i) => ({
       data: d,
       i,
       id: this._id(d, i),
@@ -91,6 +91,16 @@ export default class Plot extends Viz {
           transform = `translate(${this._margin.left}, ${this._margin.top})`,
           transition = this._transition,
           width = this._width - this._margin.left - this._margin.right;
+
+    const xTime = this._time && data[0].x === this._time(data[0].data, data[0].i),
+          yTime = this._time && data[0].y === this._time(data[0].data, data[0].i);
+
+    if (xTime || yTime) {
+      data.forEach(d => {
+        if (xTime) d.x = date(d.x);
+        if (yTime) d.y = date(d.y);
+      });
+    }
 
     let domains, stackData, stackKeys;
     if (this._stacked) {
@@ -121,7 +131,7 @@ export default class Plot extends Viz {
         }
       });
 
-      data = data.sort((a, b) => a[this._discrete] - b[this._discrete]);
+      data.sort((a, b) => a[this._discrete] - b[this._discrete]);
 
       stackData = d3Shape.stack()
         .keys(stackKeys)
@@ -139,16 +149,6 @@ export default class Plot extends Viz {
 
     }
     else domains = {x: extent(data, d => d.x), y: extent(data, d => d.y)};
-
-    const xTime = this._time && data[0].x === this._time(data[0].data, data[0].i),
-          yTime = this._time && data[0].y === this._time(data[0].data, data[0].i);
-
-    if (xTime || yTime) {
-      data.forEach(d => {
-        if (xTime) d.x = date(d.x);
-        if (yTime) d.y = date(d.y);
-      });
-    }
 
     let xDomain = this._xDomain ? this._xDomain.slice() : domains.x;
     if (xDomain[0] === void 0) xDomain[0] = domains.x[0];
