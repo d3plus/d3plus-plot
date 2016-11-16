@@ -32,7 +32,7 @@
     "d3plus-color": "^0.5.3",
     "d3plus-common": "^0.6.8",
     "d3plus-shape": "^0.8.19",
-    "d3plus-viz": "^0.3.12"
+    "d3plus-viz": "^0.4.1"
   },
   "scripts": {
     "build": "d3plus-build",
