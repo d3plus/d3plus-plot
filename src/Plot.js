@@ -425,10 +425,17 @@ export default class Plot extends Viz {
   /**
       @memberof Plot
       @desc If *value* is specified, sets the config method for the y-axis and returns the current class instance. If *value* is not specified, returns the current y-axis configuration.
+
+*Note:* If a "domain" array is passed to the y-axis config, it will be reversed.
       @param {Object} [*value*]
   */
   yConfig(_) {
-    return arguments.length ? (this._yConfig = assign(this._yConfig, _), this) : this._yConfig;
+    if (arguments.length) {
+      if (_.domain) _.domain = _.domain.slice().reverse();
+      this._yConfig = assign(this._yConfig, _);
+      return this;
+    }
+    return this._yConfig;
   }
 
   /**
