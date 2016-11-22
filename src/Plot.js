@@ -324,6 +324,15 @@ export default class Plot extends Viz {
 
   /**
       @memberof Plot
+      @desc If *value* is specified, sets the discrete axis to the specified string and returns the current class instance. If *value* is not specified, returns the current discrete axis.
+      @param {String} [*value*]
+  */
+  discrete(_) {
+    return arguments.length ? (this._discrete = _, this) : this._discrete;
+  }
+
+  /**
+      @memberof Plot
       @desc If *value* is specified, toggles shape stacking and returns the current class instance. If *value* is not specified, returns the current stack value.
       @param {Boolean} [*value* = false]
   */
