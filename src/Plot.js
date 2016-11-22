@@ -76,6 +76,7 @@ export default class Plot extends Viz {
     super.render(callback);
 
     const data = this._filteredData.map((d, i) => ({
+      __d3plus__: true,
       data: d,
       i,
       id: this._id(d, i),
@@ -121,6 +122,7 @@ export default class Plot extends Viz {
               const d = data.filter(d => d.id === k)[0];
               if (d.shape === "Area") {
                 const fillerPoint = {
+                  __d3plus__: true,
                   data: d.data,
                   id: k,
                   shape: d.shape,
