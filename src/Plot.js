@@ -5,8 +5,8 @@ import * as d3Shape from "d3-shape";
 import {mouse} from "d3-selection";
 
 import {AxisBottom, AxisLeft, date} from "d3plus-axis";
-import {assign} from "d3plus-color";
-import {accessor, closest, constant, elem} from "d3plus-common";
+import {assign as colorAssign} from "d3plus-color";
+import {accessor, assign, closest, constant, elem} from "d3plus-common";
 import * as shapes from "d3plus-shape";
 import {Viz} from "d3plus-viz";
 
@@ -35,14 +35,14 @@ export default class Plot extends Viz {
       Rect: RectBuffer
     };
     this._shape = constant("Circle");
-    this._shapeConfig = Object.assign(this._shapeConfig, {
+    this._shapeConfig = assign(this._shapeConfig, {
       Circle: {
         r: constant(5)
       },
       Line: {
         fill: constant("none"),
         label: false,
-        stroke: (d, i) => assign(this._id(d, i)),
+        stroke: (d, i) => colorAssign(this._id(d, i)),
         strokeWidth: constant(1)
       },
       Rect: {
@@ -258,7 +258,7 @@ export default class Plot extends Viz {
       return obj;
     }
 
-    shapeConfig = Object.assign(shapeConfig, wrapConfig(this._shapeConfig));
+    shapeConfig = assign(shapeConfig, wrapConfig(this._shapeConfig));
 
     const positions = {
       x0: this._discrete === "x" ? shapeConfig.x : x(0),
@@ -279,7 +279,7 @@ export default class Plot extends Viz {
       };
     }
 
-    shapeConfig = Object.assign(shapeConfig, positions);
+    shapeConfig = assign(shapeConfig, positions);
 
     /**
         @desc Handles mouse events for nested shapes, finding the closest discrete data point to send to the defined event function.
@@ -388,7 +388,7 @@ export default class Plot extends Viz {
       @param {Object} [*value*]
   */
   xConfig(_) {
-    return arguments.length ? (this._xConfig = Object.assign(this._xConfig, _), this) : this._xConfig;
+    return arguments.length ? (this._xConfig = assign(this._xConfig, _), this) : this._xConfig;
   }
 
   /**
@@ -428,7 +428,7 @@ export default class Plot extends Viz {
       @param {Object} [*value*]
   */
   yConfig(_) {
-    return arguments.length ? (this._yConfig = Object.assign(this._yConfig, _), this) : this._yConfig;
+    return arguments.length ? (this._yConfig = assign(this._yConfig, _), this) : this._yConfig;
   }
 
   /**
