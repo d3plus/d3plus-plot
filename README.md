@@ -109,6 +109,7 @@ new d3plus.Plot()
 * [Plot](#Plot) ⇐ <code>Viz</code>
     * [new Plot()](#new_Plot_new)
     * [.baseline([*value*])](#Plot.baseline)
+    * [.discrete([*value*])](#Plot.discrete)
     * [.stacked([*value*])](#Plot.stacked)
     * [.stackOffset([*value*])](#Plot.stackOffset)
     * [.stackOrder([*value*])](#Plot.stackOrder)
@@ -134,6 +135,17 @@ If *value* is specified, sets the baseline for the x/y plot and returns the curr
 | Param | Type |
 | --- | --- |
 | [*value*] | <code>Number</code> | 
+
+<a name="Plot.discrete"></a>
+
+#### Plot.discrete([*value*])
+If *value* is specified, sets the discrete axis to the specified string and returns the current class instance. If *value* is not specified, returns the current discrete axis.
+
+**Kind**: static method of <code>[Plot](#Plot)</code>  
+
+| Param | Type |
+| --- | --- |
+| [*value*] | <code>String</code> | 
 
 <a name="Plot.stacked"></a>
 
@@ -216,6 +228,7 @@ If *value* is specified, sets the y accessor to the specified function or number
 
 #### Plot.yConfig([*value*])
 If *value* is specified, sets the config method for the y-axis and returns the current class instance. If *value* is not specified, returns the current y-axis configuration.
+Note:* If a "domain" array is passed to the y-axis config, it will be reversed.
 
 **Kind**: static method of <code>[Plot](#Plot)</code>  
 
@@ -251,4 +264,4 @@ new d3plus.Area()
 ```
 
 
-###### <sub>Documentation generated on Mon, 21 Nov 2016 20:16:46 GMT</sub>
+###### <sub>Documentation generated on Tue, 22 Nov 2016 14:03:37 GMT</sub>
