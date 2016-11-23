@@ -103,7 +103,7 @@ export default class Plot extends Viz {
       });
     }
 
-    let domains, stackData, stackKeys;
+    let discreteKeys, domains, stackData, stackKeys;
     if (this._stacked) {
 
       stackKeys = Array.from(new Set(data.map(d => d.id)));
@@ -111,8 +111,11 @@ export default class Plot extends Viz {
       stackData = nest()
         .key(d => Number(d[this._discrete]))
         .entries(data)
-        .sort((a, b) => a.key - b.key)
-        .map(d => d.values);
+        .sort((a, b) => a.key - b.key);
+
+      discreteKeys = stackData.map(d => d.key);
+
+      stackData = stackData.map(d => d.values);
 
       stackData.forEach(g => {
         const ids = Array.from(new Set(g.map(d => d.id)));
@@ -269,13 +272,15 @@ export default class Plot extends Viz {
 
     if (this._stacked) {
       const scale = opp === "x" ? x : y;
-      positions[`${opp}`] = positions[`${opp}0`] = (d, i) => {
-        const index = stackKeys.indexOf(d.id);
-        return index >= 0 ? scale(stackData[index][i][0]) : scale(0);
+      positions[`${opp}`] = positions[`${opp}0`] = d => {
+        const dataIndex = stackKeys.indexOf(d.id),
+              discreteIndex = discreteKeys.indexOf(d[this._discrete]);
+        return dataIndex >= 0 ? scale(stackData[dataIndex][discreteIndex][0]) : scale(0);
       };
-      positions[`${opp}1`] = (d, i) => {
-        const index = stackKeys.indexOf(d.id);
-        return index >= 0 ? scale(stackData[index][i][1]) : scale(0);
+      positions[`${opp}1`] = d => {
+        const dataIndex = stackKeys.indexOf(d.id),
+              discreteIndex = discreteKeys.indexOf(d[this._discrete]);
+        return dataIndex >= 0 ? scale(stackData[dataIndex][discreteIndex][1]) : scale(0);
       };
     }
 
