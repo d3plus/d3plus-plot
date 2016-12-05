@@ -10,6 +10,7 @@ import {accessor, assign, closest, constant, elem} from "d3plus-common";
 import * as shapes from "d3plus-shape";
 import {Viz} from "d3plus-viz";
 
+import {default as BarBuffer} from "./buffers/Bar.js";
 import {default as CircleBuffer} from "./buffers/Circle.js";
 import {default as RectBuffer} from "./buffers/Rect.js";
 import {default as LineBuffer} from "./buffers/Line.js";
@@ -30,12 +31,17 @@ export default class Plot extends Viz {
 
     super();
     this._buffer = {
+      Bar: BarBuffer,
       Circle: CircleBuffer,
       Line: LineBuffer,
       Rect: RectBuffer
     };
     this._shape = constant("Circle");
     this._shapeConfig = assign(this._shapeConfig, {
+      Bar: {
+        textAnchor: () => this._discrete === "x" ? "middle" : "end",
+        verticalAlign: () => this._discrete === "x" ? "top" : "middle"
+      },
       Circle: {
         r: constant(5)
       },
@@ -158,15 +164,35 @@ export default class Plot extends Viz {
     }
     else domains = {x: extent(data, d => d.x), y: extent(data, d => d.y)};
 
-    let xDomain = this._xDomain ? this._xDomain.slice() : domains.x;
+    let xDomain = this._xDomain ? this._xDomain.slice() : domains.x,
+        xScale = "Linear";
+
     if (xDomain[0] === void 0) xDomain[0] = domains.x[0];
     if (xDomain[1] === void 0) xDomain[1] = domains.x[1];
-    if (xTime) xDomain = xDomain.map(date);
 
-    let yDomain = this._yDomain ? this._yDomain.slice() : domains.y;
+    if (xTime) {
+      xDomain = xDomain.map(date);
+      xScale = "Time";
+    }
+    else if (this._discrete === "x") {
+      xDomain = Array.from(new Set(data.map(d => d.x)));
+      xScale = "Ordinal";
+    }
+
+    let yDomain = this._yDomain ? this._yDomain.slice() : domains.y,
+        yScale = "Linear";
+
     if (yDomain[0] === void 0) yDomain[0] = domains.y[0];
     if (yDomain[1] === void 0) yDomain[1] = domains.y[1];
-    if (yTime) yDomain = yDomain.map(date);
+
+    if (yTime) {
+      yDomain = yDomain.map(date);
+      yScale = "Time";
+    }
+    else if (this._discrete === "y") {
+      yDomain = Array.from(new Set(data.map(d => d.y)));
+      yScale = "Ordinal";
+    }
 
     domains = {x: xDomain, y: yDomain};
 
@@ -176,8 +202,8 @@ export default class Plot extends Viz {
       else if (domains[opp][1] < b) domains[opp][1] = b;
     }
 
-    let x = scales[`scale${xTime ? "Time" : "Linear"}`]().domain(domains.x).range([0, width]),
-        y = scales[`scale${yTime ? "Time" : "Linear"}`]().domain(domains.y.reverse()).range([0, height]);
+    let x = scales[`scale${xScale}`]().domain(domains.x).range([0, width]),
+        y = scales[`scale${yScale}`]().domain(domains.y.reverse()).range([0, height]);
 
     const shapeData = nest().key(d => d.shape).entries(data);
     shapeData.forEach(d => {
@@ -190,14 +216,15 @@ export default class Plot extends Viz {
     xDomain = x.domain();
     yDomain = y.domain();
 
-    const xTicks = this._discrete === "x" && !xTime ? Array.from(new Set(data.map(d => d.x))) : undefined,
-          yTicks = this._discrete === "y" && !yTime ? Array.from(new Set(data.map(d => d.y))) : undefined;
+    const testGroup = elem("g.d3plus-plot-test", {enter: {opacity: 0}, parent: this._select}),
+          xTicks = this._discrete === "x" && !xTime ? domains.x : undefined,
+          yTicks = this._discrete === "y" && !yTime ? domains.y : undefined;
 
     this._yTest
       .domain(yDomain)
       .height(height)
-      .scale(yTime ? "time" : "linear")
-      .select(elem("g.d3plus-plot-test", {enter: {opacity: 0}, parent: this._select}).node())
+      .scale(yScale.toLowerCase())
+      .select(testGroup.node())
       .ticks(yTicks)
       .width(width)
       .config(this._yConfig)
@@ -210,8 +237,8 @@ export default class Plot extends Viz {
       .domain(xDomain)
       .height(height)
       .range([xOffset, undefined])
-      .scale(xTime ? "time" : "linear")
-      .select(elem("g.d3plus-plot-test", {enter: {opacity: 0}, parent: this._select}).node())
+      .scale(xScale.toLowerCase())
+      .select(testGroup.node())
       .ticks(xTicks)
       .width(width)
       .config(this._xConfig)
@@ -221,7 +248,7 @@ export default class Plot extends Viz {
       .domain(xDomain)
       .height(height)
       .range([xOffset, undefined])
-      .scale(xTime ? "time" : "linear")
+      .scale(xScale.toLowerCase())
       .select(elem("g.d3plus-plot-x-axis", {parent, transition, enter: {transform}, update: {transform}}).node())
       .ticks(xTicks)
       .width(width)
@@ -234,10 +261,10 @@ export default class Plot extends Viz {
       .domain(yDomain)
       .height(height)
       .range([this._xAxis.outerBounds().y, this._xTest.outerBounds().y])
-      .scale(yTime ? "time" : "linear")
+      .scale(yScale.toLowerCase())
       .select(elem("g.d3plus-plot-y-axis", {parent, transition, enter: {transform}, update: {transform}}).node())
       .ticks(yTicks)
-      .width(x.range()[1] + this._xAxis.padding())
+      .width(x.range()[x.range().length - 1] + this._xAxis.padding())
       .config(this._yConfig)
       .render();
 
@@ -305,12 +332,41 @@ export default class Plot extends Viz {
     shapeData.forEach(d => {
 
       const s = new shapes[d.key]().config(shapeConfig).data(d.values);
+
+      if (d.key === "Bar") {
+
+        let space;
+        const scale = this._discrete === "x" ? x : y;
+        const vals = scale.domain().filter(d => d.indexOf("d3plus-buffer-") < 0);
+        const range = scale.range();
+        if (vals.length > 1) space = scale(vals[1]) - scale(vals[0]);
+        else space = range[range.length - 1] - range[0];
+        space -= 20;
+
+        const ids = Array.from(new Set(d.values.map(d => d.id)));
+        const lanes = ids.length;
+        const barSize = space / lanes;
+
+        s.width(barSize);
+        s.height(barSize);
+
+        const offset = space / 2 - barSize / 2;
+
+        const xMod = scales.scaleOrdinal()
+          .domain([0, ids.length - 1])
+          .range([-offset, offset]);
+
+        s[this._discrete]((d, i) => shapeConfig[this._discrete](d, i) + xMod(ids.indexOf(d.id)));
+
+      }
+
       const classEvents = events.filter(e => e.includes(`.${d.key}`)),
             globalEvents = events.filter(e => !e.includes(".")),
             shapeEvents = events.filter(e => e.includes(".shape"));
       for (let e = 0; e < globalEvents.length; e++) s.on(globalEvents[e], mouseEvent.bind(this._on[globalEvents[e]]));
       for (let e = 0; e < shapeEvents.length; e++) s.on(shapeEvents[e], mouseEvent.bind(this._on[shapeEvents[e]]));
       for (let e = 0; e < classEvents.length; e++) s.on(classEvents[e], mouseEvent.bind(this._on[classEvents[e]]));
+
       s.config(this._shapeConfig[d.key] ? wrapConfig(this._shapeConfig[d.key]) : {}).render();
       this._shapes.push(s);
 
