@@ -337,7 +337,7 @@ export default class Plot extends Viz {
 
         let space;
         const scale = this._discrete === "x" ? x : y;
-        const vals = scale.domain().filter(d => d.indexOf("d3plus-buffer-") < 0);
+        const vals = scale.domain().filter(d => typeof d !== "string" || d.indexOf("d3plus-buffer-") < 0);
         const range = scale.range();
         if (vals.length > 1) space = scale(vals[1]) - scale(vals[0]);
         else space = range[range.length - 1] - range[0];
