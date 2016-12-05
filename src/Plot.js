@@ -109,7 +109,7 @@ export default class Plot extends Viz {
       stackKeys = Array.from(new Set(data.map(d => d.id)));
 
       stackData = nest()
-        .key(d => Number(d[this._discrete]))
+        .key(d => d[this._discrete])
         .entries(data)
         .sort((a, b) => a.key - b.key);
 
@@ -274,12 +274,12 @@ export default class Plot extends Viz {
       const scale = opp === "x" ? x : y;
       positions[`${opp}`] = positions[`${opp}0`] = d => {
         const dataIndex = stackKeys.indexOf(d.id),
-              discreteIndex = discreteKeys.indexOf(d[this._discrete]);
+              discreteIndex = discreteKeys.indexOf(`${d[this._discrete]}`);
         return dataIndex >= 0 ? scale(stackData[dataIndex][discreteIndex][0]) : scale(0);
       };
       positions[`${opp}1`] = d => {
         const dataIndex = stackKeys.indexOf(d.id),
-              discreteIndex = discreteKeys.indexOf(d[this._discrete]);
+              discreteIndex = discreteKeys.indexOf(`${d[this._discrete]}`);
         return dataIndex >= 0 ? scale(stackData[dataIndex][discreteIndex][1]) : scale(0);
       };
     }
