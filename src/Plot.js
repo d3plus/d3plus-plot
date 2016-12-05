@@ -343,20 +343,25 @@ export default class Plot extends Viz {
         else space = range[range.length - 1] - range[0];
         space -= 20;
 
-        const ids = Array.from(new Set(d.values.map(d => d.id)));
-        const lanes = ids.length;
-        const barSize = space / lanes;
+        let barSize = space;
+
+        if (!this._stacked) {
+
+          const ids = Array.from(new Set(d.values.map(d => d.id)));
+          barSize /= ids.length;
+
+          const offset = space / 2 - barSize / 2;
+
+          const xMod = scales.scaleOrdinal()
+            .domain([0, ids.length - 1])
+            .range([-offset, offset]);
+
+          s[this._discrete]((d, i) => shapeConfig[this._discrete](d, i) + xMod(ids.indexOf(d.id)));
+
+        }
 
         s.width(barSize);
         s.height(barSize);
-
-        const offset = space / 2 - barSize / 2;
-
-        const xMod = scales.scaleOrdinal()
-          .domain([0, ids.length - 1])
-          .range([-offset, offset]);
-
-        s[this._discrete]((d, i) => shapeConfig[this._discrete](d, i) + xMod(ids.indexOf(d.id)));
 
       }
 
