@@ -1,5 +1,7 @@
 import {max} from "d3-array";
 
+import {default as ordinalBuffer} from "./ordinalBuffer";
+
 export default function(data, x, y) {
 
   const oppScale = this._discrete === "x" ? y : x;
@@ -18,14 +20,7 @@ export default function(data, x, y) {
   oppScale.domain(oppDomain);
 
   const discreteScale = this._discrete === "x" ? x : y;
-
-  const newDomain = ["d3plus-buffer-start"];
-  discreteScale.domain().forEach(b => {
-    newDomain.push(b);
-    newDomain.push(`d3plus-buffer-${b}`);
-  });
-
-  discreteScale.domain(newDomain);
+  discreteScale.domain(ordinalBuffer(discreteScale.domain()));
 
   return [x, y];
 

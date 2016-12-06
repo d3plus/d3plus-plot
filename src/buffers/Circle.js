@@ -1,32 +1,42 @@
+import {default as ordinalBuffer} from "./ordinalBuffer";
+
 export default function(data, x, y, config) {
 
-  const xD = x.domain().slice(),
-        xR = x.range(),
-        yD = y.domain().slice(),
+  let xD = x.domain().slice(),
+      yD = y.domain().slice();
+
+  const xR = x.range(),
         yR = y.range();
 
+  if (!x.invert) xD = ordinalBuffer(xD);
+  if (!y.invert) yD = ordinalBuffer(yD);
+
   data.forEach(d => {
-    const r = config.r(d.data, d.i);
-    if (x(d.x) - xR[0] < r * 2) {
-      const v = x.invert(x(d.x) - r * 2);
+
+    const s = config.r(d.data, d.i) * 2;
+
+    if (x.invert && x(d.x) - xR[0] < s) {
+      const v = x.invert(x(d.x) - s);
       if (v < xD[0]) xD[0] = v;
     }
-    if (xR[1] - x(d.x) < r * 2) {
-      const v = x.invert(x(d.x) + r * 2);
+    if (x.invert && xR[1] - x(d.x) < s) {
+      const v = x.invert(x(d.x) + s);
       if (v > xD[1]) xD[1] = v;
     }
-    if (y(d.y) - yR[0] < r * 2) {
-      const v = y.invert(y(d.y) - r * 2);
+
+    if (y.invert && y(d.y) - yR[0] < s) {
+      const v = y.invert(y(d.y) - s);
       if (v > yD[0]) yD[0] = v;
     }
-    if (yR[1] - y(d.y) < r * 2) {
-      const v = y.invert(y(d.y) + r * 2);
+    if (y.invert && yR[1] - y(d.y) < s) {
+      const v = y.invert(y(d.y) + s);
       if (v < yD[1]) yD[1] = v;
     }
+
   });
 
-  x.domain(xD);
-  y.domain(yD);
+  x.domain(xD).range(xR);
+  y.domain(yD).range(yR);
 
   return [x, y];
 
