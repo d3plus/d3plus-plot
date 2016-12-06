@@ -12,7 +12,7 @@ A reusable javascript x/y plot built on D3.
 If you use NPM, `npm install d3plus-plot`. Otherwise, download the [latest release](https://github.com/d3plus/d3plus-plot/releases/latest). The released bundle supports AMD, CommonJS, and vanilla environments. Create a [custom bundle using Rollup](https://github.com/rollup/rollup) or your preferred bundler. You can also load directly from [d3plus.org](https://d3plus.org):
 
 ```html
-<script src="https://d3plus.org/js/d3plus-plot.v0.3.full.min.js"></script>
+<script src="https://d3plus.org/js/d3plus-plot.v0.4.full.min.js"></script>
 ```
 
 
@@ -47,6 +47,9 @@ This creates an x/y plot using the default shape ([Circle](https://github.com/d3
 
 ### More Examples
 
+ * [Stacked Bar Chart](http://d3plus.org/examples/d3plus-plot/bar-chart-stacked/)<sup> ***New***</sup>
+ * [Horizontal Bar Chart](http://d3plus.org/examples/d3plus-plot/bar-chart-horizontal/)<sup> ***New***</sup>
+ * [Bar Chart](http://d3plus.org/examples/d3plus-plot/bar-chart/)<sup> ***New***</sup>
  * [Getting Started](http://d3plus.org/examples/d3plus-plot/axis-config/)
  * [Flipping a Stacked Area Chart](http://d3plus.org/examples/d3plus-plot/stacked-area-flip/)
  * [Stacked Area Chart](http://d3plus.org/examples/d3plus-plot/stacked-area/)
@@ -58,6 +61,8 @@ This creates an x/y plot using the default shape ([Circle](https://github.com/d3
 
 <dl>
 <dt><a href="#AreaPlot">AreaPlot</a> ⇐ <code><a href="#Plot">Plot</a></code></dt>
+<dd></dd>
+<dt><a href="#BarChart">BarChart</a> ⇐ <code><a href="#Plot">Plot</a></code></dt>
 <dd></dd>
 <dt><a href="#LinePlot">LinePlot</a> ⇐ <code><a href="#Plot">Plot</a></code></dt>
 <dd></dd>
@@ -83,6 +88,22 @@ new d3plus.Plot()
   .baseline(0)
   .discrete("x")
   .shape("Area")
+```
+<a name="BarChart"></a>
+
+### BarChart ⇐ <code>[Plot](#Plot)</code>
+**Kind**: global class  
+**Extends:** <code>[Plot](#Plot)</code>  
+<a name="new_BarChart_new"></a>
+
+#### new BarChart()
+Creates a line plot based on an array of data.
+
+**Example** *(the equivalent of calling:)*  
+```js
+new d3plus.Plot()
+  .discrete("x")
+  .shape("Line")
 ```
 <a name="LinePlot"></a>
 
@@ -264,4 +285,4 @@ new d3plus.Area()
 ```
 
 
-###### <sub>Documentation generated on Mon, 05 Dec 2016 04:05:21 GMT</sub>
+###### <sub>Documentation generated on Tue, 06 Dec 2016 17:57:59 GMT</sub>
