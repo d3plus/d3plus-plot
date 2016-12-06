@@ -1,4 +1,4 @@
-import {extent, min, max} from "d3-array";
+import {extent, min, max, range} from "d3-array";
 import {nest} from "d3-collection";
 import * as scales from "d3-scale";
 import * as d3Shape from "d3-shape";
@@ -175,7 +175,7 @@ export default class Plot extends Viz {
       xScale = "Time";
     }
     else if (this._discrete === "x") {
-      xDomain = Array.from(new Set(data.map(d => d.x)));
+      xDomain = Array.from(new Set(data.map(d => d.x))).sort();
       xScale = "Ordinal";
     }
 
@@ -190,7 +190,7 @@ export default class Plot extends Viz {
       yScale = "Time";
     }
     else if (this._discrete === "y") {
-      yDomain = Array.from(new Set(data.map(d => d.y)));
+      yDomain = Array.from(new Set(data.map(d => d.y))).sort();
       yScale = "Ordinal";
     }
 
@@ -202,8 +202,8 @@ export default class Plot extends Viz {
       else if (domains[opp][1] < b) domains[opp][1] = b;
     }
 
-    let x = scales[`scale${xScale}`]().domain(domains.x).range([0, width]),
-        y = scales[`scale${yScale}`]().domain(domains.y.reverse()).range([0, height]);
+    let x = scales[`scale${xScale}`]().domain(domains.x).range(range(0, width + 1, width / (domains.x.length - 1))),
+        y = scales[`scale${yScale}`]().domain(domains.y.reverse()).range(range(0, height + 1, height / (domains.y.length - 1)));
 
     const shapeData = nest().key(d => d.shape).entries(data);
     shapeData.forEach(d => {
