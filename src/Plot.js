@@ -2,11 +2,10 @@ import {extent, min, max, range} from "d3-array";
 import {nest} from "d3-collection";
 import * as scales from "d3-scale";
 import * as d3Shape from "d3-shape";
-import {mouse} from "d3-selection";
 
 import {AxisBottom, AxisLeft, date} from "d3plus-axis";
 import {assign as colorAssign} from "d3plus-color";
-import {accessor, assign, closest, constant, elem} from "d3plus-common";
+import {accessor, assign, constant, elem} from "d3plus-common";
 import * as shapes from "d3plus-shape";
 import {Viz} from "d3plus-viz";
 
@@ -94,7 +93,6 @@ export default class Plot extends Viz {
     const height = this._height - this._margin.top - this._margin.bottom,
           opp = this._discrete ? this._discrete === "x" ? "y" : "x" : undefined,
           parent = this._select,
-          that = this,
           transform = `translate(${this._margin.left}, ${this._margin.top})`,
           transition = this._transition,
           width = this._width - this._margin.left - this._margin.right;
@@ -313,21 +311,6 @@ export default class Plot extends Viz {
 
     shapeConfig = assign(shapeConfig, positions);
 
-    /**
-        @desc Handles mouse events for nested shapes, finding the closest discrete data point to send to the defined event function.
-        @private
-    */
-    function mouseEvent(d) {
-      if (!this) return false;
-      if (d.nested && d.values) {
-        const axis = that._discrete,
-              cursor = mouse(that._select.node())[axis === "x" ? 0 : 1],
-              values = d.values.map(d => shapeConfig[axis](d));
-        d = d.values[values.indexOf(closest(cursor, values))];
-      }
-      return this(d.data, d.i);
-    }
-
     const events = Object.keys(this._on);
     shapeData.forEach(d => {
 
@@ -368,9 +351,9 @@ export default class Plot extends Viz {
       const classEvents = events.filter(e => e.includes(`.${d.key}`)),
             globalEvents = events.filter(e => !e.includes(".")),
             shapeEvents = events.filter(e => e.includes(".shape"));
-      for (let e = 0; e < globalEvents.length; e++) s.on(globalEvents[e], mouseEvent.bind(this._on[globalEvents[e]]));
-      for (let e = 0; e < shapeEvents.length; e++) s.on(shapeEvents[e], mouseEvent.bind(this._on[shapeEvents[e]]));
-      for (let e = 0; e < classEvents.length; e++) s.on(classEvents[e], mouseEvent.bind(this._on[classEvents[e]]));
+      for (let e = 0; e < globalEvents.length; e++) s.on(globalEvents[e], d => this._on[globalEvents[e]](d.data, d.i));
+      for (let e = 0; e < shapeEvents.length; e++) s.on(shapeEvents[e], d => this._on[shapeEvents[e]](d.data, d.i));
+      for (let e = 0; e < classEvents.length; e++) s.on(classEvents[e], d => this._on[classEvents[e]](d.data, d.i));
 
       s.config(this._shapeConfig[d.key] ? wrapConfig(this._shapeConfig[d.key]) : {}).render();
       this._shapes.push(s);
