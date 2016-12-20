@@ -1,4 +1,4 @@
-# Getting Started
+# Advanced Axis Configuration
 
 The style and configuration of each axis created by d3plus-plot can be overridden using the [.xConfig( )](https://github.com/d3plus/d3plus-plot#Plot.xConfig) and [.yConfig( )](https://github.com/d3plus/d3plus-plot#Plot.yConfig) methods, which act as a pass-through to each axis' [.config( )](https://github.com/d3plus/d3plus-axis#Axis.config) method. Using the same data as in the [getting started](https://d3plus.org/examples/d3plus-plot/getting-started/) example:
 

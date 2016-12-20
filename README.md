@@ -50,7 +50,7 @@ This creates an x/y plot using the default shape ([Circle](https://github.com/d3
  * [Stacked Bar Chart](http://d3plus.org/examples/d3plus-plot/bar-chart-stacked/)
  * [Horizontal Bar Chart](http://d3plus.org/examples/d3plus-plot/bar-chart-horizontal/)
  * [Bar Chart](http://d3plus.org/examples/d3plus-plot/bar-chart/)
- * [Getting Started](http://d3plus.org/examples/d3plus-plot/axis-config/)
+ * [Advanced Axis Configuration](http://d3plus.org/examples/d3plus-plot/axis-config/)<sup> ***New***</sup>
  * [Flipping a Stacked Area Chart](http://d3plus.org/examples/d3plus-plot/stacked-area-flip/)
  * [Stacked Area Chart](http://d3plus.org/examples/d3plus-plot/stacked-area/)
  * [Area Chart](http://d3plus.org/examples/d3plus-plot/area/)
@@ -285,4 +285,4 @@ new d3plus.Area()
 ```
 
 
-###### <sub>Documentation generated on Tue, 20 Dec 2016 20:39:50 GMT</sub>
+###### <sub>Documentation generated on Tue, 20 Dec 2016 20:43:34 GMT</sub>
