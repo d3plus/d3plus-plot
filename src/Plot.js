@@ -67,6 +67,12 @@ export default class Plot extends Viz {
     this._yAxis = new AxisLeft().align("start");
     this._yTest = new AxisLeft().align("start").gridSize(0);
     this._yConfig = {
+      gridConfig: {
+        stroke: d => {
+          const domain = this._yAxis.domain();
+          return domain[domain.length - 1] === d.id ? "transparent" : "#ccc";
+        }
+      },
       title: "Y Axis"
     };
 
