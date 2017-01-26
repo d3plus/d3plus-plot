@@ -224,10 +224,12 @@ export default class Plot extends Viz {
           xTicks = this._discrete === "x" && !xTime ? domains.x : undefined,
           yTicks = this._discrete === "y" && !yTime ? domains.y : undefined;
 
+    console.log(this._discrete);
+
     const yC = Object.assign({
-      barConfig: {"stroke-width": this._discrete === "y" ? 1 : 0},
-      gridConfig: {"stroke-width": this._discrete === "x" ? 1 : 0},
-      shapeConfig: {stroke: this._discrete ? "transparent" : this._yTest.barConfig.stroke}
+      barConfig: {"stroke-width": !this._discrete || this._discrete === "y" ? 1 : 0},
+      gridConfig: {"stroke-width": !this._discrete || this._discrete === "x" ? 1 : 0},
+      shapeConfig: {stroke: this._discrete ? "transparent" : this._yTest.barConfig().stroke}
     }, this._yConfig);
 
     this._yTest
@@ -244,9 +246,9 @@ export default class Plot extends Viz {
     const xOffset = yBounds.width ? yBounds.width + this._yTest.padding() : undefined;
 
     const xC = Object.assign({
-      barConfig: {"stroke-width": this._discrete === "x" ? 1 : 0},
-      gridConfig: {"stroke-width": this._discrete === "y" ? 1 : 0},
-      shapeConfig: {stroke: this._discrete ? "transparent" : this._yTest.barConfig.stroke}
+      barConfig: {"stroke-width": !this._discrete || this._discrete === "x" ? 1 : 0},
+      gridConfig: {"stroke-width": !this._discrete || this._discrete === "y" ? 1 : 0},
+      shapeConfig: {stroke: this._discrete ? "transparent" : this._xTest.barConfig().stroke}
     }, this._xConfig);
 
     this._xTest
