@@ -4,7 +4,7 @@ import * as scales from "d3-scale";
 import * as d3Shape from "d3-shape";
 
 import {AxisBottom, AxisLeft, date} from "d3plus-axis";
-import {assign as colorAssign} from "d3plus-color";
+import {colorAssign} from "d3plus-color";
 import {accessor, assign, constant, elem} from "d3plus-common";
 import * as shapes from "d3plus-shape";
 import {Viz} from "d3plus-viz";
