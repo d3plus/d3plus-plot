@@ -3,7 +3,7 @@ import {nest} from "d3-collection";
 import * as scales from "d3-scale";
 import * as d3Shape from "d3-shape";
 
-import {AxisBottom, AxisLeft, date} from "d3plus-axis";
+import {AxisBottom, AxisLeft, AxisRight, AxisTop, date} from "d3plus-axis";
 import {colorAssign} from "d3plus-color";
 import {accessor, assign, constant, elem} from "d3plus-common";
 import * as shapes from "d3plus-shape";
@@ -59,12 +59,14 @@ export default class Plot extends Viz {
     this._stackOrder = d3Shape.stackOrderNone;
     this._x = accessor("x");
     this._xAxis = new AxisBottom().align("end");
+    this._x2Axis = new AxisTop().align("start");
     this._xTest = new AxisBottom().align("end").gridSize(0);
     this._xConfig = {
       title: "X Axis"
     };
     this._y = accessor("y");
     this._yAxis = new AxisLeft().align("start");
+    this._y2Axis = new AxisRight().align("end");
     this._yTest = new AxisLeft().align("start").gridSize(0);
     this._yConfig = {
       gridConfig: {
@@ -224,8 +226,6 @@ export default class Plot extends Viz {
           xTicks = this._discrete === "x" && !xTime ? domains.x : undefined,
           yTicks = this._discrete === "y" && !yTime ? domains.y : undefined;
 
-    console.log(this._discrete);
-
     const yC = Object.assign({
       barConfig: {"stroke-width": !this._discrete || this._discrete === "y" ? 1 : 0},
       gridConfig: {"stroke-width": !this._discrete || this._discrete === "x" ? 1 : 0},
@@ -262,12 +262,14 @@ export default class Plot extends Viz {
       .config(xC)
       .render();
 
+    const xGroup = elem("g.d3plus-plot-x-axis", {parent, transition, enter: {transform}, update: {transform}});
+
     this._xAxis
       .domain(xDomain)
       .height(height)
       .range([xOffset, undefined])
       .scale(xScale.toLowerCase())
-      .select(elem("g.d3plus-plot-x-axis", {parent, transition, enter: {transform}, update: {transform}}).node())
+      .select(xGroup.node())
       .ticks(xTicks)
       .width(width)
       .config(xC)
@@ -275,15 +277,49 @@ export default class Plot extends Viz {
 
     x = this._xAxis._d3Scale;
 
+    this._x2Axis
+      .domain(xDomain)
+      .gridSize(0)
+      .height(height)
+      .labels([])
+      .range([xOffset, undefined])
+      .scale(xScale.toLowerCase())
+      .select(xGroup.node())
+      .ticks([])
+      .width(x.range()[x.range().length - 1] + this._xAxis.padding())
+      .config(xC)
+      .title(false)
+      .tickSize(0)
+      .barConfig({"stroke-width": this._discrete ? 0 : this._xAxis.barConfig()["stroke-width"]})
+      .render();
+
+    const yGroup = elem("g.d3plus-plot-y-axis", {parent, transition, enter: {transform}, update: {transform}});
+
     this._yAxis
       .domain(yDomain)
       .height(height)
       .range([this._xAxis.outerBounds().y, this._xTest.outerBounds().y])
       .scale(yScale.toLowerCase())
-      .select(elem("g.d3plus-plot-y-axis", {parent, transition, enter: {transform}, update: {transform}}).node())
+      .select(yGroup.node())
       .ticks(yTicks)
       .width(x.range()[x.range().length - 1] + this._xAxis.padding())
       .config(yC)
+      .render();
+
+    this._y2Axis
+      .domain(yDomain)
+      .gridSize(0)
+      .height(height)
+      .labels([])
+      .range([this._xAxis.outerBounds().y, this._xTest.outerBounds().y])
+      .scale(xScale.toLowerCase())
+      .select(yGroup.node())
+      .ticks([])
+      .width(x.range()[x.range().length - 1] + this._xAxis.padding())
+      .config(yC)
+      .title(false)
+      .tickSize(0)
+      .barConfig({"stroke-width": this._discrete ? 0 : this._yAxis.barConfig()["stroke-width"]})
       .render();
 
     y = this._yAxis._d3Scale;
