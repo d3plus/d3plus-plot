@@ -224,6 +224,12 @@ export default class Plot extends Viz {
           xTicks = this._discrete === "x" && !xTime ? domains.x : undefined,
           yTicks = this._discrete === "y" && !yTime ? domains.y : undefined;
 
+    const yC = Object.assign({
+      barConfig: {"stroke-width": this._discrete === "y" ? 1 : 0},
+      gridConfig: {"stroke-width": this._discrete === "x" ? 1 : 0},
+      shapeConfig: {stroke: this._discrete ? "transparent" : this._yTest.barConfig.stroke}
+    }, this._yConfig);
+
     this._yTest
       .domain(yDomain)
       .height(height)
@@ -231,11 +237,17 @@ export default class Plot extends Viz {
       .select(testGroup.node())
       .ticks(yTicks)
       .width(width)
-      .config(this._yConfig)
+      .config(yC)
       .render();
 
     const yBounds = this._yTest.outerBounds();
     const xOffset = yBounds.width ? yBounds.width + this._yTest.padding() : undefined;
+
+    const xC = Object.assign({
+      barConfig: {"stroke-width": this._discrete === "x" ? 1 : 0},
+      gridConfig: {"stroke-width": this._discrete === "y" ? 1 : 0},
+      shapeConfig: {stroke: this._discrete ? "transparent" : this._yTest.barConfig.stroke}
+    }, this._xConfig);
 
     this._xTest
       .domain(xDomain)
@@ -245,7 +257,7 @@ export default class Plot extends Viz {
       .select(testGroup.node())
       .ticks(xTicks)
       .width(width)
-      .config(this._xConfig)
+      .config(xC)
       .render();
 
     this._xAxis
@@ -256,7 +268,7 @@ export default class Plot extends Viz {
       .select(elem("g.d3plus-plot-x-axis", {parent, transition, enter: {transform}, update: {transform}}).node())
       .ticks(xTicks)
       .width(width)
-      .config(this._xConfig)
+      .config(xC)
       .render();
 
     x = this._xAxis._d3Scale;
@@ -269,7 +281,7 @@ export default class Plot extends Viz {
       .select(elem("g.d3plus-plot-y-axis", {parent, transition, enter: {transform}, update: {transform}}).node())
       .ticks(yTicks)
       .width(x.range()[x.range().length - 1] + this._xAxis.padding())
-      .config(this._yConfig)
+      .config(yC)
       .render();
 
     y = this._yAxis._d3Scale;
