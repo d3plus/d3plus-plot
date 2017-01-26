@@ -79,12 +79,12 @@ export default class Plot extends Viz {
   }
 
   /**
-      Extends the render behavior of the abstract Viz class.
+      Extends the draw behavior of the abstract Viz class.
       @private
   */
-  render(callback) {
+  _draw(callback) {
 
-    super.render(callback);
+    super._draw(callback);
 
     const data = this._filteredData.map((d, i) => ({
       __d3plus__: true,
