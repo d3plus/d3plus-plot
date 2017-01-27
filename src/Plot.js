@@ -278,6 +278,7 @@ export default class Plot extends Viz {
     x = this._xAxis._d3Scale;
 
     this._x2Axis
+      .config(xC)
       .domain(xDomain)
       .gridSize(0)
       .height(height)
@@ -287,7 +288,6 @@ export default class Plot extends Viz {
       .select(xGroup.node())
       .ticks([])
       .width(x.range()[x.range().length - 1] + this._xAxis.padding())
-      .config(xC)
       .title(false)
       .tickSize(0)
       .barConfig({"stroke-width": this._discrete ? 0 : this._xAxis.barConfig()["stroke-width"]})
@@ -307,6 +307,7 @@ export default class Plot extends Viz {
       .render();
 
     this._y2Axis
+      .config(yC)
       .domain(yDomain)
       .gridSize(0)
       .height(height)
@@ -316,7 +317,6 @@ export default class Plot extends Viz {
       .select(yGroup.node())
       .ticks([])
       .width(x.range()[x.range().length - 1] + this._xAxis.padding())
-      .config(yC)
       .title(false)
       .tickSize(0)
       .barConfig({"stroke-width": this._discrete ? 0 : this._yAxis.barConfig()["stroke-width"]})
