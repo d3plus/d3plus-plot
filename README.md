@@ -12,7 +12,7 @@ A reusable javascript x/y plot built on D3.
 If you use NPM, `npm install d3plus-plot`. Otherwise, download the [latest release](https://github.com/d3plus/d3plus-plot/releases/latest). The released bundle supports AMD, CommonJS, and vanilla environments. Create a [custom bundle using Rollup](https://github.com/rollup/rollup) or your preferred bundler. You can also load directly from [d3plus.org](https://d3plus.org):
 
 ```html
-<script src="https://d3plus.org/js/d3plus-plot.v0.4.full.min.js"></script>
+<script src="https://d3plus.org/js/d3plus-plot.v0.5.full.min.js"></script>
 ```
 
 
@@ -47,14 +47,14 @@ This creates an x/y plot using the default shape ([Circle](https://github.com/d3
 
 ### More Examples
 
- * [Stacked Bar Chart](http://d3plus.org/examples/d3plus-plot/bar-chart-stacked/)
+ * [Area Chart](http://d3plus.org/examples/d3plus-plot/area/)
+ * [Advanced Axis Configuration](http://d3plus.org/examples/d3plus-plot/axis-config/)
  * [Horizontal Bar Chart](http://d3plus.org/examples/d3plus-plot/bar-chart-horizontal/)
+ * [Stacked Bar Chart](http://d3plus.org/examples/d3plus-plot/bar-chart-stacked/)
  * [Bar Chart](http://d3plus.org/examples/d3plus-plot/bar-chart/)
- * [Advanced Axis Configuration](http://d3plus.org/examples/d3plus-plot/axis-config/)<sup> ***New***</sup>
+ * [Line Plot](http://d3plus.org/examples/d3plus-plot/line-plot/)
  * [Flipping a Stacked Area Chart](http://d3plus.org/examples/d3plus-plot/stacked-area-flip/)
  * [Stacked Area Chart](http://d3plus.org/examples/d3plus-plot/stacked-area/)
- * [Area Chart](http://d3plus.org/examples/d3plus-plot/area/)
- * [Line Plot](http://d3plus.org/examples/d3plus-plot/line-plot/)
 
 ## API Reference
 ### Classes
@@ -285,4 +285,4 @@ new d3plus.Area()
 ```
 
 
-###### <sub>Documentation generated on Tue, 20 Dec 2016 20:43:34 GMT</sub>
+###### <sub>Documentation generated on Sat, 28 Jan 2017 17:46:20 GMT</sub>
