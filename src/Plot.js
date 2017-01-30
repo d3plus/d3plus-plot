@@ -317,7 +317,7 @@ export default class Plot extends Viz {
       .height(height)
       .labels([])
       .range([this._xAxis.outerBounds().y, this._xTest.outerBounds().y])
-      .scale(xScale.toLowerCase())
+      .scale(yScale.toLowerCase())
       .select(yGroup.node())
       .ticks([])
       .width(x.range()[x.range().length - 1] + this._xAxis.padding())
