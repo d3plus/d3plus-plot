@@ -285,4 +285,4 @@ new d3plus.Area()
 ```
 
 
-###### <sub>Documentation generated on Mon, 30 Jan 2017 21:47:31 GMT</sub>
+###### <sub>Documentation generated on Mon, 30 Jan 2017 22:00:45 GMT</sub>
