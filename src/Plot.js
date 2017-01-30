@@ -401,7 +401,7 @@ export default class Plot extends Viz {
 
             const offset = space / 2 - barSize / 2;
 
-            const xMod = scales.scaleOrdinal()
+            const xMod = scales.scaleLinear()
               .domain([0, uniqueIds.length - 1])
               .range([-offset, offset]);
 
