@@ -92,6 +92,8 @@ export default class Plot extends Viz {
 
     super._draw(callback);
 
+    if (!this._filteredData.length) return this;
+
     const data = this._filteredData.map((d, i) => ({
       __d3plus__: true,
       data: d,
