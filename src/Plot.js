@@ -1,4 +1,4 @@
-import {extent, min, max, range} from "d3-array";
+import {extent, max, merge, min, range} from "d3-array";
 import {nest} from "d3-collection";
 import * as scales from "d3-scale";
 import * as d3Shape from "d3-shape";
@@ -390,26 +390,32 @@ export default class Plot extends Viz {
 
         let barSize = space;
 
-        if (!this._stacked) {
+        const barId = d => this._stacked
+                    ? `${this._groupBy.length > 1 ? this._ids(d).slice(0, -1).join("_") : "group"}`
+                    : `${this._ids(d).join("_")}`;
 
-          const ids = d.values.map(d => this._ids(d).join("_"));
-          const uniqueIds = Array.from(new Set(ids));
+        const groups = nest()
+          .key(d => d.y)
+          .key(barId)
+          .entries(d.values);
 
-          if (max(nest().key(d => d.y).entries(d.values).map(d => d.values.length)) === 1) {
-            s[this._discrete]((d, i) => shapeConfig[this._discrete](d, i));
-          }
-          else {
-            barSize /= uniqueIds.length;
+        const ids = merge(groups.map(d => d.values.map(v => v.key)));
+        const uniqueIds = Array.from(new Set(ids));
 
-            const offset = space / 2 - barSize / 2;
+        if (max(groups.map(d => d.values.length)) === 1) {
+          s[this._discrete]((d, i) => shapeConfig[this._discrete](d, i));
+        }
+        else {
 
-            const xMod = scales.scaleLinear()
-              .domain([0, uniqueIds.length - 1])
-              .range([-offset, offset]);
+          barSize /= uniqueIds.length;
 
-            s[this._discrete]((d, i) => shapeConfig[this._discrete](d, i) + xMod(uniqueIds.indexOf(this._ids(d).join("_"))));
-          }
+          const offset = space / 2 - barSize / 2;
 
+          const xMod = scales.scaleLinear()
+            .domain([0, uniqueIds.length - 1])
+            .range([-offset, offset]);
+
+          s[this._discrete]((d, i) => shapeConfig[this._discrete](d, i) + xMod(uniqueIds.indexOf(barId(d))));
         }
 
         s.width(barSize);
