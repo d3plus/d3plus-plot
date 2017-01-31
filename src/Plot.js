@@ -392,10 +392,10 @@ export default class Plot extends Viz {
 
         if (!this._stacked) {
 
-          const ids = d.values.map(d => d.id);
+          const ids = d.values.map(d => this._ids(d).join("_"));
           const uniqueIds = Array.from(new Set(ids));
 
-          if (ids.length === uniqueIds.length) {
+          if (max(nest().key(d => d.y).entries(d.values).map(d => d.values.length)) === 1) {
             s[this._discrete]((d, i) => shapeConfig[this._discrete](d, i));
           }
           else {
@@ -407,7 +407,7 @@ export default class Plot extends Viz {
               .domain([0, uniqueIds.length - 1])
               .range([-offset, offset]);
 
-            s[this._discrete]((d, i) => shapeConfig[this._discrete](d, i) + xMod(uniqueIds.indexOf(d.id)));
+            s[this._discrete]((d, i) => shapeConfig[this._discrete](d, i) + xMod(uniqueIds.indexOf(this._ids(d).join("_"))));
           }
 
         }
