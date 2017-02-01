@@ -386,7 +386,7 @@ export default class Plot extends Viz {
         const range = scale.range();
         if (vals.length > 1) space = scale(vals[1]) - scale(vals[0]);
         else space = range[range.length - 1] - range[0];
-        space -= 20;
+        space -= this._barPadding;
 
         let barSize = space;
 
