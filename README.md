@@ -94,6 +94,11 @@ new d3plus.Plot()
 ### BarChart ⇐ <code>[Plot](#Plot)</code>
 **Kind**: global class  
 **Extends:** <code>[Plot](#Plot)</code>  
+
+* [BarChart](#BarChart) ⇐ <code>[Plot](#Plot)</code>
+    * [new BarChart()](#new_BarChart_new)
+    * [.barPadding([*value*])](#BarChart.barPadding)
+
 <a name="new_BarChart_new"></a>
 
 #### new BarChart()
@@ -105,6 +110,17 @@ new d3plus.Plot()
   .discrete("x")
   .shape("Line")
 ```
+<a name="BarChart.barPadding"></a>
+
+#### BarChart.barPadding([*value*])
+Sets the pixel space between groups of bars.
+
+**Kind**: static method of <code>[BarChart](#BarChart)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [*value*] | <code>Number</code> | <code>20</code> | 
+
 <a name="LinePlot"></a>
 
 ### LinePlot ⇐ <code>[Plot](#Plot)</code>
@@ -285,4 +301,4 @@ new d3plus.Area()
 ```
 
 
-###### <sub>Documentation generated on Tue, 31 Jan 2017 20:59:44 GMT</sub>
+###### <sub>Documentation generated on Wed, 01 Feb 2017 03:29:50 GMT</sub>
