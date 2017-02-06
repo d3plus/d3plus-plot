@@ -94,11 +94,16 @@ export default class Plot extends Viz {
 
     if (!this._filteredData.length) return this;
 
+    const stackGroup = (d, i) => this._stacked
+                ? `${this._groupBy.length > 1 ? this._ids(d, i).slice(0, -1).join("_") : "group"}`
+                : `${this._ids(d, i).join("_")}`;
+
     const data = this._filteredData.map((d, i) => ({
       __d3plus__: true,
       data: d,
+      group: stackGroup(d, i),
       i,
-      id: this._id(d, i),
+      id: this._ids(d, i).join("_"),
       shape: this._shape(d, i),
       x: this._x(d, i),
       y: this._y(d, i)
@@ -127,7 +132,7 @@ export default class Plot extends Viz {
       stackKeys = Array.from(new Set(data.map(d => d.id)));
 
       stackData = nest()
-        .key(d => d[this._discrete])
+        .key(d => `${d[this._discrete]}_${d.group}`)
         .entries(data)
         .sort((a, b) => a.key - b.key);
 
@@ -145,6 +150,7 @@ export default class Plot extends Viz {
                 const fillerPoint = {
                   __d3plus__: true,
                   data: d.data,
+                  group: stackGroup(d.data, d.i),
                   id: k,
                   shape: d.shape,
                   [this._discrete]: g[0][this._discrete],
@@ -361,12 +367,12 @@ export default class Plot extends Viz {
       const scale = opp === "x" ? x : y;
       positions[`${opp}`] = positions[`${opp}0`] = d => {
         const dataIndex = stackKeys.indexOf(d.id),
-              discreteIndex = discreteKeys.indexOf(`${d[this._discrete]}`);
+              discreteIndex = discreteKeys.indexOf(`${d[this._discrete]}_${d.group}`);
         return dataIndex >= 0 ? scale(stackData[dataIndex][discreteIndex][0]) : scale(0);
       };
       positions[`${opp}1`] = d => {
         const dataIndex = stackKeys.indexOf(d.id),
-              discreteIndex = discreteKeys.indexOf(`${d[this._discrete]}`);
+              discreteIndex = discreteKeys.indexOf(`${d[this._discrete]}_${d.group}`);
         return dataIndex >= 0 ? scale(stackData[dataIndex][discreteIndex][1]) : scale(0);
       };
     }
@@ -390,13 +396,9 @@ export default class Plot extends Viz {
 
         let barSize = space;
 
-        const barId = d => this._stacked
-                    ? `${this._groupBy.length > 1 ? this._ids(d).slice(0, -1).join("_") : "group"}`
-                    : `${this._ids(d).join("_")}`;
-
         const groups = nest()
           .key(d => d.y)
-          .key(barId)
+          .key(d => d.group)
           .entries(d.values);
 
         const ids = merge(groups.map(d => d.values.map(v => v.key)));
@@ -415,7 +417,8 @@ export default class Plot extends Viz {
             .domain([0, uniqueIds.length - 1])
             .range([-offset, offset]);
 
-          s[this._discrete]((d, i) => shapeConfig[this._discrete](d, i) + xMod(uniqueIds.indexOf(barId(d))));
+          s[this._discrete]((d, i) => shapeConfig[this._discrete](d, i) + xMod(uniqueIds.indexOf(d.group)));
+
         }
 
         s.width(barSize);
