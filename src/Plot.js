@@ -119,26 +119,28 @@ export default class Plot extends Viz {
     const xTime = this._time && data[0].x === this._time(data[0].data, data[0].i),
           yTime = this._time && data[0].y === this._time(data[0].data, data[0].i);
 
-    if (xTime || yTime) {
-      data.forEach(d => {
-        if (xTime) d.x = date(d.x);
-        if (yTime) d.y = date(d.y);
-      });
+    const discreteTime = this._discrete === "x" && xTime || this._discrete === "y" && yTime;
+
+    for (let i = 0; i < data.length; i++) {
+      const d = data[i];
+      if (xTime) d.x = date(d.x);
+      if (yTime) d.y = date(d.y);
+      d.discrete = d.shape === "Bar" ? `${d[this._discrete]}_${d.group}` : `${d[this._discrete]}`;
     }
 
     let discreteKeys, domains, stackData, stackKeys;
     if (this._stacked) {
 
+      discreteKeys = Array.from(new Set(data.map(d => d.discrete)))
+        .sort((a, b) => discreteTime ? Number(new Date(a)) - Number(new Date(b)) : a - b);
+
       stackKeys = Array.from(new Set(data.map(d => d.id)));
 
       stackData = nest()
-        .key(d => `${d[this._discrete]}_${d.group}`)
+        .key(d => d.discrete)
         .entries(data)
-        .sort((a, b) => a.key - b.key);
-
-      discreteKeys = stackData.map(d => d.key);
-
-      stackData = stackData.map(d => d.values);
+        .sort((a, b) => a.values[0][this._discrete] - b.values[0][this._discrete])
+        .map(d => d.values);
 
       stackData.forEach(g => {
         const ids = Array.from(new Set(g.map(d => d.id)));
@@ -147,10 +149,12 @@ export default class Plot extends Viz {
             if (!ids.includes(k)) {
               const d = data.filter(d => d.id === k)[0];
               if (d.shape === "Area") {
+                const group = stackGroup(d.data, d.i);
                 const fillerPoint = {
                   __d3plus__: true,
                   data: d.data,
-                  group: stackGroup(d.data, d.i),
+                  discrete: d.shape === "Bar" ? `${g[0][this._discrete]}_${group}` : `${g[0][this._discrete]}`,
+                  group,
                   id: k,
                   shape: d.shape,
                   [this._discrete]: g[0][this._discrete],
@@ -367,12 +371,12 @@ export default class Plot extends Viz {
       const scale = opp === "x" ? x : y;
       positions[`${opp}`] = positions[`${opp}0`] = d => {
         const dataIndex = stackKeys.indexOf(d.id),
-              discreteIndex = discreteKeys.indexOf(`${d[this._discrete]}_${d.group}`);
+              discreteIndex = discreteKeys.indexOf(d.discrete);
         return dataIndex >= 0 ? scale(stackData[dataIndex][discreteIndex][0]) : scale(0);
       };
       positions[`${opp}1`] = d => {
         const dataIndex = stackKeys.indexOf(d.id),
-              discreteIndex = discreteKeys.indexOf(`${d[this._discrete]}_${d.group}`);
+              discreteIndex = discreteKeys.indexOf(d.discrete);
         return dataIndex >= 0 ? scale(stackData[dataIndex][discreteIndex][1]) : scale(0);
       };
     }
