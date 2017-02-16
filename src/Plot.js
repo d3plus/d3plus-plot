@@ -119,8 +119,6 @@ export default class Plot extends Viz {
     const xTime = this._time && data[0].x === this._time(data[0].data, data[0].i),
           yTime = this._time && data[0].y === this._time(data[0].data, data[0].i);
 
-    const discreteTime = this._discrete === "x" && xTime || this._discrete === "y" && yTime;
-
     for (let i = 0; i < data.length; i++) {
       const d = data[i];
       if (xTime) d.x = date(d.x);
@@ -131,8 +129,11 @@ export default class Plot extends Viz {
     let discreteKeys, domains, stackData, stackKeys;
     if (this._stacked) {
 
-      discreteKeys = Array.from(new Set(data.map(d => d.discrete)))
-        .sort((a, b) => discreteTime ? Number(new Date(a)) - Number(new Date(b)) : a - b);
+      discreteKeys = Array.from(new Set(data.sort((a, b) => {
+        const a1 = a[this._discrete], b1 = b[this._discrete];
+        if (a1 - b1 !== 0) return a1 - b1;
+        return a.group - b.group;
+      }).map(d => d.discrete)));
 
       stackKeys = Array.from(new Set(data.map(d => d.id)));
 
