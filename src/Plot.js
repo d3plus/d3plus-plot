@@ -103,7 +103,7 @@ export default class Plot extends Viz {
       data: d,
       group: stackGroup(d, i),
       i,
-      id: this._ids(d, i).join("_"),
+      id: this._ids(d, i).slice(0, this._depth + 1).join("_"),
       shape: this._shape(d, i),
       x: this._x(d, i),
       y: this._y(d, i)
