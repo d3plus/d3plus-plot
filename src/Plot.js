@@ -29,12 +29,14 @@ export default class Plot extends Viz {
   constructor() {
 
     super();
+    this._barPadding = 5;
     this._buffer = {
       Bar: BarBuffer,
       Circle: CircleBuffer,
       Line: LineBuffer,
       Rect: RectBuffer
     };
+    this._groupPadding = 20;
     this._shape = constant("Circle");
     this._shapeConfig = assign(this._shapeConfig, {
       Area: {
@@ -397,7 +399,7 @@ export default class Plot extends Viz {
         const range = scale.range();
         if (vals.length > 1) space = scale(vals[1]) - scale(vals[0]);
         else space = range[range.length - 1] - range[0];
-        space -= this._barPadding;
+        space -= this._groupPadding;
 
         let barSize = space;
 
@@ -414,7 +416,7 @@ export default class Plot extends Viz {
         }
         else {
 
-          barSize /= uniqueIds.length;
+          barSize = (barSize - this._barPadding * uniqueIds.length - 1) / uniqueIds.length;
 
           const offset = space / 2 - barSize / 2;
 
@@ -449,6 +451,15 @@ export default class Plot extends Viz {
 
   /**
       @memberof Plot
+      @desc Sets the pixel space between each bar in a group of bars.
+      @param {Number} [*value* = 5]
+  */
+  barPadding(_) {
+    return arguments.length ? (this._barPadding = _, this) : this._barPadding;
+  }
+
+  /**
+      @memberof Plot
       @desc If *value* is specified, sets the baseline for the x/y plot and returns the current class instance. If *value* is not specified, returns the current baseline.
       @param {Number} [*value*]
   */
@@ -463,6 +474,15 @@ export default class Plot extends Viz {
   */
   discrete(_) {
     return arguments.length ? (this._discrete = _, this) : this._discrete;
+  }
+
+  /**
+      @memberof Plot
+      @desc Sets the pixel space between groups of bars.
+      @param {Number} [*value* = 20]
+  */
+  groupPadding(_) {
+    return arguments.length ? (this._groupPadding = _, this) : this._groupPadding;
   }
 
   /**

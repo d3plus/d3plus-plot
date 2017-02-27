@@ -21,21 +21,11 @@ export default class BarChart extends Plot {
   constructor() {
 
     super();
-    this._barPadding = 20;
     this._baseline = 0;
     this._discrete = "x";
     this._shape = constant("Bar");
     this.x("x");
 
-  }
-
-  /**
-      @memberof BarChart
-      @desc Sets the pixel space between groups of bars.
-      @param {Number} [*value* = 20]
-  */
-  barPadding(_) {
-    return arguments.length ? (this._barPadding = _, this) : this._barPadding;
   }
 
 }
