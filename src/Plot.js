@@ -402,7 +402,7 @@ export default class Plot extends Viz {
         let barSize = space;
 
         const groups = nest()
-          .key(d => d.y)
+          .key(d => d[this._discrete])
           .key(d => d.group)
           .entries(d.values);
 
