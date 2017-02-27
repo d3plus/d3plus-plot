@@ -60,7 +60,7 @@ export default class Plot extends Viz {
       }
     });
     this._stackOffset = d3Shape.stackOffsetNone;
-    this._stackOrder = d3Shape.stackOrderNone;
+    this._stackOrder = d3Shape.stackOrderDescending;
     this._x = accessor("x");
     this._xAxis = new AxisBottom().align("end");
     this._x2Axis = new AxisTop().align("start");
@@ -477,7 +477,7 @@ export default class Plot extends Viz {
   /**
       @memberof Plot
       @desc If *value* is specified, sets the stack offset and returns the current class instance. If *value* is not specified, returns the current stack offset function.
-      @param {Function|String} [*value* = "none"]
+      @param {Function|String} [*value* = "descending"]
   */
   stackOffset(_) {
     return arguments.length ? (this._stackOffset = typeof _ === "function" ? _ : d3Shape[`stackOffset${_.charAt(0).toUpperCase() + _.slice(1)}`], this) : this._stackOffset;
