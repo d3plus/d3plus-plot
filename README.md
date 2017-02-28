@@ -138,9 +138,11 @@ new d3plus.Plot()
     * [.stackOrder([*value*])](#Plot.stackOrder)
     * [.x([*value*])](#Plot.x)
     * [.xConfig([*value*])](#Plot.xConfig)
+    * [.x2Config([*value*])](#Plot.x2Config)
     * [.xDomain([*value*])](#Plot.xDomain)
     * [.y([*value*])](#Plot.y)
     * [.yConfig([*value*])](#Plot.yConfig)
+    * [.y2Config([*value*])](#Plot.y2Config)
     * [.yDomain([*value*])](#Plot.yDomain)
 
 <a name="new_Plot_new"></a>
@@ -247,6 +249,17 @@ If *value* is specified, sets the config method for the x-axis and returns the c
 | --- | --- |
 | [*value*] | <code>Object</code> | 
 
+<a name="Plot.x2Config"></a>
+
+#### Plot.x2Config([*value*])
+If *value* is specified, sets the config method for the secondary x-axis and returns the current class instance. If *value* is not specified, returns the current secondary x-axis configuration.
+
+**Kind**: static method of <code>[Plot](#Plot)</code>  
+
+| Param | Type |
+| --- | --- |
+| [*value*] | <code>Object</code> | 
+
 <a name="Plot.xDomain"></a>
 
 #### Plot.xDomain([*value*])
@@ -274,6 +287,17 @@ If *value* is specified, sets the y accessor to the specified function or number
 #### Plot.yConfig([*value*])
 If *value* is specified, sets the config method for the y-axis and returns the current class instance. If *value* is not specified, returns the current y-axis configuration.
 Note:* If a "domain" array is passed to the y-axis config, it will be reversed.
+
+**Kind**: static method of <code>[Plot](#Plot)</code>  
+
+| Param | Type |
+| --- | --- |
+| [*value*] | <code>Object</code> | 
+
+<a name="Plot.y2Config"></a>
+
+#### Plot.y2Config([*value*])
+If *value* is specified, sets the config method for the secondary y-axis and returns the current class instance. If *value* is not specified, returns the current secondary y-axis configuration.
 
 **Kind**: static method of <code>[Plot](#Plot)</code>  
 
@@ -309,4 +333,4 @@ new d3plus.Area()
 ```
 
 
-###### <sub>Documentation generated on Tue, 28 Feb 2017 16:40:00 GMT</sub>
+###### <sub>Documentation generated on Tue, 28 Feb 2017 17:19:59 GMT</sub>
