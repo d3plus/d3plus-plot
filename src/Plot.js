@@ -100,7 +100,7 @@ export default class Plot extends Viz {
                 ? `${this._groupBy.length > 1 ? this._ids(d, i).slice(0, -1).join("_") : "group"}`
                 : `${this._ids(d, i).join("_")}`;
 
-    const data = this._filteredData.map((d, i) => ({
+    let data = this._filteredData.map((d, i) => ({
       __d3plus__: true,
       data: d,
       group: stackGroup(d, i),
@@ -131,18 +131,18 @@ export default class Plot extends Viz {
     let discreteKeys, domains, stackData, stackKeys;
     if (this._stacked) {
 
-      discreteKeys = Array.from(new Set(data.sort((a, b) => {
+      data = data.sort((a, b) => {
         const a1 = a[this._discrete], b1 = b[this._discrete];
         if (a1 - b1 !== 0) return a1 - b1;
         return a.group - b.group;
-      }).map(d => d.discrete)));
+      });
 
+      discreteKeys = Array.from(new Set(data.map(d => d.discrete)));
       stackKeys = Array.from(new Set(data.map(d => d.id)));
 
       stackData = nest()
         .key(d => d.discrete)
         .entries(data)
-        .sort((a, b) => a.values[0][this._discrete] - b.values[0][this._discrete])
         .map(d => d.values);
 
       stackData.forEach(g => {
