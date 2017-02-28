@@ -94,11 +94,6 @@ new d3plus.Plot()
 ### BarChart ⇐ <code>[Plot](#Plot)</code>
 **Kind**: global class  
 **Extends:** <code>[Plot](#Plot)</code>  
-
-* [BarChart](#BarChart) ⇐ <code>[Plot](#Plot)</code>
-    * [new BarChart()](#new_BarChart_new)
-    * [.barPadding([*value*])](#BarChart.barPadding)
-
 <a name="new_BarChart_new"></a>
 
 #### new BarChart()
@@ -110,17 +105,6 @@ new d3plus.Plot()
   .discrete("x")
   .shape("Line")
 ```
-<a name="BarChart.barPadding"></a>
-
-#### BarChart.barPadding([*value*])
-Sets the pixel space between groups of bars.
-
-**Kind**: static method of <code>[BarChart](#BarChart)</code>  
-
-| Param | Type | Default |
-| --- | --- | --- |
-| [*value*] | <code>Number</code> | <code>20</code> | 
-
 <a name="LinePlot"></a>
 
 ### LinePlot ⇐ <code>[Plot](#Plot)</code>
@@ -145,8 +129,10 @@ new d3plus.Plot()
 
 * [Plot](#Plot) ⇐ <code>Viz</code>
     * [new Plot()](#new_Plot_new)
+    * [.barPadding([*value*])](#Plot.barPadding)
     * [.baseline([*value*])](#Plot.baseline)
     * [.discrete([*value*])](#Plot.discrete)
+    * [.groupPadding([*value*])](#Plot.groupPadding)
     * [.stacked([*value*])](#Plot.stacked)
     * [.stackOffset([*value*])](#Plot.stackOffset)
     * [.stackOrder([*value*])](#Plot.stackOrder)
@@ -161,6 +147,17 @@ new d3plus.Plot()
 
 #### new Plot()
 Creates an x/y plot based on an array of data.
+
+<a name="Plot.barPadding"></a>
+
+#### Plot.barPadding([*value*])
+Sets the pixel space between each bar in a group of bars.
+
+**Kind**: static method of <code>[Plot](#Plot)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [*value*] | <code>Number</code> | <code>5</code> | 
 
 <a name="Plot.baseline"></a>
 
@@ -184,6 +181,17 @@ If *value* is specified, sets the discrete axis to the specified string and retu
 | --- | --- |
 | [*value*] | <code>String</code> | 
 
+<a name="Plot.groupPadding"></a>
+
+#### Plot.groupPadding([*value*])
+Sets the pixel space between groups of bars.
+
+**Kind**: static method of <code>[Plot](#Plot)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [*value*] | <code>Number</code> | <code>20</code> | 
+
 <a name="Plot.stacked"></a>
 
 #### Plot.stacked([*value*])
@@ -204,7 +212,7 @@ If *value* is specified, sets the stack offset and returns the current class ins
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [*value*] | <code>function</code> &#124; <code>String</code> | <code>&quot;none&quot;</code> | 
+| [*value*] | <code>function</code> &#124; <code>String</code> | <code>&quot;descending&quot;</code> | 
 
 <a name="Plot.stackOrder"></a>
 
@@ -301,4 +309,4 @@ new d3plus.Area()
 ```
 
 
-###### <sub>Documentation generated on Thu, 16 Feb 2017 22:56:56 GMT</sub>
+###### <sub>Documentation generated on Tue, 28 Feb 2017 16:40:00 GMT</sub>
