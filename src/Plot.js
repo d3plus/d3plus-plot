@@ -245,7 +245,7 @@ export default class Plot extends Viz {
           xTicks = this._discrete === "x" && !xTime ? domains.x : undefined,
           yTicks = this._discrete === "y" && !yTime ? domains.y : undefined;
 
-    const yC = Object.assign({
+    const yC = assign({
       barConfig: {"stroke-width": !this._discrete || this._discrete === "y" ? 1 : 0},
       gridConfig: {"stroke-width": !this._discrete || this._discrete === "x" ? 1 : 0},
       shapeConfig: {stroke: this._discrete ? "transparent" : this._yTest.barConfig().stroke}
@@ -264,7 +264,7 @@ export default class Plot extends Viz {
     const yBounds = this._yTest.outerBounds();
     const xOffset = yBounds.width ? yBounds.width + this._yTest.padding() : undefined;
 
-    const xC = Object.assign({
+    const xC = assign({
       barConfig: {"stroke-width": !this._discrete || this._discrete === "x" ? 1 : 0},
       gridConfig: {"stroke-width": !this._discrete || this._discrete === "y" ? 1 : 0},
       shapeConfig: {stroke: this._discrete ? "transparent" : this._xTest.barConfig().stroke}
