@@ -76,7 +76,7 @@ This creates an x/y plot using the default shape ([Circle](https://github.com/d3
 
 ### AreaPlot ⇐ <code>[Plot](#Plot)</code>
 **Kind**: global class  
-**Extends:** <code>[Plot](#Plot)</code>  
+**Extends**: <code>[Plot](#Plot)</code>  
 <a name="new_AreaPlot_new"></a>
 
 #### new AreaPlot()
@@ -93,7 +93,7 @@ new d3plus.Plot()
 
 ### BarChart ⇐ <code>[Plot](#Plot)</code>
 **Kind**: global class  
-**Extends:** <code>[Plot](#Plot)</code>  
+**Extends**: <code>[Plot](#Plot)</code>  
 <a name="new_BarChart_new"></a>
 
 #### new BarChart()
@@ -109,7 +109,7 @@ new d3plus.Plot()
 
 ### LinePlot ⇐ <code>[Plot](#Plot)</code>
 **Kind**: global class  
-**Extends:** <code>[Plot](#Plot)</code>  
+**Extends**: <code>[Plot](#Plot)</code>  
 <a name="new_LinePlot_new"></a>
 
 #### new LinePlot()
@@ -125,7 +125,7 @@ new d3plus.Plot()
 
 ### Plot ⇐ <code>Viz</code>
 **Kind**: global class  
-**Extends:** <code>Viz</code>  
+**Extends**: <code>Viz</code>  
 
 * [Plot](#Plot) ⇐ <code>Viz</code>
     * [new Plot()](#new_Plot_new)
@@ -320,7 +320,7 @@ If *value* is specified, sets the y domain to the specified array and returns th
 
 ### StackedArea ⇐ <code>Area</code>
 **Kind**: global class  
-**Extends:** <code>Area</code>  
+**Extends**: <code>Area</code>  
 <a name="new_StackedArea_new"></a>
 
 #### new StackedArea()
@@ -333,4 +333,4 @@ new d3plus.Area()
 ```
 
 
-###### <sub>Documentation generated on Tue, 28 Feb 2017 17:19:59 GMT</sub>
+###### <sub>Documentation generated on Mon, 13 Mar 2017 20:01:10 GMT</sub>
