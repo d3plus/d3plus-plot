@@ -202,7 +202,7 @@ export default class Plot extends Viz {
       xScale = "Time";
     }
     else if (this._discrete === "x") {
-      xDomain = Array.from(new Set(data.map(d => d.x))).sort();
+      xDomain = Array.from(new Set(data.sort((a, b) => this._xSort ? this._xSort(a.data, b.data) : a.x - b.x).map(d => d.x)));
       xScale = "Ordinal";
     }
 
@@ -217,7 +217,7 @@ export default class Plot extends Viz {
       yScale = "Time";
     }
     else if (this._discrete === "y") {
-      yDomain = Array.from(new Set(data.map(d => d.y))).sort();
+      yDomain = Array.from(new Set(data.sort((a, b) => this._ySort ? this._ySort(a.data, b.data) : a.y - b.y).map(d => d.y)));
       yScale = "Ordinal";
     }
 
@@ -571,6 +571,15 @@ export default class Plot extends Viz {
 
   /**
       @memberof Plot
+      @desc Defines a custom sorting comparitor function to be used for discrete x axes.
+      @param {Function} [*value*]
+  */
+  xSort(_) {
+    return arguments.length ? (this._xSort = _, this) : this._xSort;
+  }
+
+  /**
+      @memberof Plot
       @desc If *value* is specified, sets the y accessor to the specified function or number and returns the current class instance. If *value* is not specified, returns the current y accessor.
       @param {Function|Number} [*value*]
   */
@@ -623,6 +632,15 @@ export default class Plot extends Viz {
   */
   yDomain(_) {
     return arguments.length ? (this._yDomain = _, this) : this._yDomain;
+  }
+
+  /**
+      @memberof Plot
+      @desc Defines a custom sorting comparitor function to be used for discrete y axes.
+      @param {Function} [*value*]
+  */
+  ySort(_) {
+    return arguments.length ? (this._ySort = _, this) : this._ySort;
   }
 
 }
