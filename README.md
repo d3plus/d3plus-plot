@@ -140,10 +140,12 @@ new d3plus.Plot()
     * [.xConfig([*value*])](#Plot.xConfig)
     * [.x2Config([*value*])](#Plot.x2Config)
     * [.xDomain([*value*])](#Plot.xDomain)
+    * [.xSort([*value*])](#Plot.xSort)
     * [.y([*value*])](#Plot.y)
     * [.yConfig([*value*])](#Plot.yConfig)
     * [.y2Config([*value*])](#Plot.y2Config)
     * [.yDomain([*value*])](#Plot.yDomain)
+    * [.ySort([*value*])](#Plot.ySort)
 
 <a name="new_Plot_new"></a>
 
@@ -271,6 +273,17 @@ If *value* is specified, sets the x domain to the specified array and returns th
 | --- | --- |
 | [*value*] | <code>Array</code> | 
 
+<a name="Plot.xSort"></a>
+
+#### Plot.xSort([*value*])
+Defines a custom sorting comparitor function to be used for discrete x axes.
+
+**Kind**: static method of <code>[Plot](#Plot)</code>  
+
+| Param | Type |
+| --- | --- |
+| [*value*] | <code>function</code> | 
+
 <a name="Plot.y"></a>
 
 #### Plot.y([*value*])
@@ -316,6 +329,17 @@ If *value* is specified, sets the y domain to the specified array and returns th
 | --- | --- |
 | [*value*] | <code>Array</code> | 
 
+<a name="Plot.ySort"></a>
+
+#### Plot.ySort([*value*])
+Defines a custom sorting comparitor function to be used for discrete y axes.
+
+**Kind**: static method of <code>[Plot](#Plot)</code>  
+
+| Param | Type |
+| --- | --- |
+| [*value*] | <code>function</code> | 
+
 <a name="StackedArea"></a>
 
 ### StackedArea ⇐ <code>Area</code>
@@ -333,4 +357,4 @@ new d3plus.Area()
 ```
 
 
-###### <sub>Documentation generated on Mon, 13 Mar 2017 20:01:10 GMT</sub>
+###### <sub>Documentation generated on Fri, 24 Mar 2017 21:46:56 GMT</sub>
