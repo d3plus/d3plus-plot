@@ -216,7 +216,7 @@ If *value* is specified, sets the stack offset and returns the current class ins
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [*value*] | <code>function</code> &#124; <code>String</code> | <code>&quot;descending&quot;</code> | 
+| [*value*] | <code>function</code> \| <code>String</code> | <code>&quot;descending&quot;</code> | 
 
 <a name="Plot.stackOrder"></a>
 
@@ -227,7 +227,7 @@ If *value* is specified, sets the stack order and returns the current class inst
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [*value*] | <code>function</code> &#124; <code>String</code> | <code>&quot;none&quot;</code> | 
+| [*value*] | <code>function</code> \| <code>String</code> | <code>&quot;none&quot;</code> | 
 
 <a name="Plot.x"></a>
 
@@ -238,7 +238,7 @@ If *value* is specified, sets the x accessor to the specified function or number
 
 | Param | Type |
 | --- | --- |
-| [*value*] | <code>function</code> &#124; <code>Number</code> | 
+| [*value*] | <code>function</code> \| <code>Number</code> | 
 
 <a name="Plot.xConfig"></a>
 
@@ -293,7 +293,7 @@ If *value* is specified, sets the y accessor to the specified function or number
 
 | Param | Type |
 | --- | --- |
-| [*value*] | <code>function</code> &#124; <code>Number</code> | 
+| [*value*] | <code>function</code> \| <code>Number</code> | 
 
 <a name="Plot.yConfig"></a>
 
@@ -357,4 +357,4 @@ new d3plus.Area()
 ```
 
 
-###### <sub>Documentation generated on Fri, 24 Mar 2017 21:46:56 GMT</sub>
+###### <sub>Documentation generated on Tue, 28 Mar 2017 04:13:05 GMT</sub>
