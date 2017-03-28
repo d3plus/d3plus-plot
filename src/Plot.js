@@ -44,8 +44,10 @@ export default class Plot extends Viz {
         label: (d, i) => this._stacked ? this._drawLabel(d, i) : false
       },
       Bar: {
-        textAnchor: () => this._discrete === "x" ? "middle" : "end",
-        verticalAlign: () => this._discrete === "x" ? "top" : "middle"
+        labelConfig: {
+          textAnchor: () => this._discrete === "x" ? "middle" : "end",
+          verticalAlign: () => this._discrete === "x" ? "top" : "middle"
+        }
       },
       Circle: {
         r: constant(5)
