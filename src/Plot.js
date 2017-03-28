@@ -1,4 +1,4 @@
-import {extent, max, merge, min, range} from "d3-array";
+import {extent, max, merge, min, range, sum} from "d3-array";
 import {nest} from "d3-collection";
 import * as scales from "d3-scale";
 import * as d3Shape from "d3-shape";
@@ -62,7 +62,7 @@ export default class Plot extends Viz {
       }
     });
     this._stackOffset = d3Shape.stackOffsetNone;
-    this._stackOrder = d3Shape.stackOrderDescending;
+    this._stackOrder = d3Shape.stackOrderNone;
     this._x = accessor("x");
     this._xAxis = new AxisBottom().align("end");
     this._x2Axis = new AxisTop().align("start");
@@ -133,10 +133,20 @@ export default class Plot extends Viz {
     let discreteKeys, domains, stackData, stackKeys;
     if (this._stacked) {
 
+      const groupValues = nest()
+        .key(d => d.group)
+        .entries(data)
+        .reduce((obj, d) => {
+          if (!obj[d.key]) obj[d.key] = 0;
+          obj[d.key] += sum(d.values, dd => dd[opp]);
+          return obj;
+        }, {});
+
       data = data.sort((a, b) => {
         const a1 = a[this._discrete], b1 = b[this._discrete];
         if (a1 - b1 !== 0) return a1 - b1;
-        return a.group - b.group;
+        if (a.group !== b.group) return groupValues[b.group] - groupValues[a.group];
+        return b[opp] - a[opp];
       });
 
       discreteKeys = Array.from(new Set(data.map(d => d.discrete)));
