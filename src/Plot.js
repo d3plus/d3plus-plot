@@ -40,8 +40,10 @@ export default class Plot extends Viz {
     this._shape = constant("Circle");
     this._shapeConfig = assign(this._shapeConfig, {
       Area: {
-        fontResize: true,
-        label: (d, i) => this._stacked ? this._drawLabel(d, i) : false
+        label: (d, i) => this._stacked ? this._drawLabel(d, i) : false,
+        labelConfig: {
+          fontResize: true
+        }
       },
       Bar: {
         labelConfig: {
