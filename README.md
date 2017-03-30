@@ -227,7 +227,7 @@ If *value* is specified, sets the stack order and returns the current class inst
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [*value*] | <code>function</code> \| <code>String</code> | <code>&quot;none&quot;</code> | 
+| [*value*] | <code>function</code> \| <code>String</code> \| <code>Array</code> | <code>&quot;none&quot;</code> | 
 
 <a name="Plot.x"></a>
 
@@ -357,4 +357,4 @@ new d3plus.Area()
 ```
 
 
-###### <sub>Documentation generated on Wed, 29 Mar 2017 00:16:07 GMT</sub>
+###### <sub>Documentation generated on Thu, 30 Mar 2017 15:03:03 GMT</sub>
