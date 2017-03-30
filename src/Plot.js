@@ -187,11 +187,14 @@ export default class Plot extends Viz {
       });
 
       data.sort((a, b) => a[this._discrete] - b[this._discrete]);
+      const order = this._stackOrder;
+
+      if (order instanceof Array) stackKeys.sort((a, b) => order.indexOf(a) - order.indexOf(b));
 
       stackData = d3Shape.stack()
         .keys(stackKeys)
         .offset(this._stackOffset)
-        .order(this._stackOrder)
+        .order(order instanceof Array ? d3Shape.stackOrderNone : order)
         .value((group, key) => {
           const d = group.filter(g => g.id === key);
           return d.length ? d[0][opp] : 0;
@@ -528,10 +531,10 @@ export default class Plot extends Viz {
   /**
       @memberof Plot
       @desc If *value* is specified, sets the stack order and returns the current class instance. If *value* is not specified, returns the current stack order function.
-      @param {Function|String} [*value* = "none"]
+      @param {Function|String|Array} [*value* = "none"]
   */
   stackOrder(_) {
-    return arguments.length ? (this._stackOrder = typeof _ === "function" ? _ : d3Shape[`stackOrder${_.charAt(0).toUpperCase() + _.slice(1)}`], this) : this._stackOrder;
+    return arguments.length ? (this._stackOrder = typeof _ === "string" ? d3Shape[`stackOrder${_.charAt(0).toUpperCase() + _.slice(1)}`] : _, this) : this._stackOrder;
   }
 
   /**
