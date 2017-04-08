@@ -1,14 +1,10 @@
-import {test} from "tape";
+import zora from "zora";
 import {default as Plot} from "../src/Plot.js";
 
-test("Plot", assert => {
+export default zora()
+  .test("Plot", function *(assert) {
 
-  new Plot()
-    .render(() => {
+    yield cb => new Plot().render(cb);
+    assert.ok(true, "function success");
 
-      assert.true(true, "function success");
-      assert.end();
-
-    });
-
-});
+  });
