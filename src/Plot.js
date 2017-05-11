@@ -282,7 +282,7 @@ export default class Plot extends Viz {
       .render();
 
     const yBounds = this._yTest.outerBounds();
-    const xOffset = yBounds.width ? yBounds.width + this._yTest.padding() : undefined;
+    const yWidth = yBounds.width ? yBounds.width + this._yTest.padding() : undefined;
 
     const xC = {
       barConfig: {"stroke-width": !this._discrete || this._discrete === "x" ? 1 : 0},
@@ -293,7 +293,7 @@ export default class Plot extends Viz {
     this._xTest
       .domain(xDomain)
       .height(height)
-      .range([xOffset, undefined])
+      .range([undefined, undefined])
       .scale(xScale.toLowerCase())
       .select(testGroup.node())
       .ticks(xTicks)
@@ -301,6 +301,8 @@ export default class Plot extends Viz {
       .config(xC)
       .config(this._xConfig)
       .render();
+
+    const xOffset = max([yWidth, this._xTest._d3Scale.range()[0]]);
 
     const xGroup = elem("g.d3plus-plot-x-axis", {parent, transition, enter: {transform}, update: {transform}});
 
@@ -335,7 +337,9 @@ export default class Plot extends Viz {
       .config(this._x2Config)
       .render();
 
-    const yGroup = elem("g.d3plus-plot-y-axis", {parent, transition, enter: {transform}, update: {transform}});
+    const xTrans = xOffset > yWidth ? xOffset - yWidth : 0;
+    const yTransform = `translate(${this._margin.left + xTrans}, ${this._margin.top})`;
+    const yGroup = elem("g.d3plus-plot-y-axis", {parent, transition, enter: {transform: yTransform}, update: {transform: yTransform}});
 
     this._yAxis
       .domain(yDomain)
