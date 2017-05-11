@@ -23,10 +23,10 @@
     "url": "http://www.dave-landry.com"
   },
   "dependencies": {
-    "d3-array": "^1.1.1",
+    "d3-array": "^1.2.0",
     "d3-collection": "^1.0.2",
     "d3-scale": "^1.0.4",
-    "d3-selection": "^1.0.3",
+    "d3-selection": "^1.0.6",
     "d3-shape": "^1.0.4",
     "d3plus-axis": "^0.3.29",
     "d3plus-color": "^0.6.0",
