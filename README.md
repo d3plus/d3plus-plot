@@ -1,15 +1,12 @@
 # d3plus-plot
 
-[![NPM Release](http://img.shields.io/npm/v/d3plus-plot.svg?style=flat)](https://www.npmjs.org/package/d3plus-plot)
-[![Build Status](https://travis-ci.org/d3plus/d3plus-plot.svg?branch=master)](https://travis-ci.org/d3plus/d3plus-plot)
-[![Dependency Status](http://img.shields.io/david/d3plus/d3plus-plot.svg?style=flat)](https://david-dm.org/d3plus/d3plus-plot)
-[![Slack](https://img.shields.io/badge/Slack-Click%20to%20Join!-green.svg?style=social)](https://goo.gl/forms/ynrKdvusekAwRMPf2)
+[![NPM Release](http://img.shields.io/npm/v/d3plus-plot.svg?style=flat)](https://www.npmjs.org/package/d3plus-plot) [![Build Status](https://travis-ci.org/d3plus/d3plus-plot.svg?branch=master)](https://travis-ci.org/d3plus/d3plus-plot) [![Dependency Status](http://img.shields.io/david/d3plus/d3plus-plot.svg?style=flat)](https://david-dm.org/d3plus/d3plus-plot) [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg?style=flat)](https://gitter.im/d3plus/)
 
 A reusable javascript x/y plot built on D3.
 
 ## Installing
 
-If you use NPM, `npm install d3plus-plot`. Otherwise, download the [latest release](https://github.com/d3plus/d3plus-plot/releases/latest). The released bundle supports AMD, CommonJS, and vanilla environments. Create a [custom bundle using Rollup](https://github.com/rollup/rollup) or your preferred bundler. You can also load directly from [d3plus.org](https://d3plus.org):
+If you use NPM, run `npm install d3plus-plot --save`. Otherwise, download the [latest release](https://github.com/d3plus/d3plus-plot/releases/latest). The released bundle supports AMD, CommonJS, and vanilla environments. You can also load directly from [d3plus.org](https://d3plus.org):
 
 ```html
 <script src="https://d3plus.org/js/d3plus-plot.v0.5.full.min.js"></script>
@@ -57,75 +54,86 @@ This creates an x/y plot using the default shape ([Circle](https://github.com/d3
  * [Stacked Area Chart](http://d3plus.org/examples/d3plus-plot/stacked-area/)
 
 ## API Reference
-### Classes
 
-<dl>
-<dt><a href="#AreaPlot">AreaPlot</a> ⇐ <code><a href="#Plot">Plot</a></code></dt>
-<dd></dd>
-<dt><a href="#BarChart">BarChart</a> ⇐ <code><a href="#Plot">Plot</a></code></dt>
-<dd></dd>
-<dt><a href="#LinePlot">LinePlot</a> ⇐ <code><a href="#Plot">Plot</a></code></dt>
-<dd></dd>
-<dt><a href="#Plot">Plot</a> ⇐ <code>Viz</code></dt>
-<dd></dd>
-<dt><a href="#StackedArea">StackedArea</a> ⇐ <code>Area</code></dt>
-<dd></dd>
-</dl>
+##### Classes
+* [AreaPlot](#AreaPlot)
+* [BarChart](#BarChart)
+* [LinePlot](#LinePlot)
+* [Plot](#Plot)
+* [StackedArea](#StackedArea)
+
+---
 
 <a name="AreaPlot"></a>
+#### **AreaPlot** [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/AreaPlot.js#L5)
 
-### AreaPlot ⇐ <code>[Plot](#Plot)</code>
-**Kind**: global class  
-**Extends**: <code>[Plot](#Plot)</code>  
-<a name="new_AreaPlot_new"></a>
 
-#### new AreaPlot()
+This is a global class, and extends all of the methods and functionality of [<code>Plot</code>](#Plot).
+
+<a name="new_AreaPlot_new" href="new_AreaPlot_new">#</a> new **AreaPlot**()
+
 Creates an area plot based on an array of data.
 
-**Example** *(the equivalent of calling:)*  
+
+
+
+the equivalent of calling:
 ```js
 new d3plus.Plot()
   .baseline(0)
   .discrete("x")
   .shape("Area")
 ```
+---
+
 <a name="BarChart"></a>
+#### **BarChart** [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/BarChart.js#L5)
 
-### BarChart ⇐ <code>[Plot](#Plot)</code>
-**Kind**: global class  
-**Extends**: <code>[Plot](#Plot)</code>  
-<a name="new_BarChart_new"></a>
 
-#### new BarChart()
+This is a global class, and extends all of the methods and functionality of [<code>Plot</code>](#Plot).
+
+<a name="new_BarChart_new" href="new_BarChart_new">#</a> new **BarChart**()
+
 Creates a line plot based on an array of data.
 
-**Example** *(the equivalent of calling:)*  
+
+
+
+the equivalent of calling:
 ```js
 new d3plus.Plot()
   .discrete("x")
   .shape("Line")
 ```
+---
+
 <a name="LinePlot"></a>
+#### **LinePlot** [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/LinePlot.js#L5)
 
-### LinePlot ⇐ <code>[Plot](#Plot)</code>
-**Kind**: global class  
-**Extends**: <code>[Plot](#Plot)</code>  
-<a name="new_LinePlot_new"></a>
 
-#### new LinePlot()
+This is a global class, and extends all of the methods and functionality of [<code>Plot</code>](#Plot).
+
+<a name="new_LinePlot_new" href="new_LinePlot_new">#</a> new **LinePlot**()
+
 Creates a line plot based on an array of data.
 
-**Example** *(the equivalent of calling:)*  
+
+
+
+the equivalent of calling:
 ```js
 new d3plus.Plot()
   .discrete("x")
   .shape("Line")
 ```
-<a name="Plot"></a>
+---
 
-### Plot ⇐ <code>Viz</code>
-**Kind**: global class  
-**Extends**: <code>Viz</code>  
+<a name="Plot"></a>
+#### **Plot** [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L17)
+
+
+This is a global class, and extends all of the methods and functionality of <code>Viz</code>.
+
 
 * [Plot](#Plot) ⇐ <code>Viz</code>
     * [new Plot()](#new_Plot_new)
@@ -147,214 +155,153 @@ new d3plus.Plot()
     * [.yDomain([*value*])](#Plot.yDomain)
     * [.ySort([*value*])](#Plot.ySort)
 
-<a name="new_Plot_new"></a>
+<a name="new_Plot_new" href="new_Plot_new">#</a> new **Plot**()
 
-#### new Plot()
 Creates an x/y plot based on an array of data.
 
-<a name="Plot.barPadding"></a>
 
-#### Plot.barPadding([*value*])
+
+
+<a name="Plot.barPadding" href="Plot.barPadding">#</a> Plot.**barPadding**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L486)
+
 Sets the pixel space between each bar in a group of bars.
 
-**Kind**: static method of <code>[Plot](#Plot)</code>  
 
-| Param | Type | Default |
-| --- | --- | --- |
-| [*value*] | <code>Number</code> | <code>5</code> | 
+This is a static method of [<code>Plot</code>](#Plot).
 
-<a name="Plot.baseline"></a>
+<a name="Plot.baseline" href="Plot.baseline">#</a> Plot.**baseline**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L495)
 
-#### Plot.baseline([*value*])
 If *value* is specified, sets the baseline for the x/y plot and returns the current class instance. If *value* is not specified, returns the current baseline.
 
-**Kind**: static method of <code>[Plot](#Plot)</code>  
 
-| Param | Type |
-| --- | --- |
-| [*value*] | <code>Number</code> | 
+This is a static method of [<code>Plot</code>](#Plot).
 
-<a name="Plot.discrete"></a>
+<a name="Plot.discrete" href="Plot.discrete">#</a> Plot.**discrete**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L504)
 
-#### Plot.discrete([*value*])
 If *value* is specified, sets the discrete axis to the specified string and returns the current class instance. If *value* is not specified, returns the current discrete axis.
 
-**Kind**: static method of <code>[Plot](#Plot)</code>  
 
-| Param | Type |
-| --- | --- |
-| [*value*] | <code>String</code> | 
+This is a static method of [<code>Plot</code>](#Plot).
 
-<a name="Plot.groupPadding"></a>
+<a name="Plot.groupPadding" href="Plot.groupPadding">#</a> Plot.**groupPadding**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L513)
 
-#### Plot.groupPadding([*value*])
 Sets the pixel space between groups of bars.
 
-**Kind**: static method of <code>[Plot](#Plot)</code>  
 
-| Param | Type | Default |
-| --- | --- | --- |
-| [*value*] | <code>Number</code> | <code>20</code> | 
+This is a static method of [<code>Plot</code>](#Plot).
 
-<a name="Plot.stacked"></a>
+<a name="Plot.stacked" href="Plot.stacked">#</a> Plot.**stacked**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L522)
 
-#### Plot.stacked([*value*])
 If *value* is specified, toggles shape stacking and returns the current class instance. If *value* is not specified, returns the current stack value.
 
-**Kind**: static method of <code>[Plot](#Plot)</code>  
 
-| Param | Type | Default |
-| --- | --- | --- |
-| [*value*] | <code>Boolean</code> | <code>false</code> | 
+This is a static method of [<code>Plot</code>](#Plot).
 
-<a name="Plot.stackOffset"></a>
+<a name="Plot.stackOffset" href="Plot.stackOffset">#</a> Plot.**stackOffset**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L531)
 
-#### Plot.stackOffset([*value*])
 If *value* is specified, sets the stack offset and returns the current class instance. If *value* is not specified, returns the current stack offset function.
 
-**Kind**: static method of <code>[Plot](#Plot)</code>  
 
-| Param | Type | Default |
-| --- | --- | --- |
-| [*value*] | <code>function</code> \| <code>String</code> | <code>&quot;descending&quot;</code> | 
+This is a static method of [<code>Plot</code>](#Plot).
 
-<a name="Plot.stackOrder"></a>
+<a name="Plot.stackOrder" href="Plot.stackOrder">#</a> Plot.**stackOrder**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L540)
 
-#### Plot.stackOrder([*value*])
 If *value* is specified, sets the stack order and returns the current class instance. If *value* is not specified, returns the current stack order function.
 
-**Kind**: static method of <code>[Plot](#Plot)</code>  
 
-| Param | Type | Default |
-| --- | --- | --- |
-| [*value*] | <code>function</code> \| <code>String</code> \| <code>Array</code> | <code>&quot;none&quot;</code> | 
+This is a static method of [<code>Plot</code>](#Plot).
 
-<a name="Plot.x"></a>
+<a name="Plot.x" href="Plot.x">#</a> Plot.**x**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L549)
 
-#### Plot.x([*value*])
 If *value* is specified, sets the x accessor to the specified function or number and returns the current class instance. If *value* is not specified, returns the current x accessor.
 
-**Kind**: static method of <code>[Plot](#Plot)</code>  
 
-| Param | Type |
-| --- | --- |
-| [*value*] | <code>function</code> \| <code>Number</code> | 
+This is a static method of [<code>Plot</code>](#Plot).
 
-<a name="Plot.xConfig"></a>
+<a name="Plot.xConfig" href="Plot.xConfig">#</a> Plot.**xConfig**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L571)
 
-#### Plot.xConfig([*value*])
 If *value* is specified, sets the config method for the x-axis and returns the current class instance. If *value* is not specified, returns the current x-axis configuration.
 
-**Kind**: static method of <code>[Plot](#Plot)</code>  
 
-| Param | Type |
-| --- | --- |
-| [*value*] | <code>Object</code> | 
+This is a static method of [<code>Plot</code>](#Plot).
 
-<a name="Plot.x2Config"></a>
+<a name="Plot.x2Config" href="Plot.x2Config">#</a> Plot.**x2Config**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L580)
 
-#### Plot.x2Config([*value*])
 If *value* is specified, sets the config method for the secondary x-axis and returns the current class instance. If *value* is not specified, returns the current secondary x-axis configuration.
 
-**Kind**: static method of <code>[Plot](#Plot)</code>  
 
-| Param | Type |
-| --- | --- |
-| [*value*] | <code>Object</code> | 
+This is a static method of [<code>Plot</code>](#Plot).
 
-<a name="Plot.xDomain"></a>
+<a name="Plot.xDomain" href="Plot.xDomain">#</a> Plot.**xDomain**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L589)
 
-#### Plot.xDomain([*value*])
 If *value* is specified, sets the x domain to the specified array and returns the current class instance. If *value* is not specified, returns the current x domain. Additionally, if either value of the array is undefined, it will be calculated from the data.
 
-**Kind**: static method of <code>[Plot](#Plot)</code>  
 
-| Param | Type |
-| --- | --- |
-| [*value*] | <code>Array</code> | 
+This is a static method of [<code>Plot</code>](#Plot).
 
-<a name="Plot.xSort"></a>
+<a name="Plot.xSort" href="Plot.xSort">#</a> Plot.**xSort**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L598)
 
-#### Plot.xSort([*value*])
 Defines a custom sorting comparitor function to be used for discrete x axes.
 
-**Kind**: static method of <code>[Plot](#Plot)</code>  
 
-| Param | Type |
-| --- | --- |
-| [*value*] | <code>function</code> | 
+This is a static method of [<code>Plot</code>](#Plot).
 
-<a name="Plot.y"></a>
+<a name="Plot.y" href="Plot.y">#</a> Plot.**y**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L607)
 
-#### Plot.y([*value*])
 If *value* is specified, sets the y accessor to the specified function or number and returns the current class instance. If *value* is not specified, returns the current y accessor.
 
-**Kind**: static method of <code>[Plot](#Plot)</code>  
 
-| Param | Type |
-| --- | --- |
-| [*value*] | <code>function</code> \| <code>Number</code> | 
+This is a static method of [<code>Plot</code>](#Plot).
 
-<a name="Plot.yConfig"></a>
+<a name="Plot.yConfig" href="Plot.yConfig">#</a> Plot.**yConfig**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L631)
 
-#### Plot.yConfig([*value*])
 If *value* is specified, sets the config method for the y-axis and returns the current class instance. If *value* is not specified, returns the current y-axis configuration.
 Note:* If a "domain" array is passed to the y-axis config, it will be reversed.
 
-**Kind**: static method of <code>[Plot](#Plot)</code>  
 
-| Param | Type |
-| --- | --- |
-| [*value*] | <code>Object</code> | 
+This is a static method of [<code>Plot</code>](#Plot).
 
-<a name="Plot.y2Config"></a>
+<a name="Plot.y2Config" href="Plot.y2Config">#</a> Plot.**y2Config**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L645)
 
-#### Plot.y2Config([*value*])
 If *value* is specified, sets the config method for the secondary y-axis and returns the current class instance. If *value* is not specified, returns the current secondary y-axis configuration.
 
-**Kind**: static method of <code>[Plot](#Plot)</code>  
 
-| Param | Type |
-| --- | --- |
-| [*value*] | <code>Object</code> | 
+This is a static method of [<code>Plot</code>](#Plot).
 
-<a name="Plot.yDomain"></a>
+<a name="Plot.yDomain" href="Plot.yDomain">#</a> Plot.**yDomain**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L654)
 
-#### Plot.yDomain([*value*])
 If *value* is specified, sets the y domain to the specified array and returns the current class instance. If *value* is not specified, returns the current y domain. Additionally, if either value of the array is undefined, it will be calculated from the data.
 
-**Kind**: static method of <code>[Plot](#Plot)</code>  
 
-| Param | Type |
-| --- | --- |
-| [*value*] | <code>Array</code> | 
+This is a static method of [<code>Plot</code>](#Plot).
 
-<a name="Plot.ySort"></a>
+<a name="Plot.ySort" href="Plot.ySort">#</a> Plot.**ySort**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L663)
 
-#### Plot.ySort([*value*])
 Defines a custom sorting comparitor function to be used for discrete y axes.
 
-**Kind**: static method of <code>[Plot](#Plot)</code>  
 
-| Param | Type |
-| --- | --- |
-| [*value*] | <code>function</code> | 
+This is a static method of [<code>Plot</code>](#Plot).
+
+---
 
 <a name="StackedArea"></a>
+#### **StackedArea** [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/StackedArea.js#L3)
 
-### StackedArea ⇐ <code>Area</code>
-**Kind**: global class  
-**Extends**: <code>Area</code>  
-<a name="new_StackedArea_new"></a>
 
-#### new StackedArea()
+This is a global class, and extends all of the methods and functionality of <code>Area</code>.
+
+<a name="new_StackedArea_new" href="new_StackedArea_new">#</a> new **StackedArea**()
+
 Creates a stacked area plot based on an array of data.
 
-**Example** *(the equivalent of calling:)*  
+
+
+
+the equivalent of calling:
 ```js
 new d3plus.Area()
   .stacked(true)
 ```
+---
 
-
-###### <sub>Documentation generated on Thu, 30 Mar 2017 15:03:03 GMT</sub>
+###### <sub>Documentation generated on Thu, 11 May 2017 20:54:58 GMT</sub>
