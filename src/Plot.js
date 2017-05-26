@@ -5,7 +5,7 @@ import * as d3Shape from "d3-shape";
 
 import {AxisBottom, AxisLeft, AxisRight, AxisTop, date} from "d3plus-axis";
 import {colorAssign} from "d3plus-color";
-import {accessor, assign, constant, elem} from "d3plus-common";
+import {accessor, assign, configPrep, constant, elem} from "d3plus-common";
 import * as shapes from "d3plus-shape";
 import {Viz} from "d3plus-viz";
 
@@ -372,48 +372,31 @@ export default class Plot extends Viz {
 
     y = this._yAxis._d3Scale;
 
-    let shapeConfig = {
+    const shapeConfig = {
       duration: this._duration,
       label: d => this._drawLabel(d.data, d.i),
       select: elem("g.d3plus-plot-shapes", {parent, transition, enter: {transform}, update: {transform}}).node(),
       x: d => x(d.x),
-      y: d => y(d.y)
-    };
-
-    function wrapConfig(config) {
-      const obj = {};
-      for (const k in config) {
-        if ({}.hasOwnProperty.call(config, k) && !shapes[k]) {
-          obj[k] = typeof config[k] === "function" ? d => config[k](d.data, d.i) : config[k];
-        }
-      }
-      return obj;
-    }
-
-    shapeConfig = assign(shapeConfig, wrapConfig(this._shapeConfig));
-
-    const positions = {
-      x0: this._discrete === "x" ? shapeConfig.x : x(0),
-      x1: this._discrete === "x" ? null : shapeConfig.x,
-      y0: this._discrete === "y" ? shapeConfig.y : y(0),
-      y1: this._discrete === "y" ? null : shapeConfig.y
+      x0: this._discrete === "x" ? d => x(d.x) : x(0),
+      x1: this._discrete === "x" ? null : d => x(d.x),
+      y: d => y(d.y),
+      y0: this._discrete === "y" ? d => y(d.y) : y(0),
+      y1: this._discrete === "y" ? null : d => y(d.y)
     };
 
     if (this._stacked) {
       const scale = opp === "x" ? x : y;
-      positions[`${opp}`] = positions[`${opp}0`] = d => {
+      shapeConfig[`${opp}`] = shapeConfig[`${opp}0`] = d => {
         const dataIndex = stackKeys.indexOf(d.id),
               discreteIndex = discreteKeys.indexOf(d.discrete);
         return dataIndex >= 0 ? scale(stackData[dataIndex][discreteIndex][0]) : scale(0);
       };
-      positions[`${opp}1`] = d => {
+      shapeConfig[`${opp}1`] = d => {
         const dataIndex = stackKeys.indexOf(d.id),
               discreteIndex = discreteKeys.indexOf(d.discrete);
         return dataIndex >= 0 ? scale(stackData[dataIndex][discreteIndex][1]) : scale(0);
       };
     }
-
-    shapeConfig = assign(shapeConfig, positions);
 
     const events = Object.keys(this._on);
     shapeData.forEach(d => {
@@ -469,7 +452,7 @@ export default class Plot extends Viz {
       for (let e = 0; e < shapeEvents.length; e++) s.on(shapeEvents[e], d => this._on[shapeEvents[e]](d.data, d.i));
       for (let e = 0; e < classEvents.length; e++) s.on(classEvents[e], d => this._on[classEvents[e]](d.data, d.i));
 
-      s.config(this._shapeConfig[d.key] ? wrapConfig(this._shapeConfig[d.key]) : {}).render();
+      s.config(configPrep.bind(this)(this._shapeConfig, "shape", d.key)).render();
       this._shapes.push(s);
 
     });
