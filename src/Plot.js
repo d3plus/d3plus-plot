@@ -29,14 +29,14 @@ export default class Plot extends Viz {
   constructor() {
 
     super();
-    this._barPadding = 5;
+    this._barPadding = 0;
     this._buffer = {
       Bar: BarBuffer,
       Circle: CircleBuffer,
       Line: LineBuffer,
       Rect: RectBuffer
     };
-    this._groupPadding = 20;
+    this._groupPadding = 5;
     this._shape = constant("Circle");
     this._shapeConfig = assign(this._shapeConfig, {
       Area: {
@@ -465,7 +465,7 @@ export default class Plot extends Viz {
   /**
       @memberof Plot
       @desc Sets the pixel space between each bar in a group of bars.
-      @param {Number} [*value* = 5]
+      @param {Number} [*value* = 0]
   */
   barPadding(_) {
     return arguments.length ? (this._barPadding = _, this) : this._barPadding;
@@ -492,7 +492,7 @@ export default class Plot extends Viz {
   /**
       @memberof Plot
       @desc Sets the pixel space between groups of bars.
-      @param {Number} [*value* = 20]
+      @param {Number} [*value* = 5]
   */
   groupPadding(_) {
     return arguments.length ? (this._groupPadding = _, this) : this._groupPadding;
