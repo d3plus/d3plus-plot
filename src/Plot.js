@@ -266,9 +266,7 @@ export default class Plot extends Viz {
           yTicks = this._discrete === "y" && !yTime ? domains.y : undefined;
 
     const yC = {
-      barConfig: {"stroke-width": !this._discrete || this._discrete === "y" ? 1 : 0},
-      gridConfig: {"stroke-width": !this._discrete || this._discrete === "x" ? 1 : 0},
-      shapeConfig: {stroke: this._discrete ? "transparent" : this._yTest.barConfig().stroke}
+      gridConfig: {stroke: !this._discrete || this._discrete === "x" ? this._yTest.gridConfig().stroke : "transparent"}
     };
 
     this._yTest
@@ -286,9 +284,7 @@ export default class Plot extends Viz {
     const yWidth = yBounds.width ? yBounds.width + this._yTest.padding() : undefined;
 
     const xC = {
-      barConfig: {"stroke-width": !this._discrete || this._discrete === "x" ? 1 : 0},
-      gridConfig: {"stroke-width": !this._discrete || this._discrete === "y" ? 1 : 0},
-      shapeConfig: {stroke: this._discrete ? "transparent" : this._xTest.barConfig().stroke}
+      gridConfig: {stroke: !this._discrete || this._discrete === "y" ? this._xTest.gridConfig().stroke : "transparent"}
     };
 
     this._xTest
@@ -304,6 +300,10 @@ export default class Plot extends Viz {
       .render();
 
     const xOffset = max([yWidth, this._xTest._d3Scale.range()[0]]);
+
+    this._xTest
+      .range([xOffset, undefined])
+      .render();
 
     const xGroup = elem("g.d3plus-plot-x-axis", {parent, transition, enter: {transform}, update: {transform}});
 
@@ -373,6 +373,9 @@ export default class Plot extends Viz {
 
     y = this._yAxis._d3Scale;
 
+    let yOffset = this._xAxis.barConfig()["stroke-width"];
+    if (yOffset) yOffset /= 2;
+
     const shapeConfig = {
       duration: this._duration,
       label: d => this._drawLabel(d.data, d.i),
@@ -381,8 +384,8 @@ export default class Plot extends Viz {
       x0: this._discrete === "x" ? d => x(d.x) : x(0),
       x1: this._discrete === "x" ? null : d => x(d.x),
       y: d => y(d.y),
-      y0: this._discrete === "y" ? d => y(d.y) : y(0),
-      y1: this._discrete === "y" ? null : d => y(d.y)
+      y0: this._discrete === "y" ? d => y(d.y) : y(0) - yOffset,
+      y1: this._discrete === "y" ? null : d => y(d.y) - yOffset
     };
 
     if (this._stacked) {
