@@ -103,8 +103,8 @@ export default class Plot extends Viz {
     if (!this._filteredData.length) return this;
 
     const stackGroup = (d, i) => this._stacked
-                ? `${this._groupBy.length > 1 ? this._ids(d, i).slice(0, -1).join("_") : "group"}`
-                : `${this._ids(d, i).join("_")}`;
+      ? `${this._groupBy.length > 1 ? this._ids(d, i).slice(0, -1).join("_") : "group"}`
+      : `${this._ids(d, i).join("_")}`;
 
     let data = this._filteredData.map((d, i) => ({
       __d3plus__: true,
