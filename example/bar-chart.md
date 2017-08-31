@@ -1,6 +1,6 @@
 # Bar Chart
 
-When constructing data to be used with a Bar Chart, there must be a unique data point for each bar. Given this data array:
+When constructing data to be used with the [BarChart](http://d3plus.org/docs/#BarChart) class, there must be a unique data point for each bar. Given this data array:
 
 ```js
 var data = [

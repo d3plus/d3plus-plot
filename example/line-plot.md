@@ -1,6 +1,6 @@
 # Line Plot
 
-When constructing data to be used with a Line Plot, there must be a unique data point for each point on the discrete axis (defaults to the X axis). Given this data array:
+When constructing data to be used with a [LinePlot](http://d3plus.org/docs/#LinePlot), there must be a unique data point for each point on the [discrete](http://d3plus.org/docs/#Plot.discrete) axis (defaults to the X axis). Given this data array:
 
 ```js
 var data = [

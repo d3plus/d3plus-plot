@@ -1,6 +1,6 @@
 # Changing Grid Styles
 
-The .xConfig() and .yConfig() methods allow access to the display styles for the axis bar, the grid lines, and the shape ticks.
+The [.xConfig( )](http://d3plus.org/docs/#Plot.xConfig) and [.yConfig( )](http://d3plus.org/docs/#Plot.yConfig) methods allow access to the display styles for the axis bar, the grid lines, and the shape ticks.
 
 ```js
 var data = [
