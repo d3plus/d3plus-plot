@@ -13,9 +13,9 @@ If you use NPM, run `npm install d3plus-plot --save`. Otherwise, download the [l
 ```
 
 
-## Getting Started
+## Simple X/Y Plot
 
-d3plus-plot combines the abstract Viz class found in [d3plus-viz](https://github.com/d3plus/d3plus-viz) with the axes in [d3plus-axis](https://github.com/d3plus/d3plus-axis) to create a standard x/y plot. In addition to a lot of automatic formatting and positioning, the Viz class also provides mouse events and tooltips.
+[d3plus-plot](https://github.com/d3plus/d3plus-plot) combines the abstract [Viz](http://d3plus.org/docs/#Viz) class found in [d3plus-viz](https://github.com/d3plus/d3plus-viz) with the axes in [d3plus-axis](https://github.com/d3plus/d3plus-axis) to create a standard x/y plot. In addition to a lot of automatic formatting and positioning, the [Viz](http://d3plus.org/docs/#Viz) class also provides mouse events and tooltips.
 
 ```js
 var data = [
@@ -34,7 +34,7 @@ new d3plus.Plot()
   .render();
 ```
 
-This creates an x/y plot using the default shape ([Circle](https://github.com/d3plus/d3plus-shape#Circle)). The default shape can be overridden using the [.shape( )](https://github.com/d3plus/d3plus-viz#Viz.shape) accessor method, as well as using the many shorthand Classes for specific types of charts (see examples below).
+This creates an x/y plot using the default shape ([Circle](http://d3plus.org/docs/#Circle)). The shape type can be overwritten using the [.shape( )](http://d3plus.org/docs/#Viz.shape) accessor method, as well as using the many shorthand Classes for specific types of charts, like [BarChart](http://d3plus.org/examples/d3plus-plot/bar-chart/) and [AreaPlot](http://d3plus.org/examples/d3plus-plot/area/).
 
 
 [<kbd><img src="/example/getting-started.png" width="990px" /></kbd>](https://d3plus.org/examples/d3plus-plot/getting-started/)
@@ -53,7 +53,7 @@ This creates an x/y plot using the default shape ([Circle](https://github.com/d3
  * [Horizontal Bar Chart](http://d3plus.org/examples/d3plus-plot/bar-chart-horizontal/)
  * [Area Chart](http://d3plus.org/examples/d3plus-plot/area/)
  * [Line Plot](http://d3plus.org/examples/d3plus-plot/line-plot/)
- * [Flipping a Stacked Area Chart](http://d3plus.org/examples/d3plus-plot/stacked-area-flip/)
+ * [Horizontal Stacked Area Chart](http://d3plus.org/examples/d3plus-plot/stacked-area-flip/)
  * [Stacked Area Chart](http://d3plus.org/examples/d3plus-plot/stacked-area/)
 
 ## API Reference
@@ -335,4 +335,4 @@ new d3plus.Area()
 
 
 
-###### <sub>Documentation generated on Thu, 31 Aug 2017 16:54:09 GMT</sub>
+###### <sub>Documentation generated on Fri, 08 Sep 2017 19:08:46 GMT</sub>
