@@ -251,13 +251,15 @@ export default class Plot extends Viz {
         y = scales[`scale${yScale}`]().domain(domains.y.reverse()).range(range(0, height + 1, height / (domains.y.length - 1)));
 
     const shapeData = nest().key(d => d.shape).entries(data);
-    shapeData.forEach(d => {
-      if (this._buffer[d.key]) {
-        const res = this._buffer[d.key].bind(this)(d.values, x, y, this._shapeConfig[d.key]);
-        x = res[0];
-        y = res[1];
-      }
-    });
+    if (this._xConfig.scale !== "log" && this._yConfig.scale !== "log") {
+      shapeData.forEach(d => {
+        if (this._buffer[d.key]) {
+          const res = this._buffer[d.key].bind(this)(d.values, x, y, this._shapeConfig[d.key]);
+          if (this._xConfig.scale !== "log") x = res[0];
+          if (this._yConfig.scale !== "log") y = res[1];
+        }
+      });
+    }
     xDomain = x.domain();
     yDomain = y.domain();
 
@@ -299,7 +301,7 @@ export default class Plot extends Viz {
       .config(this._xConfig)
       .render();
 
-    const xOffset = max([yWidth, this._xTest._d3Scale.range()[0]]);
+    const xOffset = max([yWidth, this._xTest._getRange()[0]]);
 
     this._xTest
       .range([xOffset, undefined])
@@ -319,7 +321,11 @@ export default class Plot extends Viz {
       .config(this._xConfig)
       .render();
 
-    x = this._xAxis._d3Scale;
+    x = d => {
+      if (this._xConfig.scale === "log" && d === 0) d = xDomain[0] < 0 ? -1 : 1;
+      return this._xAxis._getPosition.bind(this._xAxis)(d);
+    };
+    const xRange = this._xAxis._getRange();
 
     this._x2Axis
       .config(xC)
@@ -331,7 +337,7 @@ export default class Plot extends Viz {
       .scale(xScale.toLowerCase())
       .select(xGroup.node())
       .ticks([])
-      .width(x.range()[x.range().length - 1] + this._xAxis.padding())
+      .width(xRange[xRange.length - 1] + this._xAxis.padding())
       .title(false)
       .tickSize(0)
       .barConfig({"stroke-width": this._discrete ? 0 : this._xAxis.barConfig()["stroke-width"]})
@@ -349,7 +355,7 @@ export default class Plot extends Viz {
       .scale(yScale.toLowerCase())
       .select(yGroup.node())
       .ticks(yTicks)
-      .width(x.range()[x.range().length - 1] + this._xAxis.padding())
+      .width(xRange[xRange.length - 1] + this._xAxis.padding())
       .config(yC)
       .config(this._yConfig)
       .render();
@@ -364,14 +370,17 @@ export default class Plot extends Viz {
       .scale(yScale.toLowerCase())
       .select(yGroup.node())
       .ticks([])
-      .width(x.range()[x.range().length - 1] + this._xAxis.padding())
+      .width(xRange[xRange.length - 1] + this._xAxis.padding())
       .title(false)
       .tickSize(0)
       .barConfig({"stroke-width": this._discrete ? 0 : this._yAxis.barConfig()["stroke-width"]})
       .config(this._y2Config)
       .render();
 
-    y = this._yAxis._d3Scale;
+    y = d => {
+      if (this._yConfig.scale === "log" && d === 0) d = yDomain[0] < 0 ? -1 : 1;
+      return this._yAxis._getPosition.bind(this._yAxis)(d);
+    };
 
     let yOffset = this._xAxis.barConfig()["stroke-width"];
     if (yOffset) yOffset /= 2;
