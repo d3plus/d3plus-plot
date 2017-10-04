@@ -309,6 +309,12 @@ export default class Plot extends Viz {
 
     const xGroup = elem("g.d3plus-plot-x-axis", {parent, transition, enter: {transform}, update: {transform}});
 
+    const xTrans = xOffset > yWidth ? xOffset - yWidth : 0;
+    const yTransform = `translate(${this._margin.left + xTrans}, ${this._margin.top})`;
+    const yGroup = elem("g.d3plus-plot-y-axis", {parent, transition, enter: {transform: yTransform}, update: {transform: yTransform}});
+
+    const x2Group = elem("g.d3plus-plot-x2-axis", {parent, transition, enter: {transform}, update: {transform}});
+
     this._xAxis
       .domain(xDomain)
       .height(height)
@@ -335,7 +341,7 @@ export default class Plot extends Viz {
       .labels([])
       .range([xOffset, undefined])
       .scale(xScale.toLowerCase())
-      .select(xGroup.node())
+      .select(x2Group.node())
       .ticks([])
       .width(xRange[xRange.length - 1] + this._xAxis.padding())
       .title(false)
@@ -343,10 +349,6 @@ export default class Plot extends Viz {
       .barConfig({"stroke-width": this._discrete ? 0 : this._xAxis.barConfig()["stroke-width"]})
       .config(this._x2Config)
       .render();
-
-    const xTrans = xOffset > yWidth ? xOffset - yWidth : 0;
-    const yTransform = `translate(${this._margin.left + xTrans}, ${this._margin.top})`;
-    const yGroup = elem("g.d3plus-plot-y-axis", {parent, transition, enter: {transform: yTransform}, update: {transform: yTransform}});
 
     this._yAxis
       .domain(yDomain)
