@@ -383,6 +383,7 @@ export default class Plot extends Viz {
       if (this._yConfig.scale === "log" && d === 0) d = yDomain[0] < 0 ? -1 : 1;
       return this._yAxis._getPosition.bind(this._yAxis)(d);
     };
+    const yRange = this._yAxis._getRange();
 
     let yOffset = this._xAxis.barConfig()["stroke-width"];
     if (yOffset) yOffset /= 2;
@@ -422,8 +423,8 @@ export default class Plot extends Viz {
 
         let space;
         const scale = this._discrete === "x" ? x : y;
-        const vals = scale.domain().filter(d => typeof d !== "string" || d.indexOf("d3plus-buffer-") < 0);
-        const range = scale.range();
+        const vals = (this._discrete === "x" ? xDomain : yDomain).filter(d => typeof d !== "string" || d.indexOf("d3plus-buffer-") < 0);
+        const range = this._discrete === "x" ? xRange : yRange;
         if (vals.length > 1) space = scale(vals[1]) - scale(vals[0]);
         else space = range[range.length - 1] - range[0];
         space -= this._groupPadding;
