@@ -9,9 +9,9 @@ import {default as ordinalBuffer} from "./ordinalBuffer";
     @param {D3Scale} x
     @param {D3Scale} y
     @param {Object} [config]
-    @param {Number} [buffer]
+    @param {Number} [buffer = 10]
 */
-export default function(data, x, y, config = {}, buffer = 10) {
+export default function(data, x, y, config, buffer = 10) {
 
   const oppScale = this._discrete === "x" ? y : x;
 
