@@ -66,7 +66,7 @@ export default class Plot extends Viz {
         width: constant(10)
       }
     });
-    this._stackOffset = d3Shape.stackOffsetNone;
+    this._stackOffset = d3Shape.stackOffsetDiverging;
     this._stackOrder = d3Shape.stackOrderNone;
     this._x = accessor("x");
     this._xAxis = new AxisBottom().align("end");
@@ -204,7 +204,7 @@ export default class Plot extends Viz {
 
       domains = {
         [this._discrete]: extent(data, d => d[this._discrete]),
-        [opp]: [min(stackData.map(g => min(g.map(p => p[1])))), max(stackData.map(g => max(g.map(p => p[1]))))]
+        [opp]: [min(stackData.map(g => min(g.map(p => p[0])))), max(stackData.map(g => max(g.map(p => p[1]))))]
       };
 
     }
