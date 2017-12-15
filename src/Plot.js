@@ -29,6 +29,7 @@ export default class Plot extends Viz {
   constructor() {
 
     super();
+    this._annotations = [];
     this._barPadding = 0;
     this._buffer = {
       Bar: BarBuffer,
@@ -385,6 +386,22 @@ export default class Plot extends Viz {
     };
     const yRange = this._yAxis._getRange();
 
+    const annotationGroup = elem("g.d3plus-plot-annotations", {parent, transition, enter: {transform}, update: {transform}}).node();
+    this._annotations.forEach(annotation => {
+      new shapes[annotation.shape]()
+        .config(annotation)
+        .config({
+          x: d => x(d.x),
+          x0: this._discrete === "x" ? d => x(d.x) : x(0),
+          x1: this._discrete === "x" ? null : d => x(d.x),
+          y: d => y(d.y),
+          y0: this._discrete === "y" ? d => y(d.y) : y(0) - yOffset,
+          y1: this._discrete === "y" ? null : d => y(d.y) - yOffset
+        })
+        .select(annotationGroup)
+        .render();
+    });
+
     let yOffset = this._xAxis.barConfig()["stroke-width"];
     if (yOffset) yOffset /= 2;
 
@@ -475,6 +492,15 @@ export default class Plot extends Viz {
 
     return this;
 
+  }
+
+  /**
+      @memberof Plot
+      @desc Allows drawing custom shapes to be used as annotations in the provided x/y plot. This method accepts custom config objects for the [Shape](http://d3plus.org/docs/#Shape) class, either a single config object or an array of config objects. Each config object requires an additional parameter, the "shape", which denotes which [Shape](http://d3plus.org/docs/#Shape) sub-class to use ([Rect](http://d3plus.org/docs/#Rect), [Line](http://d3plus.org/docs/#Line), etc). Annotations will be drawn underneath the data to be displayed.
+      @param {Array|Object} *annotations* = []
+  */
+  annotations(_) {
+    return arguments.length ? (this._annotations = _ instanceof Array ? _ : [_], this) : this._annotations;
   }
 
   /**
