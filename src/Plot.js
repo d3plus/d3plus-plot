@@ -14,6 +14,10 @@ import {default as CircleBuffer} from "./buffers/Circle.js";
 import {default as RectBuffer} from "./buffers/Rect.js";
 import {default as LineBuffer} from "./buffers/Line.js";
 
+function defaultSize(d) {
+  return this._sizeScaleD3(this._size(d));
+}
+
 /**
     @class Plot
     @extends Viz
@@ -53,7 +57,7 @@ export default class Plot extends Viz {
         }
       },
       Circle: {
-        r: constant(5)
+        r: defaultSize.bind(this)
       },
       Line: {
         fill: constant("none"),
@@ -62,10 +66,13 @@ export default class Plot extends Viz {
         strokeWidth: constant(1)
       },
       Rect: {
-        height: constant(10),
-        width: constant(10)
+        height: d => defaultSize.bind(this)(d) * 2,
+        width: d => defaultSize.bind(this)(d) * 2
       }
     });
+    this._sizeMax = 20;
+    this._sizeMin = 5;
+    this._sizeScale = "sqrt";
     this._stackOffset = d3Shape.stackOffsetDiverging;
     this._stackOrder = d3Shape.stackOrderNone;
     this._x = accessor("x");
@@ -117,6 +124,17 @@ export default class Plot extends Viz {
       x: this._x(d, i),
       y: this._y(d, i)
     }));
+
+    if (this._size) {
+      const rExtent = extent(data, d => this._size(d.data));
+      this._sizeScaleD3 = () => this._sizeMin;
+      this._sizeScaleD3 = scales[`scale${this._sizeScale.charAt(0).toUpperCase()}${this._sizeScale.slice(1)}`]()
+        .domain(rExtent)
+        .range([rExtent[0] === rExtent[1] ? this._sizeMax : min([this._sizeMax / 2, this._sizeMin]), this._sizeMax]);
+    }
+    else {
+      this._sizeScaleD3 = () => this._sizeMin;
+    }
 
     const height = this._height - this._margin.top - this._margin.bottom,
           opp = this._discrete ? this._discrete === "x" ? "y" : "x" : undefined,
@@ -498,6 +516,7 @@ export default class Plot extends Viz {
       @memberof Plot
       @desc Allows drawing custom shapes to be used as annotations in the provided x/y plot. This method accepts custom config objects for the [Shape](http://d3plus.org/docs/#Shape) class, either a single config object or an array of config objects. Each config object requires an additional parameter, the "shape", which denotes which [Shape](http://d3plus.org/docs/#Shape) sub-class to use ([Rect](http://d3plus.org/docs/#Rect), [Line](http://d3plus.org/docs/#Line), etc). Annotations will be drawn underneath the data to be displayed.
       @param {Array|Object} *annotations* = []
+      @chainable
   */
   annotations(_) {
     return arguments.length ? (this._annotations = _ instanceof Array ? _ : [_], this) : this._annotations;
@@ -506,7 +525,8 @@ export default class Plot extends Viz {
   /**
       @memberof Plot
       @desc Sets the pixel space between each bar in a group of bars.
-      @param {Number} [*value* = 0]
+      @param {Number} *value* = 0
+      @chainable
   */
   barPadding(_) {
     return arguments.length ? (this._barPadding = _, this) : this._barPadding;
@@ -514,8 +534,9 @@ export default class Plot extends Viz {
 
   /**
       @memberof Plot
-      @desc If *value* is specified, sets the baseline for the x/y plot and returns the current class instance. If *value* is not specified, returns the current baseline.
-      @param {Number} [*value*]
+      @desc Sets the baseline for the x/y plot. If *value* is not specified, returns the current baseline.
+      @param {Number} *value*
+      @chainable
   */
   baseline(_) {
     return arguments.length ? (this._baseline = _, this) : this._baseline;
@@ -523,8 +544,9 @@ export default class Plot extends Viz {
 
   /**
       @memberof Plot
-      @desc If *value* is specified, sets the discrete axis to the specified string and returns the current class instance. If *value* is not specified, returns the current discrete axis.
-      @param {String} [*value*]
+      @desc Sets the discrete axis to the specified string. If *value* is not specified, returns the current discrete axis.
+      @param {String} *value*
+      @chainable
   */
   discrete(_) {
     return arguments.length ? (this._discrete = _, this) : this._discrete;
@@ -534,6 +556,7 @@ export default class Plot extends Viz {
       @memberof Plot
       @desc Sets the pixel space between groups of bars.
       @param {Number} [*value* = 5]
+      @chainable
   */
   groupPadding(_) {
     return arguments.length ? (this._groupPadding = _, this) : this._groupPadding;
@@ -541,8 +564,49 @@ export default class Plot extends Viz {
 
   /**
       @memberof Plot
-      @desc If *value* is specified, toggles shape stacking and returns the current class instance. If *value* is not specified, returns the current stack value.
-      @param {Boolean} [*value* = false]
+      @desc Sets the size of bubbles to the given Number, data key, or function.
+      @param {Function|Number|String} *value* = 10
+      @chainable
+  */
+  size(_) {
+    return arguments.length ? (this._size = typeof _ === "function" || !_ ? _ : accessor(_), this) : this._size;
+  }
+
+  /**
+      @memberof Plot
+      @desc Sets the size scale maximum to the specified number.
+      @param {Number} *value* = 20
+      @chainable
+  */
+  sizeMax(_) {
+    return arguments.length ? (this._sizeMax = _, this) : this._sizeMax;
+  }
+
+  /**
+      @memberof Plot
+      @desc Sets the size scale minimum to the specified number.
+      @param {Number} *value* = 5
+      @chainable
+  */
+  sizeMin(_) {
+    return arguments.length ? (this._sizeMin = _, this) : this._sizeMin;
+  }
+
+  /**
+      @memberof Plot
+      @desc Sets the size scale to the specified string.
+      @param {String} *value* = "sqrt"
+      @chainable
+  */
+  sizeScale(_) {
+    return arguments.length ? (this._sizeScale = _, this) : this._sizeScale;
+  }
+
+  /**
+      @memberof Plot
+      @desc If *value* is specified, toggles shape stacking. If *value* is not specified, returns the current stack value.
+      @param {Boolean} *value* = false
+      @chainable
   */
   stacked(_) {
     return arguments.length ? (this._stacked = _, this) : this._stacked;
@@ -550,8 +614,9 @@ export default class Plot extends Viz {
 
   /**
       @memberof Plot
-      @desc If *value* is specified, sets the stack offset and returns the current class instance. If *value* is not specified, returns the current stack offset function.
-      @param {Function|String} [*value* = "descending"]
+      @desc Sets the stack offset. If *value* is not specified, returns the current stack offset function.
+      @param {Function|String} *value* = "descending"
+      @chainable
   */
   stackOffset(_) {
     return arguments.length ? (this._stackOffset = typeof _ === "function" ? _ : d3Shape[`stackOffset${_.charAt(0).toUpperCase() + _.slice(1)}`], this) : this._stackOffset;
@@ -559,8 +624,9 @@ export default class Plot extends Viz {
 
   /**
       @memberof Plot
-      @desc If *value* is specified, sets the stack order and returns the current class instance. If *value* is not specified, returns the current stack order function.
-      @param {Function|String|Array} [*value* = "none"]
+      @desc Sets the stack order. If *value* is not specified, returns the current stack order function.
+      @param {Function|String|Array} *value* = "none"
+      @chainable
   */
   stackOrder(_) {
     return arguments.length ? (this._stackOrder = typeof _ === "string" ? d3Shape[`stackOrder${_.charAt(0).toUpperCase() + _.slice(1)}`] : _, this) : this._stackOrder;
@@ -568,8 +634,9 @@ export default class Plot extends Viz {
 
   /**
       @memberof Plot
-      @desc If *value* is specified, sets the x accessor to the specified function or number and returns the current class instance. If *value* is not specified, returns the current x accessor.
-      @param {Function|Number} [*value*]
+      @desc Sets the x accessor to the specified function or number. If *value* is not specified, returns the current x accessor.
+      @param {Function|Number} *value*
+      @chainable
   */
   x(_) {
     if (arguments.length) {
@@ -590,8 +657,9 @@ export default class Plot extends Viz {
 
   /**
       @memberof Plot
-      @desc If *value* is specified, sets the config method for the x-axis and returns the current class instance. If *value* is not specified, returns the current x-axis configuration.
-      @param {Object} [*value*]
+      @desc Sets the config method for the x-axis. If *value* is not specified, returns the current x-axis configuration.
+      @param {Object} *value*
+      @chainable
   */
   xConfig(_) {
     return arguments.length ? (this._xConfig = assign(this._xConfig, _), this) : this._xConfig;
@@ -599,8 +667,9 @@ export default class Plot extends Viz {
 
   /**
       @memberof Plot
-      @desc If *value* is specified, sets the config method for the secondary x-axis and returns the current class instance. If *value* is not specified, returns the current secondary x-axis configuration.
-      @param {Object} [*value*]
+      @desc Sets the config method for the secondary x-axis. If *value* is not specified, returns the current secondary x-axis configuration.
+      @param {Object} *value*
+      @chainable
   */
   x2Config(_) {
     return arguments.length ? (this._x2Config = assign(this._x2Config, _), this) : this._x2Config;
@@ -608,8 +677,9 @@ export default class Plot extends Viz {
 
   /**
       @memberof Plot
-      @desc If *value* is specified, sets the x domain to the specified array and returns the current class instance. If *value* is not specified, returns the current x domain. Additionally, if either value of the array is undefined, it will be calculated from the data.
-      @param {Array} [*value*]
+      @desc Sets the x domain to the specified array. If *value* is not specified, returns the current x domain. Additionally, if either value of the array is undefined, it will be calculated from the data.
+      @param {Array} *value*
+      @chainable
   */
   xDomain(_) {
     return arguments.length ? (this._xDomain = _, this) : this._xDomain;
@@ -618,7 +688,8 @@ export default class Plot extends Viz {
   /**
       @memberof Plot
       @desc Defines a custom sorting comparitor function to be used for discrete x axes.
-      @param {Function} [*value*]
+      @param {Function} *value*
+      @chainable
   */
   xSort(_) {
     return arguments.length ? (this._xSort = _, this) : this._xSort;
@@ -626,8 +697,9 @@ export default class Plot extends Viz {
 
   /**
       @memberof Plot
-      @desc If *value* is specified, sets the y accessor to the specified function or number and returns the current class instance. If *value* is not specified, returns the current y accessor.
-      @param {Function|Number} [*value*]
+      @desc Sets the y accessor to the specified function or number. If *value* is not specified, returns the current y accessor.
+      @param {Function|Number} *value*
+      @chainable
   */
   y(_) {
     if (arguments.length) {
@@ -648,10 +720,11 @@ export default class Plot extends Viz {
 
   /**
       @memberof Plot
-      @desc If *value* is specified, sets the config method for the y-axis and returns the current class instance. If *value* is not specified, returns the current y-axis configuration.
+      @desc Sets the config method for the y-axis. If *value* is not specified, returns the current y-axis configuration.
 
 *Note:* If a "domain" array is passed to the y-axis config, it will be reversed.
-      @param {Object} [*value*]
+      @param {Object} *value*
+      @chainable
   */
   yConfig(_) {
     if (arguments.length) {
@@ -664,8 +737,9 @@ export default class Plot extends Viz {
 
   /**
       @memberof Plot
-      @desc If *value* is specified, sets the config method for the secondary y-axis and returns the current class instance. If *value* is not specified, returns the current secondary y-axis configuration.
-      @param {Object} [*value*]
+      @desc Sets the config method for the secondary y-axis. If *value* is not specified, returns the current secondary y-axis configuration.
+      @param {Object} *value*
+      @chainable
   */
   y2Config(_) {
     return arguments.length ? (this._y2Config = assign(this._y2Config, _), this) : this._y2Config;
@@ -673,8 +747,9 @@ export default class Plot extends Viz {
 
   /**
       @memberof Plot
-      @desc If *value* is specified, sets the y domain to the specified array and returns the current class instance. If *value* is not specified, returns the current y domain. Additionally, if either value of the array is undefined, it will be calculated from the data.
-      @param {Array} [*value*]
+      @desc Sets the y domain to the specified array. If *value* is not specified, returns the current y domain. Additionally, if either value of the array is undefined, it will be calculated from the data.
+      @param {Array} *value*
+      @chainable
   */
   yDomain(_) {
     return arguments.length ? (this._yDomain = _, this) : this._yDomain;
@@ -683,7 +758,8 @@ export default class Plot extends Viz {
   /**
       @memberof Plot
       @desc Defines a custom sorting comparitor function to be used for discrete y axes.
-      @param {Function} [*value*]
+      @param {Function} *value*
+      @chainable
   */
   ySort(_) {
     return arguments.length ? (this._ySort = _, this) : this._ySort;

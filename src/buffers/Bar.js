@@ -10,6 +10,7 @@ import {default as ordinalBuffer} from "./ordinalBuffer";
     @param {D3Scale} y
     @param {Object} [config]
     @param {Number} [buffer = 10]
+    @private
 */
 export default function(data, x, y, config, buffer = 10) {
 

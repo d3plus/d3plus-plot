@@ -1,6 +1,15 @@
 import {default as ordinalBuffer} from "./ordinalBuffer";
 
-export default function(data, x, y, config) {
+/**
+    Adds a buffer to either side of the non-discrete axis.
+    @param {Array} data
+    @param {D3Scale} x
+    @param {D3Scale} y
+    @param {Object} [config]
+    @param {Number} [buffer] Defaults to the radius of the largest Circle.
+    @private
+*/
+export default function(data, x, y, config, buffer) {
 
   let xD = x.domain().slice(),
       yD = y.domain().slice();
@@ -13,7 +22,7 @@ export default function(data, x, y, config) {
 
   data.forEach(d => {
 
-    const s = config.r(d.data, d.i) * 2;
+    const s = buffer ? buffer : config.r(d.data, d.i) * 2;
 
     if (x.invert && x(d.x) - xR[0] < s) {
       const v = x.invert(x(d.x) - s);
