@@ -15,7 +15,7 @@ import {default as RectBuffer} from "./buffers/Rect.js";
 import {default as LineBuffer} from "./buffers/Line.js";
 
 function defaultSize(d) {
-  return this._sizeScaleD3(this._size(d));
+  return this._sizeScaleD3(this._size ? this._size(d) : null);
 }
 
 /**

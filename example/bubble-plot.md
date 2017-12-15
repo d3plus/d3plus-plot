@@ -1,4 +1,4 @@
-# Scatter/Bubble Plot
+# Scatter Plot/Bubble Chart
 
 Building upon the [Simple X/Y Plot](http://d3plus.org/examples/d3plus-plot/getting-started/) example, it is very easy to size the Circles with data. Given an additional "value" parameter in the data:
 

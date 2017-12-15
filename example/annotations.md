@@ -1,4 +1,4 @@
-# Adding Custom Annotations to a Chart
+# Custom Chart Annotations
 
 Outside of the data provided to the [data method](http://d3plus.org/docs/#Viz.data), it is possible to draw custom shapes on any x/y plot. The [annotations method](http://d3plus.org/docs/#Plot.annotations) allows drawing custom shapes to be used as annotations. The method accepts custom config objects for the [Shape](http://d3plus.org/docs/#Shape) class, either a single config object or an array of config objects. Each config object requires an additional parameter, the "shape", which denotes which [Shape](http://d3plus.org/docs/#Shape) sub-class to use ([Rect](http://d3plus.org/docs/#Rect), [Line](http://d3plus.org/docs/#Line), etc). Annotations will be drawn underneath the data to be displayed.
 
