@@ -60,7 +60,7 @@ This creates an x/y plot using the default shape ([Circle](http://d3plus.org/doc
 
 ## API Reference
 
-##### Classes
+##### 
 * [AreaPlot](#AreaPlot)
 * [BarChart](#BarChart)
 * [LinePlot](#LinePlot)
@@ -382,4 +382,4 @@ new d3plus.Area()
 
 
 
-###### <sub>Documentation generated on Fri, 15 Dec 2017 18:23:12 GMT</sub>
+###### <sub>Documentation generated on Thu, 21 Dec 2017 22:23:30 GMT</sub>
