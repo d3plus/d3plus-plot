@@ -44,8 +44,8 @@ This creates an x/y plot using the default shape ([Circle](http://d3plus.org/doc
 
 ### More Examples
 
- * [Scatter Plot/Bubble Chart](http://d3plus.org/examples/d3plus-plot/bubble-plot/)<sup> ***New***</sup>
- * [Custom Chart Annotations](http://d3plus.org/examples/d3plus-plot/annotations/)<sup> ***New***</sup>
+ * [Scatter Plot/Bubble Chart](http://d3plus.org/examples/d3plus-plot/bubble-plot/)
+ * [Custom Chart Annotations](http://d3plus.org/examples/d3plus-plot/annotations/)
  * [Stacked Area Chart](http://d3plus.org/examples/d3plus-plot/stacked-area/)
  * [Horizontal Stacked Area Chart](http://d3plus.org/examples/d3plus-plot/stacked-area-flip/)
  * [Changing the Stroke Width of a Line Plot](http://d3plus.org/examples/d3plus-plot/line-plot-strokeWidth/)
@@ -382,4 +382,4 @@ new d3plus.Area()
 
 
 
-###### <sub>Documentation generated on Thu, 21 Dec 2017 22:23:30 GMT</sub>
+###### <sub>Documentation generated on Fri, 29 Dec 2017 15:52:08 GMT</sub>
