@@ -31,7 +31,7 @@
     "d3plus-axis": "^0.3.41",
     "d3plus-color": "^0.6.2",
     "d3plus-common": "^0.6.31",
-    "d3plus-shape": "^0.13.11",
+    "d3plus-shape": "^0.13.15",
     "d3plus-viz": "^0.10.14"
   },
   "scripts": {
