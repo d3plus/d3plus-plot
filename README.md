@@ -382,4 +382,4 @@ new d3plus.Area()
 
 
 
-###### <sub>Documentation generated on Fri, 29 Dec 2017 15:52:08 GMT</sub>
+###### <sub>Documentation generated on Wed, 03 Jan 2018 17:40:21 GMT</sub>
