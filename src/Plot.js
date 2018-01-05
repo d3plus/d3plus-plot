@@ -82,7 +82,9 @@ export default class Plot extends Viz {
     this._xConfig = {
       title: "X Axis"
     };
-    this._x2Config = {};
+    this._x2Config = {
+      padding: 0
+    };
     this._y = accessor("y");
     this._yAxis = new AxisLeft().align("start");
     this._y2Axis = new AxisRight().align("end");
@@ -139,7 +141,6 @@ export default class Plot extends Viz {
     const height = this._height - this._margin.top - this._margin.bottom,
           opp = this._discrete ? this._discrete === "x" ? "y" : "x" : undefined,
           parent = this._select,
-          transform = `translate(${this._margin.left}, ${this._margin.top})`,
           transition = this._transition,
           width = this._width - this._margin.left - this._margin.right;
 
@@ -326,13 +327,14 @@ export default class Plot extends Viz {
       .range([xOffset, undefined])
       .render();
 
+    const topOffset = this._yTest.shapeConfig().labelConfig.fontSize() / 2;
+    const transform = `translate(${this._margin.left}, ${this._margin.top + topOffset})`;
+
     const xGroup = elem("g.d3plus-plot-x-axis", {parent, transition, enter: {transform}, update: {transform}});
 
     const xTrans = xOffset > yWidth ? xOffset - yWidth : 0;
-    const yTransform = `translate(${this._margin.left + xTrans}, ${this._margin.top})`;
+    const yTransform = `translate(${this._margin.left + xTrans}, ${this._margin.top + topOffset})`;
     const yGroup = elem("g.d3plus-plot-y-axis", {parent, transition, enter: {transform: yTransform}, update: {transform: yTransform}});
-
-    const x2Group = elem("g.d3plus-plot-x2-axis", {parent, transition, enter: {transform}, update: {transform}});
 
     this._xAxis
       .domain(xDomain)
@@ -360,9 +362,9 @@ export default class Plot extends Viz {
       .labels([])
       .range([xOffset, undefined])
       .scale(xScale.toLowerCase())
-      .select(x2Group.node())
+      .select(xGroup.node())
       .ticks([])
-      .width(xRange[xRange.length - 1] + this._xAxis.padding())
+      .width(xRange[xRange.length - 1])
       .title(false)
       .tickSize(0)
       .barConfig({"stroke-width": this._discrete ? 0 : this._xAxis.barConfig()["stroke-width"]})
@@ -376,7 +378,7 @@ export default class Plot extends Viz {
       .scale(yScale.toLowerCase())
       .select(yGroup.node())
       .ticks(yTicks)
-      .width(xRange[xRange.length - 1] + this._xAxis.padding())
+      .width(xRange[xRange.length - 1])
       .config(yC)
       .config(this._yConfig)
       .render();
