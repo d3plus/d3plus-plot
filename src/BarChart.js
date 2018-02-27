@@ -5,11 +5,12 @@ import {default as Plot} from "./Plot";
 /**
     @class BarChart
     @extends Plot
-    @desc Creates a line plot based on an array of data.
+    @desc Creates a bar chart based on an array of data.
     @example <caption>the equivalent of calling:</caption>
 new d3plus.Plot()
+  .baseline(0)
   .discrete("x")
-  .shape("Line")
+  .shape("Bar")
 */
 export default class BarChart extends Plot {
 
