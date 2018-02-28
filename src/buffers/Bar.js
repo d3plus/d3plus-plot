@@ -12,7 +12,8 @@ import {default as ordinalBuffer} from "./ordinalBuffer";
     @param {Number} [buffer = 10]
     @private
 */
-export default function(data, x, y, config, buffer = 10) {
+export default function({data, x, y, y2, config, buffer = 10}) {
+  const yKey = y2 ? "y2" : "y";
 
   const oppScale = this._discrete === "x" ? y : x;
 
@@ -25,12 +26,12 @@ export default function(data, x, y, config, buffer = 10) {
     const groupedData = nest()
       .key(d => d[this._discrete])
       .entries(data)
-      .map(d => d.values.map(x => x[this._discrete === "x" ? "y" : "x"]));
+      .map(d => d.values.map(x => x[this._discrete === "x" ? yKey : "x"]));
     posVals = groupedData.map(arr => sum(arr.filter(d => d > 0)));
     negVals = groupedData.map(arr => sum(arr.filter(d => d < 0)));
   }
   else {
-    posVals = data.map(d => d[this._discrete === "x" ? "y" : "x"]);
+    posVals = data.map(d => d[this._discrete === "x" ? yKey : "x"]);
     negVals = posVals;
   }
   let bMax = oppScale(max(posVals));
