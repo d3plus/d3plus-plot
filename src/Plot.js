@@ -368,11 +368,11 @@ export default class Plot extends Viz {
     const yGroup = elem("g.d3plus-plot-y-axis", {parent, transition, enter: {transform: yTransform}, update: {transform: yTransform}});
 
     this._y2Test
-      .domain(y2Domain)
+      .domain(y2Exists ? y2Domain : yDomain)
       .height(height)
-      .scale(y2Scale.toLowerCase())
+      .scale(y2Exists ? y2Scale.toLowerCase() : yScale.toLowerCase())
       .select(testGroup.node())
-      .ticks(y2Ticks)
+      .ticks(y2Ticks ? y2Ticks : yTicks)
       .width(width)
       .config(yC)
       .config(this._y2Config)
@@ -433,12 +433,12 @@ export default class Plot extends Viz {
 
     this._y2Axis
       .config(yC)
-      .domain(y2Domain)
-      // .gridSize(0)
+      .domain(y2Exists ? y2Domain : yDomain)
+      .gridSize(0)
       .height(height)
       // .labels([])
       .range([this._xAxis.outerBounds().y, this._xTest.outerBounds().y])
-      .scale(y2Scale.toLowerCase())
+      .scale(y2Exists ? y2Scale.toLowerCase() : yScale.toLowerCase())
       .select(y2Group.node())
       // .ticks([])
       .width(xRange[xRange.length - 1] + this._xAxis.padding() + y2Width - xOffset)
@@ -842,6 +842,16 @@ export default class Plot extends Viz {
   */
   ySort(_) {
     return arguments.length ? (this._ySort = _, this) : this._ySort;
+  }
+
+  /**
+   @memberof Plot
+   @desc Defines a custom sorting comparitor function to be used for discrete y2 axes.
+   @param {Function} *value*
+   @chainable
+   */
+  y2Sort(_) {
+    return arguments.length ? (this._y2Sort = _, this) : this._y2Sort;
   }
 
 }
