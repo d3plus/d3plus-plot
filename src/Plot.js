@@ -141,8 +141,12 @@ export default class Plot extends Viz {
       this._sizeScaleD3 = () => this._sizeMin;
     }
 
+    const y2Exists = data.some(d => d.y2);
+
     const height = this._height - this._margin.top - this._margin.bottom,
           opp = this._discrete ? this._discrete === "x" ? "y" : "x" : undefined,
+          opp2 = this._discrete && this._discrete === "x" && y2Exists ? "y2" : undefined,
+          opps = [opp, opp2],
           parent = this._select,
           transition = this._transition,
           width = this._width - this._margin.left - this._margin.right;
@@ -281,11 +285,13 @@ export default class Plot extends Viz {
 
     domains = {x: xDomain, y: yDomain, y2: y2Domain};
 
-    if (opp && this._baseline !== void 0) {
-      const b = this._baseline;
-      if (domains[opp][0] > b) domains[opp][0] = b;
-      else if (domains[opp][1] < b) domains[opp][1] = b;
-    }
+    opps.forEach(opp => {
+      if (opp && this._baseline !== void 0) {
+        const b = this._baseline;
+        if (domains[opp][0] > b) domains[opp][0] = b;
+        else if (domains[opp][1] < b) domains[opp][1] = b;
+      }
+    });
 
     let x = scales[`scale${xScale}`]().domain(domains.x).range(range(0, width + 1, width / (domains.x.length - 1))),
         y = scales[`scale${yScale}`]().domain(domains.y.reverse()).range(range(0, height + 1, height / (domains.y.length - 1))),
