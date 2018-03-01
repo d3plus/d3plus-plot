@@ -9,7 +9,8 @@ import {default as ordinalBuffer} from "./ordinalBuffer";
     @param {Number} [buffer] Defaults to the radius of the largest Circle.
     @private
 */
-export default function(data, x, y, config, buffer) {
+export default function({data, x, y, y2, config, buffer}) {
+  const yKey = y2 ? "y2" : "y";
 
   let xD = x.domain().slice(),
       yD = y.domain().slice();
@@ -33,12 +34,12 @@ export default function(data, x, y, config, buffer) {
       if (v > xD[1]) xD[1] = v;
     }
 
-    if (y.invert && y(d.y) - yR[0] < s) {
-      const v = y.invert(y(d.y) - s);
+    if (y.invert && y(d[yKey]) - yR[0] < s) {
+      const v = y.invert(y(d[yKey]) - s);
       if (v > yD[0]) yD[0] = v;
     }
-    if (y.invert && yR[1] - y(d.y) < s) {
-      const v = y.invert(y(d.y) + s);
+    if (y.invert && yR[1] - y(d[yKey]) < s) {
+      const v = y.invert(y(d[yKey]) + s);
       if (v < yD[1]) yD[1] = v;
     }
 

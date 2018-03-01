@@ -1,6 +1,7 @@
 import {default as ordinalBuffer} from "./ordinalBuffer";
 
-export default function(data, x, y, config) {
+export default function({data, x, y, y2, config}) {
+  const yKey = y2 ? "y2" : "y";
 
   let xD = x.domain().slice(),
       yD = y.domain().slice();
@@ -25,12 +26,12 @@ export default function(data, x, y, config) {
       if (v > xD[1]) xD[1] = v;
     }
 
-    if (y.invert && y(d.y) - yR[0] < h) {
-      const v = y.invert(y(d.y) - h);
+    if (y.invert && y(d[yKey]) - yR[0] < h) {
+      const v = y.invert(y(d[yKey]) - h);
       if (v > yD[0]) yD[0] = v;
     }
-    if (y.invert && yR[1] - y(d.y) < h) {
-      const v = y.invert(y(d.y) + h);
+    if (y.invert && yR[1] - y(d[yKey]) < h) {
+      const v = y.invert(y(d[yKey]) + h);
       if (v < yD[1]) yD[1] = v;
     }
 
