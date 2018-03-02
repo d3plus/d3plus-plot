@@ -76,9 +76,11 @@ export default class Plot extends Viz {
     this._stackOffset = d3Shape.stackOffsetDiverging;
     this._stackOrder = d3Shape.stackOrderNone;
     this._x = accessor("x");
+    this._x2 = accessor("x2");
     this._xAxis = new AxisBottom().align("end");
     this._x2Axis = new AxisTop().align("start");
     this._xTest = new AxisBottom().align("end").gridSize(0);
+    this._x2Test = new AxisTop().align("start").gridSize(0);
     this._xConfig = {
       title: "X Axis"
     };
@@ -126,6 +128,7 @@ export default class Plot extends Viz {
       id: this._ids(d, i).slice(0, this._drawDepth + 1).join("_"),
       shape: this._shape(d, i),
       x: this._x(d, i),
+      x2: this._x2(d, i),
       y: this._y(d, i),
       y2: this._y2(d, i)
     }));
@@ -141,23 +144,26 @@ export default class Plot extends Viz {
       this._sizeScaleD3 = () => this._sizeMin;
     }
 
-    const y2Exists = data.some(d => d.y2);
+    const x2Exists = data.some(d => d.x2),
+          y2Exists = data.some(d => d.y2);
 
     const height = this._height - this._margin.top - this._margin.bottom,
           opp = this._discrete ? this._discrete === "x" ? "y" : "x" : undefined,
-          opp2 = this._discrete && this._discrete === "x" && y2Exists ? "y2" : undefined,
+          opp2 = this._discrete ? this._discrete === "x" ? "y2" : "x2" : undefined,
           opps = [opp, opp2],
           parent = this._select,
           transition = this._transition,
           width = this._width - this._margin.left - this._margin.right;
 
     const xTime = this._time && data[0].x === this._time(data[0].data, data[0].i),
+          x2Time = this._time && data[0].x2 === this._time(data[0].data, data[0].i),
           y2Time = this._time && data[0].y2 === this._time(data[0].data, data[0].i),
           yTime = this._time && data[0].y === this._time(data[0].data, data[0].i);
 
     for (let i = 0; i < data.length; i++) {
       const d = data[i];
       if (xTime) d.x = date(d.x);
+      if (x2Time) d.x2 = date(d.x2);
       if (yTime) d.y = date(d.y);
       if (y2Time) d.y2 = date(d.y2);
       d.discrete = d.shape === "Bar" ? `${d[this._discrete]}_${d.group}` : `${d[this._discrete]}`;
@@ -236,7 +242,7 @@ export default class Plot extends Viz {
       };
 
     }
-    else domains = {x: extent(data, d => d.x), y: extent(data, d => d.y), y2: extent(data, d => d.y2)};
+    else domains = {x: extent(data, d => d.x), x2: extent(data, d => d.x2), y: extent(data, d => d.y), y2: extent(data, d => d.y2)};
 
     let xDomain = this._xDomain ? this._xDomain.slice() : domains.x,
         xScale = "Linear";
@@ -248,9 +254,24 @@ export default class Plot extends Viz {
       xDomain = xDomain.map(date);
       xScale = "Time";
     }
+
+    let x2Domain = this._x2Domain ? this._x2Domain.slice() : domains.x2,
+        x2Scale = "Linear";
+
+    if (x2Domain[0] === void 0) x2Domain[0] = domains.x2[0];
+    if (x2Domain[1] === void 0) x2Domain[1] = domains.x2[1];
+
+    if (x2Time) {
+      x2Domain = x2Domain.map(date);
+      x2Scale = "Time";
+    }
+
     else if (this._discrete === "x") {
-      xDomain = Array.from(new Set(data.sort((a, b) => this._xSort ? this._xSort(a.data, b.data) : a.x - b.x).map(d => d.x)));
+      xDomain = Array.from(new Set(data.filter(d => d.x).sort((a, b) => this._xSort ? this._xSort(a.data, b.data) : a.x - b.x).map(d => d.x)));
       xScale = "Ordinal";
+
+      x2Domain = Array.from(new Set(data.filter(d => d.x2).sort((a, b) => this._x2Sort ? this._x2Sort(a.data, b.data) : a.x2 - b.x2).map(d => d.x2)));
+      x2Scale = "Ordinal";
     }
 
     let yDomain = this._yDomain ? this._yDomain.slice() : domains.y,
@@ -283,7 +304,7 @@ export default class Plot extends Viz {
       yScale = "Ordinal";
     }
 
-    domains = {x: xDomain, y: yDomain, y2: y2Domain};
+    domains = {x: xDomain, x2: x2Domain, y: yDomain, y2: y2Domain};
 
     opps.forEach(opp => {
       if (opp && this._baseline !== void 0) {
@@ -294,6 +315,7 @@ export default class Plot extends Viz {
     });
 
     let x = scales[`scale${xScale}`]().domain(domains.x).range(range(0, width + 1, width / (domains.x.length - 1))),
+        x2 = scales[`scale${x2Scale}`]().domain(domains.x2).range(range(0, width + 1, width / (domains.x2.length - 1))),
         y = scales[`scale${yScale}`]().domain(domains.y.reverse()).range(range(0, height + 1, height / (domains.y.length - 1))),
         y2 = scales[`scale${y2Scale}`]().domain(domains.y2.reverse()).range(range(0, height + 1, height / (domains.y2.length - 1)));
 
@@ -304,17 +326,20 @@ export default class Plot extends Viz {
           const res = this._buffer[d.key].bind(this)({data: d.values, x, y, config: this._shapeConfig[d.key]});
           if (this._xConfig.scale !== "log") x = res[0];
           if (this._yConfig.scale !== "log") y = res[1];
-          const res2 = this._buffer[d.key].bind(this)({data: d.values, x, y: y2, y2: true, config: this._shapeConfig[d.key]});
+          const res2 = this._buffer[d.key].bind(this)({data: d.values, x: x2, y: y2, x2: true, y2: true, config: this._shapeConfig[d.key]});
+          if (this._x2Config.scale !== "log") x2 = res2[0];
           if (this._y2Config.scale !== "log") y2 = res2[1];
         }
       });
     }
     xDomain = x.domain();
+    x2Domain = x2.domain();
     yDomain = y.domain();
     y2Domain = y2.domain();
 
     const testGroup = elem("g.d3plus-plot-test", {enter: {opacity: 0}, parent: this._select}),
           xTicks = this._discrete === "x" && !xTime ? domains.x : undefined,
+          x2Ticks = this._discrete === "x" && !x2Time ? domains.x2 : undefined,
           y2Ticks = this._discrete === "y2" && !y2Time ? domains.y2 : undefined,
           yTicks = this._discrete === "y" && !yTime ? domains.y : undefined;
 
@@ -336,6 +361,20 @@ export default class Plot extends Viz {
     const yBounds = this._yTest.outerBounds();
     const yWidth = yBounds.width ? yBounds.width + this._yTest.padding() : undefined;
 
+    this._y2Test
+      .domain(y2Exists ? y2Domain : yDomain)
+      .height(height)
+      .scale(y2Exists ? y2Scale.toLowerCase() : yScale.toLowerCase())
+      .select(testGroup.node())
+      .ticks(y2Ticks ? y2Ticks : yTicks)
+      .width(width)
+      .config(yC)
+      .config(this._y2Config)
+      .render();
+
+    const y2Bounds = this._y2Test.outerBounds();
+    const y2Width = y2Bounds.width ? y2Bounds.width + this._y2Test.padding() : undefined;
+
     const xC = {
       gridConfig: {stroke: !this._discrete || this._discrete === "y" ? this._xTest.gridConfig().stroke : "transparent"}
     };
@@ -352,10 +391,26 @@ export default class Plot extends Viz {
       .config(this._xConfig)
       .render();
 
-    const xOffset =  max([yWidth, this._xTest._getRange()[0]]);
+    this._x2Test
+      .domain(xDomain)
+      .height(height)
+      .range([undefined, undefined])
+      .scale(xScale.toLowerCase())
+      .select(testGroup.node())
+      .ticks(xTicks)
+      .width(width)
+      .config(xC)
+      .config(this._x2Config)
+      .render();
+
+    const x2Bounds = this._x2Test.outerBounds();
+    const x2Height = x2Bounds.height ? x2Bounds.height + this._x2Test.padding() : undefined;
+
+    const xOffsetLeft =  max([yWidth, this._xTest._getRange()[0], this._x2Test._getRange()[0]]);
+    const xOffsetRight = max([y2Width, width - this._xTest._getRange()[1], width - this._x2Test._getRange()[1]]);
 
     this._xTest
-      .range([xOffset, undefined])
+      .range([xOffsetLeft, undefined])
       .render();
 
     const topOffset = this._yTest.shapeConfig().labelConfig.fontSize() / 2;
@@ -363,66 +418,58 @@ export default class Plot extends Viz {
 
     const xGroup = elem("g.d3plus-plot-x-axis", {parent, transition, enter: {transform}, update: {transform}});
 
-    const xTrans = xOffset > yWidth ? xOffset - yWidth : 0;
+    const xTrans = xOffsetLeft > yWidth ? xOffsetLeft - yWidth : 0;
     const yTransform = `translate(${this._margin.left + xTrans}, ${this._margin.top + topOffset})`;
     const yGroup = elem("g.d3plus-plot-y-axis", {parent, transition, enter: {transform: yTransform}, update: {transform: yTransform}});
 
-    this._y2Test
-      .domain(y2Exists ? y2Domain : yDomain)
-      .height(height)
-      .scale(y2Exists ? y2Scale.toLowerCase() : yScale.toLowerCase())
-      .select(testGroup.node())
-      .ticks(y2Ticks ? y2Ticks : yTicks)
-      .width(width)
-      .config(yC)
-      .config(this._y2Config)
-      .render();
-
-    const y2Bounds = this._y2Test.outerBounds();
-    const y2Width = y2Bounds.width ? y2Bounds.width + this._y2Test.padding() - 5 : undefined;
-
-    const y2Transform = `translate(${this._margin.left + xOffset}, ${this._margin.top + topOffset})`;
+    const y2Transform = `translate(${this._margin.left + xOffsetLeft}, ${this._margin.top + topOffset})`;
     const y2Group = elem("g.d3plus-plot-y2-axis", {parent, transition, enter: {transform: y2Transform}, update: {transform: y2Transform}});
 
     this._xAxis
       .domain(xDomain)
       .height(height)
-      .range([xOffset, undefined])
+      .range([xOffsetLeft, width - xOffsetRight])
       .scale(xScale.toLowerCase())
       .select(xGroup.node())
       .ticks(xTicks)
-      .width(width - y2Width)
+      .width(width)
       .config(xC)
       .config(this._xConfig)
       .render();
 
-    x = d => {
-      if (this._xConfig.scale === "log" && d === 0) d = xDomain[0] < 0 ? -1 : 1;
-      return this._xAxis._getPosition.bind(this._xAxis)(d);
-    };
-    const xRange = this._xAxis._getRange();
-
     this._x2Axis
       .config(xC)
-      .domain(xDomain)
-      .gridSize(0)
+      .domain(x2Exists ? x2Domain : xDomain)
+      // .gridSize(0)
       .height(height)
-      .labels([])
-      .range([xOffset, undefined])
-      .scale(xScale.toLowerCase())
+      // .labels([])
+      .range([xOffsetLeft, width - xOffsetRight])
+      .scale(x2Scale.toLowerCase())
       .select(xGroup.node())
-      .ticks([])
-      .width(xRange[xRange.length - 1])
-      .title(false)
-      .tickSize(0)
+      .ticks(x2Exists ? x2Ticks : xTicks)
+      .width(width)
+      // .title(false)
+      // .tickSize(0)
       .barConfig({"stroke-width": this._discrete ? 0 : this._xAxis.barConfig()["stroke-width"]})
       .config(this._x2Config)
       .render();
 
+    x = (d, x) => {
+      if (x === "x2") {
+        if (this._x2Config.scale === "log" && d === 0) d = x2Domain[0] < 0 ? -1 : 1;
+        return this._x2Axis._getPosition.bind(this._x2Axis)(d);
+      }
+      else {
+        if (this._xConfig.scale === "log" && d === 0) d = xDomain[0] < 0 ? -1 : 1;
+        return this._xAxis._getPosition.bind(this._xAxis)(d);
+      }
+    };
+    const xRange = this._xAxis._getRange();
+
     this._yAxis
       .domain(yDomain)
       .height(height)
-      .range([this._xAxis.outerBounds().y, this._xTest.outerBounds().y])
+      .range([this._xAxis.outerBounds().y + x2Height, this._xTest.outerBounds().y])
       .scale(yScale.toLowerCase())
       .select(yGroup.node())
       .ticks(yTicks)
@@ -437,11 +484,11 @@ export default class Plot extends Viz {
       .gridSize(0)
       .height(height)
       // .labels([])
-      .range([this._xAxis.outerBounds().y, this._xTest.outerBounds().y])
+      .range([this._xAxis.outerBounds().y + x2Height, this._xTest.outerBounds().y])
       .scale(y2Exists ? y2Scale.toLowerCase() : yScale.toLowerCase())
       .select(y2Group.node())
       // .ticks([])
-      .width(xRange[xRange.length - 1] + this._xAxis.padding() + y2Width - xOffset)
+      .width(xRange[xRange.length - 1] + this._xAxis.padding() + y2Width - xOffsetLeft)
       .title(false)
       // .tickSize(0)
       .barConfig({"stroke-width": this._discrete ? 0 : this._y2Axis.barConfig()["stroke-width"]})
@@ -465,9 +512,9 @@ export default class Plot extends Viz {
       new shapes[annotation.shape]()
         .config(annotation)
         .config({
-          x: d => x(d.x),
-          x0: this._discrete === "x" ? d => x(d.x) : x(0),
-          x1: this._discrete === "x" ? null : d => x(d.x),
+          x: d => d.x2 ? x(d.x2, "x2") : x(d.x),
+          x0: this._discrete === "x" ? d => d.x2 ? x(d.x2, "x2") : x(d.x) : x(0),
+          x1: this._discrete === "x" ? null : d => d.x2 ? x(d.x2, "x2") : x(d.x),
           y: d => d.y2 ? y(d.y2, "y2") : y(d.y),
           y0: this._discrete === "y" ? d => d.y2 ? y(d.y2, "y2") : y(d.y) : y(0) - yOffset,
           y1: this._discrete === "y" ? null : d => d.y2 ? y(d.y2, "y2") : y(d.y) - yOffset
@@ -483,9 +530,9 @@ export default class Plot extends Viz {
       duration: this._duration,
       label: d => this._drawLabel(d.data, d.i),
       select: elem("g.d3plus-plot-shapes", {parent, transition, enter: {transform}, update: {transform}}).node(),
-      x: d => x(d.x),
-      x0: this._discrete === "x" ? d => x(d.x) : x(0),
-      x1: this._discrete === "x" ? null : d => x(d.x),
+      x: d => d.x2 ? x(d.x2, "x2") : x(d.x),
+      x0: this._discrete === "x" ? d => d.x2 ? x(d.x2, "x2") : x(d.x) : x(0),
+      x1: this._discrete === "x" ? null : d => d.x2 ? x(d.x2, "x2") : x(d.x),
       y: d => d.y2 ? y(d.y2, "y2") : y(d.y),
       y0: this._discrete === "y" ? d => d.y2 ? y(d.y2, "y2") : y(d.y) : y(0) - yOffset,
       y1: this._discrete === "y" ? null : d => d.y2 ? y(d.y2, "y2") : y(d.y) - yOffset
@@ -712,6 +759,29 @@ export default class Plot extends Viz {
   }
 
   /**
+       @memberof Plot
+       @desc Sets the x2 accessor to the specified function or number. If *value* is not specified, returns the current x2 accessor.
+       @param {Function|Number} *value*
+       @chainable
+   */
+  x2(_) {
+    if (arguments.length) {
+      if (typeof _ === "function") this._x2 = _;
+      else {
+        this._x2 = accessor(_);
+        if (!this._aggs[_] && this._discrete === "x") {
+          this._aggs[_] = a => {
+            const v = Array.from(new Set(a));
+            return v.length === 1 ? v[0] : v;
+          };
+        }
+      }
+      return this;
+    }
+    else return this._x2;
+  }
+
+  /**
       @memberof Plot
       @desc Sets the config method for the x-axis. If *value* is not specified, returns the current x-axis configuration.
       @param {Object} *value*
@@ -742,6 +812,16 @@ export default class Plot extends Viz {
   }
 
   /**
+       @memberof Plot
+       @desc Sets the x2 domain to the specified array. If *value* is not specified, returns the current x2 domain. Additionally, if either value of the array is undefined, it will be calculated from the data.
+       @param {Array} *value*
+       @chainable
+   */
+  x2Domain(_) {
+    return arguments.length ? (this._x2Domain = _, this) : this._x2Domain;
+  }
+
+  /**
       @memberof Plot
       @desc Defines a custom sorting comparitor function to be used for discrete x axes.
       @param {Function} *value*
@@ -749,6 +829,16 @@ export default class Plot extends Viz {
   */
   xSort(_) {
     return arguments.length ? (this._xSort = _, this) : this._xSort;
+  }
+
+  /**
+       @memberof Plot
+       @desc Defines a custom sorting comparitor function to be used for discrete x2 axes.
+       @param {Function} *value*
+       @chainable
+   */
+  x2Sort(_) {
+    return arguments.length ? (this._x2Sort = _, this) : this._x2Sort;
   }
 
   /**
@@ -845,10 +935,10 @@ export default class Plot extends Viz {
   }
 
   /**
-   @memberof Plot
-   @desc Defines a custom sorting comparitor function to be used for discrete y2 axes.
-   @param {Function} *value*
-   @chainable
+       @memberof Plot
+       @desc Defines a custom sorting comparitor function to be used for discrete y2 axes.
+       @param {Function} *value*
+       @chainable
    */
   y2Sort(_) {
     return arguments.length ? (this._y2Sort = _, this) : this._y2Sort;
