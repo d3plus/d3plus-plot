@@ -155,8 +155,8 @@ export default class Plot extends Viz {
           transition = this._transition,
           width = this._width - this._margin.left - this._margin.right;
 
-    const xTime = this._time && data[0].x === this._time(data[0].data, data[0].i),
-          x2Time = this._time && data[0].x2 === this._time(data[0].data, data[0].i),
+    const x2Time = this._time && data[0].x2 === this._time(data[0].data, data[0].i),
+          xTime = this._time && data[0].x === this._time(data[0].data, data[0].i),
           y2Time = this._time && data[0].y2 === this._time(data[0].data, data[0].i),
           yTime = this._time && data[0].y === this._time(data[0].data, data[0].i);
 
@@ -293,15 +293,14 @@ export default class Plot extends Viz {
     else if (this._discrete === "y") {
       yDomain = Array.from(new Set(data.sort((a, b) => this._ySort ? this._ySort(a.data, b.data) : a.y - b.y).map(d => d.y)));
       yScale = "Ordinal";
+
+      y2Domain = Array.from(new Set(data.sort((a, b) => this._y2Sort ? this._y2Sort(a.data, b.data) : a.y2 - b.y2).map(d => d.y2)));
+      y2Scale = "Ordinal";
     }
 
     if (y2Time) {
       y2Domain = y2Domain.map(date);
       y2Scale = "Time";
-    }
-    else if (this._discrete === "y2") {
-      y2Domain = Array.from(new Set(data.sort((a, b) => this._y2Sort ? this._y2Sort(a.data, b.data) : a.y2 - b.y2).map(d => d.y2)));
-      yScale = "Ordinal";
     }
 
     domains = {x: xDomain, x2: x2Domain, y: yDomain, y2: y2Domain};
@@ -338,9 +337,9 @@ export default class Plot extends Viz {
     y2Domain = y2.domain();
 
     const testGroup = elem("g.d3plus-plot-test", {enter: {opacity: 0}, parent: this._select}),
-          xTicks = this._discrete === "x" && !xTime ? domains.x : undefined,
           x2Ticks = this._discrete === "x" && !x2Time ? domains.x2 : undefined,
-          y2Ticks = this._discrete === "y2" && !y2Time ? domains.y2 : undefined,
+          xTicks = this._discrete === "x" && !xTime ? domains.x : undefined,
+          y2Ticks = this._discrete === "y" && !y2Time ? domains.y2 : undefined,
           yTicks = this._discrete === "y" && !yTime ? domains.y : undefined;
 
     const yC = {
@@ -392,12 +391,12 @@ export default class Plot extends Viz {
       .render();
 
     this._x2Test
-      .domain(xDomain)
+      .domain(x2Domain)
       .height(height)
       .range([undefined, undefined])
-      .scale(xScale.toLowerCase())
+      .scale(x2Scale.toLowerCase())
       .select(testGroup.node())
-      .ticks(xTicks)
+      .ticks(x2Ticks)
       .width(width)
       .config(xC)
       .config(this._x2Config)
@@ -407,7 +406,6 @@ export default class Plot extends Viz {
     const x2Height = x2Bounds.height ? x2Bounds.height + this._x2Test.padding() : undefined;
 
     const xOffsetLeft =  max([yWidth, this._xTest._getRange()[0], this._x2Test._getRange()[0]]);
-    const xOffsetRight = max([y2Width, width - this._xTest._getRange()[1], width - this._x2Test._getRange()[1]]);
 
     this._xTest
       .range([xOffsetLeft, undefined])
@@ -417,18 +415,23 @@ export default class Plot extends Viz {
     const transform = `translate(${this._margin.left}, ${this._margin.top + topOffset})`;
 
     const xGroup = elem("g.d3plus-plot-x-axis", {parent, transition, enter: {transform}, update: {transform}});
+    const x2Group = elem("g.d3plus-plot-x2-axis", {parent, transition, enter: {transform}, update: {transform}});
 
     const xTrans = xOffsetLeft > yWidth ? xOffsetLeft - yWidth : 0;
     const yTransform = `translate(${this._margin.left + xTrans}, ${this._margin.top + topOffset})`;
     const yGroup = elem("g.d3plus-plot-y-axis", {parent, transition, enter: {transform: yTransform}, update: {transform: yTransform}});
 
-    const y2Transform = `translate(${this._margin.left + xOffsetLeft}, ${this._margin.top + topOffset})`;
+    const y2Transform = `translate(${this._margin.left}, ${this._margin.top + topOffset})`;
     const y2Group = elem("g.d3plus-plot-y2-axis", {parent, transition, enter: {transform: y2Transform}, update: {transform: y2Transform}});
+
+    const xOffsetRight = max([y2Width, width - this._xTest._getRange()[1], width - this._x2Test._getRange()[1]]);
+    const xOffset = width - this._xTest._getRange()[1];
+    const xDifference = xOffsetRight - xOffset + this._xTest.padding();
 
     this._xAxis
       .domain(xDomain)
       .height(height)
-      .range([xOffsetLeft, width - xOffsetRight])
+      .range([xOffsetLeft, width - xDifference])
       .scale(xScale.toLowerCase())
       .select(xGroup.node())
       .ticks(xTicks)
@@ -437,20 +440,23 @@ export default class Plot extends Viz {
       .config(this._xConfig)
       .render();
 
+    const x2Offset = width - this._x2Test._getRange()[1];
+    const x2Difference = xOffsetRight - x2Offset + this._x2Test.padding();
+
     this._x2Axis
-      .config(xC)
       .domain(x2Exists ? x2Domain : xDomain)
       // .gridSize(0)
       .height(height)
       // .labels([])
-      .range([xOffsetLeft, width - xOffsetRight])
+      .range([xOffsetLeft, width - x2Difference])
       .scale(x2Scale.toLowerCase())
-      .select(xGroup.node())
+      .select(x2Group.node())
       .ticks(x2Exists ? x2Ticks : xTicks)
       .width(width)
       // .title(false)
       // .tickSize(0)
       .barConfig({"stroke-width": this._discrete ? 0 : this._xAxis.barConfig()["stroke-width"]})
+      .config(xC)
       .config(this._x2Config)
       .render();
 
@@ -488,7 +494,7 @@ export default class Plot extends Viz {
       .scale(y2Exists ? y2Scale.toLowerCase() : yScale.toLowerCase())
       .select(y2Group.node())
       // .ticks([])
-      .width(xRange[xRange.length - 1] + this._xAxis.padding() + y2Width - xOffsetLeft)
+      .width(width - max([0, xOffsetRight - y2Width]))
       .title(false)
       // .tickSize(0)
       .barConfig({"stroke-width": this._discrete ? 0 : this._y2Axis.barConfig()["stroke-width"]})
