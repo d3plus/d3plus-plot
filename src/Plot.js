@@ -42,6 +42,8 @@ export default class Plot extends Viz {
       Rect: RectBuffer
     };
     this._groupPadding = 5;
+    this._secondaryX = false;
+    this._secondaryY = false;
     this._shape = constant("Circle");
     this._shapeConfig = assign(this._shapeConfig, {
       Area: {
@@ -346,6 +348,16 @@ export default class Plot extends Viz {
       gridConfig: {stroke: !this._discrete || this._discrete === "x" ? this._yTest.gridConfig().stroke : "transparent"}
     };
 
+    const defaultConfig = {
+      gridSize: 0,
+      labels: [],
+      title: false,
+      tickSize: 0
+    };
+
+    const defaultX2Config = this._secondaryX ? {} : defaultConfig;
+    const defaultY2Config = this._secondaryY ? {} : defaultConfig;
+
     this._yTest
       .domain(yDomain)
       .height(height)
@@ -368,6 +380,7 @@ export default class Plot extends Viz {
       .ticks(y2Ticks ? y2Ticks : yTicks)
       .width(width)
       .config(yC)
+      .config(defaultY2Config)
       .config(this._y2Config)
       .render();
 
@@ -391,19 +404,21 @@ export default class Plot extends Viz {
       .render();
 
     this._x2Test
-      .domain(x2Domain)
+      .domain(x2Exists ? x2Domain : xDomain)
       .height(height)
       .range([undefined, undefined])
-      .scale(x2Scale.toLowerCase())
+      .scale(x2Exists ? x2Scale.toLowerCase() : xScale.toLowerCase())
       .select(testGroup.node())
-      .ticks(x2Ticks)
+      .ticks(x2Exists ? x2Ticks : xTicks)
       .width(width)
       .config(xC)
+      .tickSize(0)
+      .config(defaultX2Config)
       .config(this._x2Config)
       .render();
 
     const x2Bounds = this._x2Test.outerBounds();
-    const x2Height = x2Bounds.height ? x2Bounds.height + this._x2Test.padding() : undefined;
+    const x2Height = x2Bounds.height + this._x2Test.padding();
 
     const xOffsetLeft =  max([yWidth, this._xTest._getRange()[0], this._x2Test._getRange()[0]]);
 
@@ -445,18 +460,14 @@ export default class Plot extends Viz {
 
     this._x2Axis
       .domain(x2Exists ? x2Domain : xDomain)
-      // .gridSize(0)
       .height(height)
-      // .labels([])
       .range([xOffsetLeft, width - x2Difference])
       .scale(x2Scale.toLowerCase())
       .select(x2Group.node())
       .ticks(x2Exists ? x2Ticks : xTicks)
       .width(width)
-      // .title(false)
-      // .tickSize(0)
-      .barConfig({"stroke-width": this._discrete ? 0 : this._xAxis.barConfig()["stroke-width"]})
       .config(xC)
+      .config(defaultX2Config)
       .config(this._x2Config)
       .render();
 
@@ -489,16 +500,13 @@ export default class Plot extends Viz {
       .domain(y2Exists ? y2Domain : yDomain)
       .gridSize(0)
       .height(height)
-      // .labels([])
       .range([this._xAxis.outerBounds().y + x2Height, this._xTest.outerBounds().y])
       .scale(y2Exists ? y2Scale.toLowerCase() : yScale.toLowerCase())
       .select(y2Group.node())
-      // .ticks([])
       .width(width - max([0, xOffsetRight - y2Width]))
       .title(false)
-      // .tickSize(0)
-      .barConfig({"stroke-width": this._discrete ? 0 : this._y2Axis.barConfig()["stroke-width"]})
       .config(this._y2Config)
+      .config(defaultY2Config)
       .render();
 
     y = (d, y) => {
@@ -669,6 +677,26 @@ export default class Plot extends Viz {
   */
   groupPadding(_) {
     return arguments.length ? (this._groupPadding = _, this) : this._groupPadding;
+  }
+
+  /**
+       @memberof Plot
+       @desc Sets whether the secondary x-axis is rendered. If no value is supplied, the secondary x-axis is not rendered.
+       @param {Boolean} *value* = false
+       @chainable
+   */
+  secondaryX(_) {
+    return arguments.length ? (this._secondaryX = _, this) : this._secondaryX;
+  }
+
+  /**
+   @memberof Plot
+   @desc Sets whether the secondary y-axis is rendered. If no value is supplied, the secondary y-axis is not rendered.
+   @param {Boolean} *value* = false
+   @chainable
+   */
+  secondaryY(_) {
+    return arguments.length ? (this._secondaryY = _, this) : this._secondaryY;
   }
 
   /**
