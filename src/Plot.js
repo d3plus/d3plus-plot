@@ -427,10 +427,11 @@ export default class Plot extends Viz {
       .render();
 
     const topOffset = this._yTest.shapeConfig().labelConfig.fontSize() / 2;
-    const transform = `translate(${this._margin.left}, ${this._margin.top + topOffset})`;
+    const transform = `translate(${this._margin.left}, ${this._margin.top + topOffset + x2Height})`;
+    const x2Transform = `translate(${this._margin.left}, ${this._margin.top + topOffset})`;
 
     const xGroup = elem("g.d3plus-plot-x-axis", {parent, transition, enter: {transform}, update: {transform}});
-    const x2Group = elem("g.d3plus-plot-x2-axis", {parent, transition, enter: {transform}, update: {transform}});
+    const x2Group = elem("g.d3plus-plot-x2-axis", {parent, transition, enter: {transform: x2Transform}, update: {transform: x2Transform}});
 
     const xTrans = xOffsetLeft > yWidth ? xOffsetLeft - yWidth : 0;
     const yTransform = `translate(${this._margin.left + xTrans}, ${this._margin.top + topOffset})`;
@@ -445,7 +446,7 @@ export default class Plot extends Viz {
 
     this._xAxis
       .domain(xDomain)
-      .height(height)
+      .height(height - x2Height)
       .range([xOffsetLeft, width - xDifference])
       .scale(xScale.toLowerCase())
       .select(xGroup.node())
@@ -458,9 +459,12 @@ export default class Plot extends Viz {
     const x2Offset = width - this._x2Test._getRange()[1];
     const x2Difference = xOffsetRight - x2Offset + this._x2Test.padding();
 
+    const xBounds = this._xTest.outerBounds();
+    const xHeight = xBounds.height + this._xTest.padding();
+
     this._x2Axis
       .domain(x2Exists ? x2Domain : xDomain)
-      .height(height)
+      .height(height - xHeight)
       .range([xOffsetLeft, width - x2Difference])
       .scale(x2Scale.toLowerCase())
       .select(x2Group.node())
@@ -512,11 +516,11 @@ export default class Plot extends Viz {
     y = (d, y) => {
       if (y === "y2") {
         if (this._y2Config.scale === "log" && d === 0) d = y2Domain[0] < 0 ? -1 : 1;
-        return this._y2Axis._getPosition.bind(this._y2Axis)(d);
+        return this._y2Axis._getPosition.bind(this._y2Axis)(d) - x2Height;
       }
       else {
         if (this._yConfig.scale === "log" && d === 0) d = yDomain[0] < 0 ? -1 : 1;
-        return this._yAxis._getPosition.bind(this._yAxis)(d);
+        return this._yAxis._getPosition.bind(this._yAxis)(d) - x2Height;
       }
     };
     const yRange = this._yAxis._getRange();
