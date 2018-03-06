@@ -9,7 +9,9 @@ import {default as ordinalBuffer} from "./ordinalBuffer";
     @param {Number} [buffer] Defaults to the radius of the largest Circle.
     @private
 */
-export default function(data, x, y, config, buffer) {
+export default function({data, x, y, x2, y2, config, buffer}) {
+  const xKey = x2 ? "x2" : "x";
+  const yKey = y2 ? "y2" : "y";
 
   let xD = x.domain().slice(),
       yD = y.domain().slice();
@@ -24,21 +26,21 @@ export default function(data, x, y, config, buffer) {
 
     const s = buffer ? buffer : config.r(d.data, d.i) * 2;
 
-    if (x.invert && x(d.x) - xR[0] < s) {
-      const v = x.invert(x(d.x) - s);
+    if (x.invert && x(d[xKey]) - xR[0] < s) {
+      const v = x.invert(x(d[xKey]) - s);
       if (v < xD[0]) xD[0] = v;
     }
-    if (x.invert && xR[1] - x(d.x) < s) {
-      const v = x.invert(x(d.x) + s);
+    if (x.invert && xR[1] - x(d[xKey]) < s) {
+      const v = x.invert(x(d[xKey]) + s);
       if (v > xD[1]) xD[1] = v;
     }
 
-    if (y.invert && y(d.y) - yR[0] < s) {
-      const v = y.invert(y(d.y) - s);
+    if (y.invert && y(d[yKey]) - yR[0] < s) {
+      const v = y.invert(y(d[yKey]) - s);
       if (v > yD[0]) yD[0] = v;
     }
-    if (y.invert && yR[1] - y(d.y) < s) {
-      const v = y.invert(y(d.y) + s);
+    if (y.invert && yR[1] - y(d[yKey]) < s) {
+      const v = y.invert(y(d[yKey]) + s);
       if (v < yD[1]) yD[1] = v;
     }
 
