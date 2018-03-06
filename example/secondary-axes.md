@@ -1,17 +1,15 @@
 # Secondary Axes
 
-The [.secondaryX( )](http://d3plus.org/docs/#Plot.secondaryX) and [.secondaryY( )](http://d3plus.org/docs/#Plot.secondaryY) methods allow you to toggle whether a secondary x-axis and secondary-y axis are rendered.
-
-When x2 values exist in your data, they will be plotted on the secondary x-axis and when y2 values exist in your data, they will be plotted on the secondary y-axis.
+When x2 values exist in your data or a `.x2` accessor is supplied, these values will be plotted on the secondary x-axis and when y2 values exist in your data or a `.y2` accessor is supplied, these values will be plotted on the secondary y-axis.
 
 ```js
 var data = [
-  {id: "alpha", x: 4, y:  7},
-  {id: "alpha", x: 5, y: 25},
-  {id: "alpha", x: 6, y: 13},
-  {id: "beta",  x2: 28, y2: 700},
-  {id: "beta",  x2: 33, y2:  850},
-  {id: "beta",  x2: 56, y2: 900}
+  {id: "alpha", alphaX: 4, alphaY:  7},
+  {id: "alpha", alphaX: 5, alphaY: 25},
+  {id: "alpha", alphaX: 6, alphaY: 13},
+  {id: "beta",  betaX: 28, betaY: 700},
+  {id: "beta",  betaX: 33, betaY:  850},
+  {id: "beta",  betaX: 56, betaY: 900}
 ];
 ```
 
@@ -21,8 +19,8 @@ We can create a simple Line Plot with a secondary x-axis and secondary y-axis:
 new d3plus.LinePlot()
   .data(data)
   .groupBy("id")
-  .secondaryX(true)
-  .secondaryY(true)
+  .x(d => d["alphaX"])
+  .x2(d => d["betaX"])
   .xConfig({
     title: "alpha"
   })
@@ -35,5 +33,7 @@ new d3plus.LinePlot()
   .y2Config({
   title: "beta"
   })
+  .y(d => d["alphaY"])
+  .y2(d => d["betaY"])
   .render();
 ```

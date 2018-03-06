@@ -42,8 +42,6 @@ export default class Plot extends Viz {
       Rect: RectBuffer
     };
     this._groupPadding = 5;
-    this._secondaryX = false;
-    this._secondaryY = false;
     this._shape = constant("Circle");
     this._shapeConfig = assign(this._shapeConfig, {
       Area: {
@@ -349,14 +347,15 @@ export default class Plot extends Viz {
     };
 
     const defaultConfig = {
+      barConfig: {"stroke-width": 0},
       gridSize: 0,
       labels: [],
       title: false,
       tickSize: 0
     };
 
-    const defaultX2Config = this._secondaryX ? {} : defaultConfig;
-    const defaultY2Config = this._secondaryY ? {} : defaultConfig;
+    const defaultX2Config = x2Exists ? {} : defaultConfig;
+    const defaultY2Config = y2Exists ? {} : defaultConfig;
 
     this._yTest
       .domain(yDomain)
@@ -681,26 +680,6 @@ export default class Plot extends Viz {
   */
   groupPadding(_) {
     return arguments.length ? (this._groupPadding = _, this) : this._groupPadding;
-  }
-
-  /**
-       @memberof Plot
-       @desc Sets whether the secondary x-axis is rendered. If no value is supplied, the secondary x-axis is not rendered.
-       @param {Boolean} *value* = false
-       @chainable
-   */
-  secondaryX(_) {
-    return arguments.length ? (this._secondaryX = _, this) : this._secondaryX;
-  }
-
-  /**
-   @memberof Plot
-   @desc Sets whether the secondary y-axis is rendered. If no value is supplied, the secondary y-axis is not rendered.
-   @param {Boolean} *value* = false
-   @chainable
-   */
-  secondaryY(_) {
-    return arguments.length ? (this._secondaryY = _, this) : this._secondaryY;
   }
 
   /**
