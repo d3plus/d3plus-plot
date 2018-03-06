@@ -942,6 +942,16 @@ export default class Plot extends Viz {
   }
 
   /**
+       @memberof Plot
+       @desc Sets the y2 domain to the specified array. If *value* is not specified, returns the current y2 domain. Additionally, if either value of the array is undefined, it will be calculated from the data.
+       @param {Array} *value*
+       @chainable
+   */
+  y2Domain(_) {
+    return arguments.length ? (this._y2Domain = _, this) : this._y2Domain;
+  }
+
+  /**
       @memberof Plot
       @desc Defines a custom sorting comparitor function to be used for discrete y axes.
       @param {Function} *value*
