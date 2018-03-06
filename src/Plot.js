@@ -144,8 +144,8 @@ export default class Plot extends Viz {
       this._sizeScaleD3 = () => this._sizeMin;
     }
 
-    const x2Exists = data.some(d => d.x2),
-          y2Exists = data.some(d => d.y2);
+    const x2Exists = data.some(d => d.x2 !== undefined),
+          y2Exists = data.some(d => d.y2 !== undefined);
 
     const height = this._height - this._margin.top - this._margin.bottom,
           opp = this._discrete ? this._discrete === "x" ? "y" : "x" : undefined,
