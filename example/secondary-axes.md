@@ -19,21 +19,9 @@ We can create a simple Line Plot with a secondary x-axis and secondary y-axis:
 new d3plus.LinePlot()
   .data(data)
   .groupBy("id")
-  .x(d => d["alphaX"])
-  .x2(d => d["betaX"])
-  .xConfig({
-    title: "alpha"
-  })
-  .x2Config({
-  title: "beta"
-  })
-  .yConfig({
-  title: "alpha"
-  })
-  .y2Config({
-  title: "beta"
-  })
-  .y(d => d["alphaY"])
-  .y2(d => d["betaY"])
+  .x("alphaX")
+  .x2("betaX")
+  .y("alphaY")
+  .y2("betaY")
   .render();
 ```
