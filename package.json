@@ -32,7 +32,7 @@
     "d3plus-color": "^0.6.2",
     "d3plus-common": "^0.6.31",
     "d3plus-shape": "^0.13.15",
-    "d3plus-viz": "^0.10.14"
+    "d3plus-viz": "^0.10.18"
   },
   "scripts": {
     "build": "d3plus-build",
@@ -44,7 +44,7 @@
     "test": "d3plus-test"
   },
   "devDependencies": {
-    "d3plus-dev": "^0.6.1"
+    "d3plus-dev": "^0.6.3"
   },
   "module": "es/index",
   "files": [
