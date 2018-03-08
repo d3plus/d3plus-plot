@@ -1,4 +1,3 @@
-import {extent} from "d3-array";
 import {constant} from "d3plus-common";
 
 import {default as Plot} from "./Plot";
@@ -16,7 +15,7 @@ new d3plus.Plot()
   .yConfig({
     tickFormat: val => {
       const data = this._filteredData;
-      const xDomain = extent(data.map(d => d.x));
+      const xDomain = this._xDomain;
       const startData = data.filter(d => d.x === xDomain[0]);
       return startData.find(d => d.y === val).id;
      }
@@ -24,7 +23,7 @@ new d3plus.Plot()
   .y2Config({
     tickFormat: val => {
       const data = this._filteredData;
-      const xDomain = extent(data.map(d => d.x));
+      const xDomain = this._xDomain;
       const endData = data.filter(d => d.x === xDomain[1]);
       return startData.find(d => d.y === val).id;
      }
@@ -49,17 +48,19 @@ export default class BumpChart extends Plot {
     this.yConfig({
       tickFormat: val => {
         const data = this._filteredData;
-        const xDomain = extent(data.map(d => d.x));
+        const xDomain = this._xDomain;
         const startData = data.filter(d => d.x === xDomain[0]);
-        return startData.find(d => d.y === val).id;
+        const d = startData.find(d => d.y === val);
+        return this._drawLabel(d, d.i);
       }
     });
     this.y2Config({
       tickFormat: val => {
         const data = this._filteredData;
-        const xDomain = extent(data.map(d => d.x));
-        const endData = data.filter(d => d.x === xDomain[1]);
-        return endData.find(d => d.y === val).id;
+        const xDomain = this._xDomain;
+        const endData = data.filter(d => d.x === xDomain[xDomain.length - 1]);
+        const d = endData.find(d => d.y === val);
+        return this._drawLabel(d, d.i);
       }
     });
     this.ySort((a, b) => b.y - a.y);

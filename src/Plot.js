@@ -343,6 +343,8 @@ export default class Plot extends Viz {
     yDomain = y.domain();
     y2Domain = y2.domain();
 
+    this._xDomain = xDomain;
+
     const testGroup = elem("g.d3plus-plot-test", {enter: {opacity: 0}, parent: this._select}),
           x2Ticks = this._discrete === "x" && !x2Time ? domains.x2 : undefined,
           xTicks = this._discrete === "x" && !xTime ? domains.x : undefined,
