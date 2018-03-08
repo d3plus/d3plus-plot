@@ -8,6 +8,29 @@ import {default as Plot} from "./Plot";
     @extends Plot
     @desc Creates a bump chart based on an array of data.
     @example <caption>the equivalent of calling:</caption>
+new d3plus.Plot()
+  .discrete("x")
+  .shape("Line")
+  .x("x")
+  .y2("y")
+  .yConfig({
+    tickFormat: val => {
+      const data = this._filteredData;
+      const xDomain = extent(data.map(d => d.x));
+      const startData = data.filter(d => d.x === xDomain[0]);
+      return startData.find(d => d.y === val).id;
+     }
+   })
+  .y2Config({
+    tickFormat: val => {
+      const data = this._filteredData;
+      const xDomain = extent(data.map(d => d.x));
+      const endData = data.filter(d => d.x === xDomain[1]);
+      return startData.find(d => d.y === val).id;
+     }
+   })
+  .ySort((a, b) => b.y - a.y)
+  .y2Sort((a, b) => b.y - a.y)
 */
 export default class BumpChart extends Plot {
 
