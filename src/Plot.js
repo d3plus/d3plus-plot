@@ -433,17 +433,17 @@ export default class Plot extends Viz {
       .render();
 
     const topOffset = this._yTest.shapeConfig().labelConfig.fontSize() / 2;
-    const transform = `translate(${this._margin.left}, ${this._margin.top + topOffset + x2Height})`;
-    const x2Transform = `translate(${this._margin.left}, ${this._margin.top + topOffset})`;
+    const transform = `translate(${this._margin.left}, ${this._margin.top + x2Height})`;
+    const x2Transform = `translate(${this._margin.left}, ${this._margin.top})`;
 
     const xGroup = elem("g.d3plus-plot-x-axis", {parent, transition, enter: {transform}, update: {transform}});
     const x2Group = elem("g.d3plus-plot-x2-axis", {parent, transition, enter: {transform: x2Transform}, update: {transform: x2Transform}});
 
     const xTrans = xOffsetLeft > yWidth ? xOffsetLeft - yWidth : 0;
-    const yTransform = `translate(${this._margin.left + xTrans}, ${this._margin.top + topOffset})`;
+    const yTransform = `translate(${this._margin.left + xTrans}, ${this._margin.top})`;
     const yGroup = elem("g.d3plus-plot-y-axis", {parent, transition, enter: {transform: yTransform}, update: {transform: yTransform}});
 
-    const y2Transform = `translate(${this._margin.left}, ${this._margin.top + topOffset})`;
+    const y2Transform = `translate(${this._margin.left}, ${this._margin.top})`;
     const y2Group = elem("g.d3plus-plot-y2-axis", {parent, transition, enter: {transform: y2Transform}, update: {transform: y2Transform}});
 
     const xOffsetRight = max([y2Width, width - this._xTest._getRange()[1], width - this._x2Test._getRange()[1]]);
@@ -493,10 +493,14 @@ export default class Plot extends Viz {
     };
     const xRange = this._xAxis._getRange();
 
+    const yOffsetBottom = max([xHeight, height - this._yTest._getRange()[1], height - this._y2Test._getRange()[1]]);
+    const yAxisOffset = height - this._yTest._getRange()[1];
+    const yDifference = yScale === "Ordinal" ? yOffsetBottom - yAxisOffset + this._yTest.padding() : xHeight;
+
     this._yAxis
       .domain(yDomain)
       .height(height)
-      .range([this._xAxis.outerBounds().y + x2Height, height - xHeight])
+      .range([this._xAxis.outerBounds().y + topOffset + x2Height, height - yDifference])
       .scale(yScale.toLowerCase())
       .select(yGroup.node())
       .ticks(yTicks)
@@ -505,12 +509,15 @@ export default class Plot extends Viz {
       .config(this._yConfig)
       .render();
 
+    const y2AxisOffset = height - this._y2Test._getRange()[1];
+    const y2Difference = y2Scale === "Ordinal" ? yOffsetBottom - y2AxisOffset + this._y2Test.padding() : xHeight;
+
     this._y2Axis
       .config(yC)
       .domain(y2Exists ? y2Domain : yDomain)
       .gridSize(0)
       .height(height)
-      .range([this._xAxis.outerBounds().y + x2Height, height - xHeight])
+      .range([this._xAxis.outerBounds().y + x2Height + topOffset, height - y2Difference])
       .scale(y2Exists ? y2Scale.toLowerCase() : yScale.toLowerCase())
       .select(y2Group.node())
       .width(width - max([0, xOffsetRight - y2Width]))
