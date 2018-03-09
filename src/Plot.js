@@ -133,6 +133,8 @@ export default class Plot extends Viz {
       y2: this._y2(d, i)
     }));
 
+    this._formattedData = data;
+
     if (this._size) {
       const rExtent = extent(data, d => this._size(d.data));
       this._sizeScaleD3 = () => this._sizeMin;
@@ -434,7 +436,6 @@ export default class Plot extends Viz {
       .range([xOffsetLeft, undefined])
       .render();
 
-    const topOffset = this._yTest.shapeConfig().labelConfig.fontSize() / 2;
     const transform = `translate(${this._margin.left}, ${this._margin.top + x2Height})`;
     const x2Transform = `translate(${this._margin.left}, ${this._margin.top})`;
 
@@ -495,9 +496,11 @@ export default class Plot extends Viz {
     };
     const xRange = this._xAxis._getRange();
 
+    const isYAxisOrdinal = yScale === "Ordinal";
+    const topOffset = isYAxisOrdinal ? this._yTest.shapeConfig().labelConfig.fontSize() : this._yTest.shapeConfig().labelConfig.fontSize() / 2;
     const yOffsetBottom = max([xHeight, height - this._yTest._getRange()[1], height - this._y2Test._getRange()[1]]);
     const yAxisOffset = height - this._yTest._getRange()[1];
-    const yDifference = yScale === "Ordinal" ? yOffsetBottom - yAxisOffset + this._yTest.padding() : xHeight;
+    const yDifference = isYAxisOrdinal ? yOffsetBottom - yAxisOffset + this._yTest.padding() : xHeight;
 
     this._yAxis
       .domain(yDomain)
@@ -512,7 +515,7 @@ export default class Plot extends Viz {
       .render();
 
     const y2AxisOffset = height - this._y2Test._getRange()[1];
-    const y2Difference = y2Scale === "Ordinal" ? yOffsetBottom - y2AxisOffset + this._y2Test.padding() : xHeight;
+    const y2Difference = isYAxisOrdinal ? yOffsetBottom - y2AxisOffset + this._y2Test.padding() : xHeight;
 
     this._y2Axis
       .config(yC)
