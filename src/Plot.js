@@ -133,6 +133,8 @@ export default class Plot extends Viz {
       y2: this._y2(d, i)
     }));
 
+    this._formattedData = data;
+
     if (this._size) {
       const rExtent = extent(data, d => this._size(d.data));
       this._sizeScaleD3 = () => this._sizeMin;
@@ -242,10 +244,17 @@ export default class Plot extends Viz {
       };
 
     }
-    else domains = {x: extent(data, d => d.x), x2: extent(data, d => d.x2), y: extent(data, d => d.y), y2: extent(data, d => d.y2)};
+    else {
+      domains = {
+        x: this._xSort ? Array.from(new Set(data.filter(d => d.x).sort((a, b) =>  this._xSort(a.data, b.data)).map(d => d.x))) : extent(data, d => d.x),
+        x2: this._x2Sort ? Array.from(new Set(data.filter(d => d.x2).sort((a, b) =>  this._x2Sort(a.data, b.data)).map(d => d.x2))) : extent(data, d => d.x2),
+        y: this._ySort ? Array.from(new Set(data.filter(d => d.y).sort((a, b) =>  this._ySort(a.data, b.data)).map(d => d.y))) : extent(data, d => d.y),
+        y2: this._y2Sort ? Array.from(new Set(data.filter(d => d.y2).sort((a, b) =>  this._y2Sort(a.data, b.data)).map(d => d.y2))) : extent(data, d => d.y2)
+      };
+    }
 
     let xDomain = this._xDomain ? this._xDomain.slice() : domains.x,
-        xScale = "Linear";
+        xScale = this._xSort ? "Ordinal" : "Linear";
 
     if (xDomain[0] === void 0) xDomain[0] = domains.x[0];
     if (xDomain[1] === void 0) xDomain[1] = domains.x[1];
@@ -256,7 +265,7 @@ export default class Plot extends Viz {
     }
 
     let x2Domain = this._x2Domain ? this._x2Domain.slice() : domains.x2,
-        x2Scale = "Linear";
+        x2Scale = this._x2Sort ? "Ordinal" : "Linear";
 
     if (x2Domain[0] === void 0) x2Domain[0] = domains.x2[0];
     if (x2Domain[1] === void 0) x2Domain[1] = domains.x2[1];
@@ -275,13 +284,13 @@ export default class Plot extends Viz {
     }
 
     let yDomain = this._yDomain ? this._yDomain.slice() : domains.y,
-        yScale = "Linear";
+        yScale = this._ySort ? "Ordinal" : "Linear";
 
     if (yDomain[0] === void 0) yDomain[0] = domains.y[0];
     if (yDomain[1] === void 0) yDomain[1] = domains.y[1];
 
     let y2Domain = this._y2Domain ? this._y2Domain.slice() : domains.y2,
-        y2Scale = "Linear";
+        y2Scale = this._y2Sort ? "Ordinal" : "Linear";
 
     if (y2Domain[0] === void 0) y2Domain[0] = domains.y2[0];
     if (y2Domain[1] === void 0) y2Domain[1] = domains.y2[1];
@@ -319,7 +328,7 @@ export default class Plot extends Viz {
         y2 = scales[`scale${y2Scale}`]().domain(domains.y2.reverse()).range(range(0, height + 1, height / (domains.y2.length - 1)));
 
     const shapeData = nest().key(d => d.shape).entries(data);
-    if (this._xConfig.scale !== "log" && this._yConfig.scale !== "log") {
+    if (this._xConfig.scale !== "log" && this._yConfig.scale !== "log" && ((this._discrete === "x" && yScale !== "Ordinal")) || this._discrete === "y" && xScale !== "Ordinal") {
       shapeData.forEach(d => {
         if (this._buffer[d.key]) {
           const res = this._buffer[d.key].bind(this)({data: d.values, x, y, config: this._shapeConfig[d.key]});
@@ -335,6 +344,8 @@ export default class Plot extends Viz {
     x2Domain = x2.domain();
     yDomain = y.domain();
     y2Domain = y2.domain();
+
+    this._xDomain = xDomain;
 
     const testGroup = elem("g.d3plus-plot-test", {enter: {opacity: 0}, parent: this._select}),
           x2Ticks = this._discrete === "x" && !x2Time ? domains.x2 : undefined,
@@ -425,18 +436,17 @@ export default class Plot extends Viz {
       .range([xOffsetLeft, undefined])
       .render();
 
-    const topOffset = this._yTest.shapeConfig().labelConfig.fontSize() / 2;
-    const transform = `translate(${this._margin.left}, ${this._margin.top + topOffset + x2Height})`;
-    const x2Transform = `translate(${this._margin.left}, ${this._margin.top + topOffset})`;
+    const transform = `translate(${this._margin.left}, ${this._margin.top + x2Height})`;
+    const x2Transform = `translate(${this._margin.left}, ${this._margin.top})`;
 
     const xGroup = elem("g.d3plus-plot-x-axis", {parent, transition, enter: {transform}, update: {transform}});
     const x2Group = elem("g.d3plus-plot-x2-axis", {parent, transition, enter: {transform: x2Transform}, update: {transform: x2Transform}});
 
     const xTrans = xOffsetLeft > yWidth ? xOffsetLeft - yWidth : 0;
-    const yTransform = `translate(${this._margin.left + xTrans}, ${this._margin.top + topOffset})`;
+    const yTransform = `translate(${this._margin.left + xTrans}, ${this._margin.top})`;
     const yGroup = elem("g.d3plus-plot-y-axis", {parent, transition, enter: {transform: yTransform}, update: {transform: yTransform}});
 
-    const y2Transform = `translate(${this._margin.left}, ${this._margin.top + topOffset})`;
+    const y2Transform = `translate(${this._margin.left}, ${this._margin.top})`;
     const y2Group = elem("g.d3plus-plot-y2-axis", {parent, transition, enter: {transform: y2Transform}, update: {transform: y2Transform}});
 
     const xOffsetRight = max([y2Width, width - this._xTest._getRange()[1], width - this._x2Test._getRange()[1]]);
@@ -486,10 +496,16 @@ export default class Plot extends Viz {
     };
     const xRange = this._xAxis._getRange();
 
+    const isYAxisOrdinal = yScale === "Ordinal";
+    const topOffset = isYAxisOrdinal ? this._yTest.shapeConfig().labelConfig.fontSize() : this._yTest.shapeConfig().labelConfig.fontSize() / 2;
+    const yOffsetBottom = max([xHeight, height - this._yTest._getRange()[1], height - this._y2Test._getRange()[1]]);
+    const yAxisOffset = height - this._yTest._getRange()[1];
+    const yDifference = isYAxisOrdinal ? yOffsetBottom - yAxisOffset + this._yTest.padding() : xHeight;
+
     this._yAxis
       .domain(yDomain)
       .height(height)
-      .range([this._xAxis.outerBounds().y + x2Height, this._xTest.outerBounds().y])
+      .range([this._xAxis.outerBounds().y + topOffset + x2Height, height - yDifference])
       .scale(yScale.toLowerCase())
       .select(yGroup.node())
       .ticks(yTicks)
@@ -498,12 +514,15 @@ export default class Plot extends Viz {
       .config(this._yConfig)
       .render();
 
+    const y2AxisOffset = height - this._y2Test._getRange()[1];
+    const y2Difference = isYAxisOrdinal ? yOffsetBottom - y2AxisOffset + this._y2Test.padding() : xHeight;
+
     this._y2Axis
       .config(yC)
       .domain(y2Exists ? y2Domain : yDomain)
       .gridSize(0)
       .height(height)
-      .range([this._xAxis.outerBounds().y + x2Height, this._xTest.outerBounds().y])
+      .range([this._xAxis.outerBounds().y + x2Height + topOffset, height - y2Difference])
       .scale(y2Exists ? y2Scale.toLowerCase() : yScale.toLowerCase())
       .select(y2Group.node())
       .width(width - max([0, xOffsetRight - y2Width]))
