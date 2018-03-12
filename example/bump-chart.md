@@ -27,7 +27,9 @@ We can create a simple Bump Chart:
 new d3plus.BumpChart()
   .data(data)
   .groupBy("fruit")
-  .label(d => d.label)
+  .label(function(d) {
+      return d.label;
+    })
   .x("year")
   .y("rank")
   .render();
