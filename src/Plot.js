@@ -682,6 +682,25 @@ export default class Plot extends Viz {
   }
 
   /**
+       @memberof Plot
+       @desc Sets the confidence to the specified array of lower and upper bounds.
+       @param {Array} *value*
+       @chainable
+   */
+  confidence(_) {
+    if (arguments.length) {
+      this._confidence = [];
+      const lower = _[0];
+      this._confidence[0] = typeof lower === "function" || !lower ? lower : accessor(lower);
+      const upper = _[1];
+      this._confidence[1] = typeof upper === "function" || !upper ? upper : accessor(upper);
+
+      return this;
+    }
+    else return this._confidence;
+  }
+
+  /**
       @memberof Plot
       @desc Sets the discrete axis to the specified string. If *value* is not specified, returns the current discrete axis.
       @param {String} *value*
