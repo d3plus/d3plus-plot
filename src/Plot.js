@@ -125,7 +125,9 @@ export default class Plot extends Viz {
       data: d,
       group: stackGroup(d, i),
       i,
+      hci: this._confidence && this._confidence[1] && this._confidence[1](d, i),
       id: this._ids(d, i).slice(0, this._drawDepth + 1).join("_"),
+      lci: this._confidence && this._confidence[0] && this._confidence[0](d, i),
       shape: this._shape(d, i),
       x: this._x(d, i),
       x2: this._x2(d, i),
@@ -633,6 +635,23 @@ export default class Plot extends Viz {
         s.width(barSize);
         s.height(barSize);
 
+      }
+      else if (d.key === "Line" && this._confidence) {
+
+        const key = this._discrete === "x" ? "y" : "x";
+        const discrete = this._discrete === "x" ? "x" : "y";
+        const areaConfig = Object.assign({}, shapeConfig);
+        areaConfig[key] = null;
+        areaConfig[`${key}0`] = d => y(d.lci);
+        areaConfig[`${key}1`] = d => y(d.hci);
+        areaConfig[`${discrete}0`] = null;
+        areaConfig[`${discrete}1`] = null;
+
+        console.log(areaConfig);
+
+        const area = new shapes.Area().config(areaConfig).data(d.values);
+        area.config(configPrep.bind(this)(this._shapeConfig, "shape", "Area")).render();
+        this._shapes.push(area);
       }
 
       const classEvents = events.filter(e => e.includes(`.${d.key}`)),
