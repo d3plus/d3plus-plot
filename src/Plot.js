@@ -638,18 +638,13 @@ export default class Plot extends Viz {
       }
       else if (d.key === "Line" && this._confidence) {
 
-        const key = this._discrete === "x" ? "y" : "x";
-        const discrete = this._discrete === "x" ? "x" : "y";
         const areaConfig = Object.assign({}, shapeConfig);
-        areaConfig[key] = null;
-        areaConfig[`${key}0`] = d => y(d.lci);
-        areaConfig[`${key}1`] = d => y(d.hci);
-        areaConfig[`${discrete}0`] = null;
-        areaConfig[`${discrete}1`] = null;
+        const key = this._discrete === "x" ? "y" : "x";
+        const scaleFunction = this._discrete === "x" ? y : x;
+        areaConfig[`${key}0`] = d => scaleFunction(d.lci);
+        areaConfig[`${key}1`] = d => scaleFunction(d.hci);
 
-        console.log(areaConfig);
-
-        const area = new shapes.Area().config(areaConfig).data(d.values);
+        const area = new shapes.Area().config(areaConfig).fillOpacity(0.5).data(d.values);
         area.config(configPrep.bind(this)(this._shapeConfig, "shape", "Area")).render();
         this._shapes.push(area);
       }
