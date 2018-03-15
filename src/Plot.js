@@ -247,10 +247,18 @@ export default class Plot extends Viz {
 
     }
     else {
+      const xData = this._discrete === "x" ? data.map(d => d.x) : data.map(d => d.x)
+        .concat(this._confidence && this._confidence[0] ? data.map(d => d.lci)  : [])
+        .concat(this._confidence && this._confidence[1] ? data.map(d => d.hci) : []);
+
+      const yData = this._discrete === "y" ? data.map(d => d.y) : data.map(d => d.y)
+        .concat(this._confidence && this._confidence[0] ? data.map(d => d.lci)  : [])
+        .concat(this._confidence && this._confidence[1] ? data.map(d => d.hci) : []);
+
       domains = {
-        x: this._xSort ? Array.from(new Set(data.filter(d => d.x).sort((a, b) =>  this._xSort(a.data, b.data)).map(d => d.x))) : extent(data, d => d.x),
+        x: this._xSort ? Array.from(new Set(data.filter(d => d.x).sort((a, b) =>  this._xSort(a.data, b.data)).map(d => d.x))) : extent(xData, d => d),
         x2: this._x2Sort ? Array.from(new Set(data.filter(d => d.x2).sort((a, b) =>  this._x2Sort(a.data, b.data)).map(d => d.x2))) : extent(data, d => d.x2),
-        y: this._ySort ? Array.from(new Set(data.filter(d => d.y).sort((a, b) =>  this._ySort(a.data, b.data)).map(d => d.y))) : extent(data, d => d.y),
+        y: this._ySort ? Array.from(new Set(data.filter(d => d.y).sort((a, b) =>  this._ySort(a.data, b.data)).map(d => d.y))) : extent(yData, d => d),
         y2: this._y2Sort ? Array.from(new Set(data.filter(d => d.y2).sort((a, b) =>  this._y2Sort(a.data, b.data)).map(d => d.y2))) : extent(data, d => d.y2)
       };
     }
