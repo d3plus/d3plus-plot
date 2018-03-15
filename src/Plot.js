@@ -649,8 +649,8 @@ export default class Plot extends Viz {
         const areaConfig = Object.assign({}, shapeConfig);
         const key = this._discrete === "x" ? "y" : "x";
         const scaleFunction = this._discrete === "x" ? y : x;
-        areaConfig[`${key}0`] = d => scaleFunction(d.lci);
-        areaConfig[`${key}1`] = d => scaleFunction(d.hci);
+        areaConfig[`${key}0`] = d => scaleFunction(this._confidence[0] ? d.lci : d[key]);
+        areaConfig[`${key}1`] = d => scaleFunction(this._confidence[1] ? d.hci : d[key]);
 
         const area = new shapes.Area().config(areaConfig).fillOpacity(0.5).data(d.values);
         area.config(configPrep.bind(this)(this._shapeConfig, "shape", "Area")).render();
