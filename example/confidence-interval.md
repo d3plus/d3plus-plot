@@ -4,6 +4,8 @@ A confidence interval is a range of values so defined that there is a specified 
 
 The [.confidence( )](http://d3plus.org/docs/#Plot.confidence) method allows us to specify an array of accessors for the lower and upper bounds of a confidence interval (in the format `[lower, upper]`).
 
+The [.confidenceConfig( )](http://d3plus.org/docs/#Plot.confidenceConfig) method works similarly to the [.shapeConfig( )](http://d3plus.org/docs/#Viz.shapeConfig) method, but the configuration is only applied to shapes rendered as part of the confidence interval.
+
 Given this data array:
 
 ```js
@@ -33,5 +35,8 @@ new d3plus.LinePlot()
       return d.amount + d.moe
     },
   ])
+  .confidenceConfig({
+    fillOpacity: 0.3
+  })
   .render();
 ```

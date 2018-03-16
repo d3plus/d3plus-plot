@@ -41,6 +41,9 @@ export default class Plot extends Viz {
       Line: LineBuffer,
       Rect: RectBuffer
     };
+    this._confidenceConfig = {
+      fillOpacity: constant(0.5)
+    };
     this._groupPadding = 5;
     this._shape = constant("Circle");
     this._shapeConfig = assign(this._shapeConfig, {
@@ -652,8 +655,9 @@ export default class Plot extends Viz {
         areaConfig[`${key}0`] = d => scaleFunction(this._confidence[0] ? d.lci : d[key]);
         areaConfig[`${key}1`] = d => scaleFunction(this._confidence[1] ? d.hci : d[key]);
 
-        const area = new shapes.Area().config(areaConfig).fillOpacity(0.5).data(d.values);
-        area.config(configPrep.bind(this)(this._shapeConfig, "shape", "Area")).render();
+        const area = new shapes.Area().config(areaConfig).data(d.values);
+        const confidenceConfig = Object.assign(this._shapeConfig, this._confidenceConfig);
+        area.config(configPrep.bind(this)(confidenceConfig, "shape", "Area")).render();
         this._shapes.push(area);
       }
 
@@ -728,6 +732,16 @@ export default class Plot extends Viz {
       return this;
     }
     else return this._confidence;
+  }
+
+  /**
+       @memberof Plot
+       @desc If *value* is specified, sets the config method for each shape rendered as a confidence interval and returns the current class instance.
+       @param {Object} [*value*]
+       @chainable
+   */
+  confidenceConfig(_) {
+    return arguments.length ? (this._confidenceConfig = assign(this._confidenceConfig, _), this) : this._confidenceConfig;
   }
 
   /**
