@@ -706,8 +706,16 @@ export default class Plot extends Viz {
   /**
        @memberof Plot
        @desc Sets the confidence to the specified array of lower and upper bounds.
-       @param {Array} *value*
+       @param {String[]|Function[]} *value*
        @chainable
+       @example <caption>Can be called with accessor functions or static keys:</caption>
+       var data = {id: "alpha", value: 10, lci: 9, hci: 11};
+       ...
+       // Accessor functions
+       .confidence([function(d) { return d.lci }, function(d) { return d.hci }])
+
+       // Or static keys
+       .confidence(["lci", "hci"])
    */
   confidence(_) {
     if (arguments.length) {
