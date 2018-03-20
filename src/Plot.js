@@ -288,8 +288,8 @@ export default class Plot extends Viz {
     let x2Domain = this._x2Domain ? this._x2Domain.slice() : domains.x2,
         x2Scale = this._x2Sort ? "Ordinal" : "Linear";
 
-    if (x2Domain[0] === void 0) x2Domain[0] = domains.x2[0];
-    if (x2Domain[1] === void 0) x2Domain[1] = domains.x2[1];
+    if (x2Domain && x2Domain[0] === void 0) x2Domain[0] = domains.x2[0];
+    if (x2Domain && x2Domain[1] === void 0) x2Domain[1] = domains.x2[1];
 
     if (x2Time) {
       x2Domain = x2Domain.map(date);
@@ -313,8 +313,8 @@ export default class Plot extends Viz {
     let y2Domain = this._y2Domain ? this._y2Domain.slice() : domains.y2,
         y2Scale = this._y2Sort ? "Ordinal" : "Linear";
 
-    if (y2Domain[0] === void 0) y2Domain[0] = domains.y2[0];
-    if (y2Domain[1] === void 0) y2Domain[1] = domains.y2[1];
+    if (y2Domain && y2Domain[0] === void 0) y2Domain[0] = domains.y2[0];
+    if (y2Domain && y2Domain[1] === void 0) y2Domain[1] = domains.y2[1];
 
     if (yTime) {
       yDomain = yDomain.map(date);
@@ -333,13 +333,14 @@ export default class Plot extends Viz {
       y2Scale = "Time";
     }
 
-    domains = {x: xDomain, x2: x2Domain, y: yDomain, y2: y2Domain};
+
+    domains = {x: xDomain, x2: x2Domain || xDomain, y: yDomain, y2: y2Domain || yDomain};
 
     opps.forEach(opp => {
       if (opp && this._baseline !== void 0) {
         const b = this._baseline;
-        if (domains[opp][0] > b) domains[opp][0] = b;
-        else if (domains[opp][1] < b) domains[opp][1] = b;
+        if (domains[opp] && domains[opp][0] > b) domains[opp][0] = b;
+        else if (domains[opp] && domains[opp][1] < b) domains[opp][1] = b;
       }
     });
 
