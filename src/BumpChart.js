@@ -65,8 +65,8 @@ export default class BumpChart extends Plot {
         return this._drawLabel(d, d.i);
       }
     });
-    this.ySort((a, b) => b.y - a.y);
-    this.y2Sort((a, b) => b.y - a.y);
+    this.ySort((a, b) => this._y(b) - this._y(a));
+    this.y2Sort((a, b) => this._y(b) - this._y(a));
   }
 
 }
