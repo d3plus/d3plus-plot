@@ -350,7 +350,8 @@ export default class Plot extends Viz {
         y2 = scales[`scale${y2Scale}`]().domain(domains.y2.reverse()).range(range(0, height + 1, height / (domains.y2.length - 1)));
 
     const shapeData = nest().key(d => d.shape).entries(data);
-    if (this._xConfig.scale !== "log" && this._yConfig.scale !== "log" && ((this._discrete === "x" && yScale !== "Ordinal")) || this._discrete === "y" && xScale !== "Ordinal") {
+    const oppScale = this._discrete === "x" ? yScale : xScale;
+    if (this._xConfig.scale !== "log" && this._yConfig.scale !== "log" && oppScale !== "Ordinal") {
       shapeData.forEach(d => {
         if (this._buffer[d.key]) {
           const res = this._buffer[d.key].bind(this)({data: d.values, x, y, config: this._shapeConfig[d.key]});
