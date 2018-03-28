@@ -53,7 +53,7 @@ export default class BumpChart extends Plot {
         const xDomain = this._xDomain;
         const startData = data.filter(d => d.x === xDomain[0]);
         const d = startData.find(d => d.y === val);
-        return this._drawLabel(d, d.i);
+        return d ? this._drawLabel(d, d.i) : "";
       }
     });
     this.y2Config({
@@ -62,7 +62,7 @@ export default class BumpChart extends Plot {
         const xDomain = this._xDomain;
         const endData = data.filter(d => d.x === xDomain[xDomain.length - 1]);
         const d = endData.find(d => d.y === val);
-        return this._drawLabel(d, d.i);
+        return d ? this._drawLabel(d, d.i) : "";
       }
     });
     this.ySort((a, b) => this._y(b) - this._y(a));
