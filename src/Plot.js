@@ -684,6 +684,17 @@ export default class Plot extends Viz {
 
     });
 
+    this._redrawLegend = true;
+
+    this._legendMargin = {
+      left: xOffsetLeft,
+      right: Math.max(xDifference, x2Difference),
+      bottom: Math.max(yDifference, y2Difference),
+      top: x2Height + topOffset
+    };
+
+    super._draw(callback);
+
     return this;
 
   }
