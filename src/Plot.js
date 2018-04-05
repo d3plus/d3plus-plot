@@ -115,7 +115,7 @@ export default class Plot extends Viz {
   */
   _draw(callback) {
 
-    super._draw(callback);
+    super._preDraw(callback);
 
     if (!this._filteredData.length) return this;
 
@@ -462,6 +462,35 @@ export default class Plot extends Viz {
     const isYAxisOrdinal = yScale === "Ordinal";
     const topOffset = isYAxisOrdinal ? this._yTest.shapeConfig().labelConfig.fontSize() : this._yTest.shapeConfig().labelConfig.fontSize() / 2;
 
+    const xOffsetRight = max([y2Width, width - this._xTest._getRange()[1], width - this._x2Test._getRange()[1]]);
+    const xOffset = width - this._xTest._getRange()[1];
+    const xDifference = xOffsetRight - xOffset + this._xTest.padding();
+
+    const x2Offset = width - this._x2Test._getRange()[1];
+    const x2Difference = xOffsetRight - x2Offset + this._x2Test.padding();
+
+    const xBounds = this._xTest.outerBounds();
+    const xHeight = xBounds.height + this._xTest.padding();
+
+    const yOffsetBottom = max([xHeight, height - this._yTest._getRange()[1], height - this._y2Test._getRange()[1]]);
+    const yAxisOffset = height - this._yTest._getRange()[1];
+    const yDifference = isYAxisOrdinal ? yOffsetBottom - yAxisOffset + this._yTest.padding() : xHeight;
+
+    const y2AxisOffset = height - this._y2Test._getRange()[1];
+    const y2Difference = isYAxisOrdinal ? yOffsetBottom - y2AxisOffset + this._y2Test.padding() : xHeight;
+
+    this._legendMargin = {
+      left: xOffsetLeft,
+      right: Math.max(xDifference, x2Difference),
+      bottom: Math.max(yDifference, y2Difference),
+      top: x2Height + topOffset
+    };
+
+    super._draw(callback);
+
+    const horizontalMargin = this._margin.left + this._margin.right;
+    const verticalMargin = this._margin.top + this._margin.bottom;
+
     const transform = `translate(${this._margin.left}, ${this._margin.top + x2Height + topOffset})`;
     const x2Transform = `translate(${this._margin.left}, ${this._margin.top + topOffset})`;
 
@@ -472,17 +501,13 @@ export default class Plot extends Viz {
     const yTransform = `translate(${this._margin.left + xTrans}, ${this._margin.top + topOffset})`;
     const yGroup = elem("g.d3plus-plot-y-axis", {parent, transition, enter: {transform: yTransform}, update: {transform: yTransform}});
 
-    const y2Transform = `translate(${this._margin.left}, ${this._margin.top + topOffset})`;
+    const y2Transform = `translate(-${this._margin.right}, ${this._margin.top + topOffset})`;
     const y2Group = elem("g.d3plus-plot-y2-axis", {parent, transition, enter: {transform: y2Transform}, update: {transform: y2Transform}});
-
-    const xOffsetRight = max([y2Width, width - this._xTest._getRange()[1], width - this._x2Test._getRange()[1]]);
-    const xOffset = width - this._xTest._getRange()[1];
-    const xDifference = xOffsetRight - xOffset + this._xTest.padding();
 
     this._xAxis
       .domain(xDomain)
-      .height(height - (x2Height + topOffset))
-      .range([xOffsetLeft, width - xDifference])
+      .height(height - (x2Height + topOffset + verticalMargin))
+      .range([xOffsetLeft, width - (xDifference + horizontalMargin)])
       .scale(xScale.toLowerCase())
       .select(xGroup.node())
       .ticks(xTicks)
@@ -491,16 +516,10 @@ export default class Plot extends Viz {
       .config(this._xConfig)
       .render();
 
-    const x2Offset = width - this._x2Test._getRange()[1];
-    const x2Difference = xOffsetRight - x2Offset + this._x2Test.padding();
-
-    const xBounds = this._xTest.outerBounds();
-    const xHeight = xBounds.height + this._xTest.padding();
-
     this._x2Axis
       .domain(x2Exists ? x2Domain : xDomain)
-      .height(height - (xHeight + topOffset))
-      .range([xOffsetLeft, width - x2Difference])
+      .height(height - (xHeight + topOffset + verticalMargin))
+      .range([xOffsetLeft, width - (x2Difference + horizontalMargin)])
       .scale(x2Scale.toLowerCase())
       .select(x2Group.node())
       .ticks(x2Exists ? x2Ticks : xTicks)
@@ -522,14 +541,10 @@ export default class Plot extends Viz {
     };
     const xRange = this._xAxis._getRange();
 
-    const yOffsetBottom = max([xHeight, height - this._yTest._getRange()[1], height - this._y2Test._getRange()[1]]);
-    const yAxisOffset = height - this._yTest._getRange()[1];
-    const yDifference = isYAxisOrdinal ? yOffsetBottom - yAxisOffset + this._yTest.padding() : xHeight;
-
     this._yAxis
       .domain(yDomain)
       .height(height)
-      .range([this._xAxis.outerBounds().y + x2Height, height - (yDifference + topOffset)])
+      .range([this._xAxis.outerBounds().y + x2Height, height - (yDifference + topOffset + verticalMargin)])
       .scale(yScale.toLowerCase())
       .select(yGroup.node())
       .ticks(yTicks)
@@ -538,15 +553,12 @@ export default class Plot extends Viz {
       .config(this._yConfig)
       .render();
 
-    const y2AxisOffset = height - this._y2Test._getRange()[1];
-    const y2Difference = isYAxisOrdinal ? yOffsetBottom - y2AxisOffset + this._y2Test.padding() : xHeight;
-
     this._y2Axis
       .config(yC)
       .domain(y2Exists ? y2Domain : yDomain)
       .gridSize(0)
       .height(height)
-      .range([this._xAxis.outerBounds().y + x2Height, height - (y2Difference + topOffset)])
+      .range([this._xAxis.outerBounds().y + x2Height, height - (y2Difference + topOffset + verticalMargin)])
       .scale(y2Exists ? y2Scale.toLowerCase() : yScale.toLowerCase())
       .select(y2Group.node())
       .width(width - max([0, xOffsetRight - y2Width]))
@@ -683,17 +695,6 @@ export default class Plot extends Viz {
       this._shapes.push(s);
 
     });
-
-    this._redrawLegend = true;
-
-    this._legendMargin = {
-      left: xOffsetLeft,
-      right: Math.max(xDifference, x2Difference),
-      bottom: Math.max(yDifference, y2Difference),
-      top: x2Height + topOffset
-    };
-
-    super._draw(callback);
 
     return this;
 
