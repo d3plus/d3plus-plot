@@ -115,8 +115,6 @@ export default class Plot extends Viz {
   */
   _draw(callback) {
 
-    super._preDraw(callback);
-
     if (!this._filteredData.length) return this;
 
     const stackGroup = (d, i) => this._stacked
@@ -479,12 +477,10 @@ export default class Plot extends Viz {
     const y2AxisOffset = height - this._y2Test._getRange()[1];
     const y2Difference = isYAxisOrdinal ? yOffsetBottom - y2AxisOffset + this._y2Test.padding() : xHeight;
 
-    this._legendMargin = {
-      left: xOffsetLeft,
-      right: Math.max(xDifference, x2Difference),
-      bottom: Math.max(yDifference, y2Difference),
-      top: x2Height + topOffset
-    };
+    this._padding.left += xOffsetLeft;
+    this._padding.right += Math.max(xDifference, x2Difference);
+    this._padding.bottom += Math.max(yDifference, y2Difference);
+    this._padding.top += x2Height + topOffset;
 
     super._draw(callback);
 
