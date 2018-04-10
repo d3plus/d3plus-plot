@@ -282,6 +282,10 @@ export default class Plot extends Viz {
       xDomain = xDomain.map(date);
       xScale = "Time";
     }
+    else if (this._discrete === "x") {
+      xDomain = Array.from(new Set(data.filter(d => d.x).sort((a, b) => this._xSort ? this._xSort(a.data, b.data) : a.x - b.x).map(d => d.x)));
+      xScale = "Ordinal";
+    }
 
     let x2Domain = this._x2Domain ? this._x2Domain.slice() : domains.x2,
         x2Scale = this._x2Sort ? "Ordinal" : "Linear";
@@ -293,11 +297,7 @@ export default class Plot extends Viz {
       x2Domain = x2Domain.map(date);
       x2Scale = "Time";
     }
-
     else if (this._discrete === "x") {
-      xDomain = Array.from(new Set(data.filter(d => d.x).sort((a, b) => this._xSort ? this._xSort(a.data, b.data) : a.x - b.x).map(d => d.x)));
-      xScale = "Ordinal";
-
       x2Domain = Array.from(new Set(data.filter(d => d.x2).sort((a, b) => this._x2Sort ? this._x2Sort(a.data, b.data) : a.x2 - b.x2).map(d => d.x2)));
       x2Scale = "Ordinal";
     }
