@@ -264,6 +264,8 @@ export default class Plot extends Viz {
         .concat(this._confidence && this._confidence[0] ? data.map(d => d.lci)  : [])
         .concat(this._confidence && this._confidence[1] ? data.map(d => d.hci) : []);
 
+      data.sort((a, b) => a[this._discrete] - b[this._discrete]);
+
       domains = {
         x: this._xSort ? Array.from(new Set(data.filter(d => d.x).sort((a, b) =>  this._xSort(a.data, b.data)).map(d => d.x))) : extent(xData, d => d),
         x2: this._x2Sort ? Array.from(new Set(data.filter(d => d.x2).sort((a, b) =>  this._x2Sort(a.data, b.data)).map(d => d.x2))) : extent(x2Data, d => d),
