@@ -20,37 +20,40 @@ export default function({data, x, y, x2, y2, buffer = 10}) {
 
   const oppDomain = oppScale.domain().slice();
 
-  if (this._discrete === "x") oppDomain.reverse();
+  const isDiscreetX = this._discrete === "x";
+
+  if (isDiscreetX) oppDomain.reverse();
 
   let negVals, posVals;
   if (this._stacked) {
     const groupedData = nest()
       .key(d => d[this._discrete])
       .entries(data)
-      .map(d => d.values.map(x => x[this._discrete === "x" ? yKey : xKey]));
+      .map(d => d.values.map(x => x[isDiscreetX ? yKey : xKey]));
     posVals = groupedData.map(arr => sum(arr.filter(d => d > 0)));
     negVals = groupedData.map(arr => sum(arr.filter(d => d < 0)));
   }
   else {
-    posVals = data.map(d => d[this._discrete === "x" ? yKey : xKey]);
+    posVals = data.map(d => d[isDiscreetX ? yKey : xKey]);
     negVals = posVals;
   }
+
   let bMax = oppScale(max(posVals));
-  if (bMax !== oppScale(0)) bMax += this._discrete === "x" ? -buffer : buffer;
+  if (isDiscreetX ? bMax < oppScale(0) : bMax > oppScale(0)) bMax += isDiscreetX ? -buffer : buffer;
   bMax = oppScale.invert(bMax);
 
   let bMin = oppScale(min(negVals));
-  if (bMin !== oppScale(0)) bMin += this._discrete === "x" ? buffer : -buffer;
+  if (isDiscreetX ? bMin > oppScale(0) : bMin < oppScale(0)) bMin += isDiscreetX ? buffer : -buffer;
   bMin = oppScale.invert(bMin);
 
   if (bMax > oppDomain[1]) oppDomain[1] = bMax;
   if (bMin < oppDomain[0]) oppDomain[0] = bMin;
 
-  if (this._discrete === "x") oppDomain.reverse();
+  if (isDiscreetX) oppDomain.reverse();
 
   oppScale.domain(oppDomain);
 
-  const discreteScale = this._discrete === "x" ? x : y;
+  const discreteScale = isDiscreetX ? x : y;
   discreteScale.domain(ordinalBuffer(discreteScale.domain()));
 
   return [x, y];
