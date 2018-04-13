@@ -1,6 +1,6 @@
 # d3plus-plot
 
-[![NPM Release](http://img.shields.io/npm/v/d3plus-plot.svg?style=flat)](https://www.npmjs.org/package/d3plus-plot) [![Build Status](https://travis-ci.org/d3plus/d3plus-plot.svg?branch=master)](https://travis-ci.org/d3plus/d3plus-plot) [![Dependency Status](http://img.shields.io/david/d3plus/d3plus-plot.svg?style=flat)](https://david-dm.org/d3plus/d3plus-plot) [![Gitter](https://img.shields.io/badge/-chat_on_gitter-brightgreen.svg?style=flat&logo=gitter-white)](https://gitter.im/d3plus/) [![1.0 progress](https://img.shields.io/badge/1.0_progress-60%25-yellow.svg?style=flat)](https://github.com/d3plus/d3plus-plot/projects/1)
+[![NPM Release](http://img.shields.io/npm/v/d3plus-plot.svg?style=flat)](https://www.npmjs.org/package/d3plus-plot) [![Build Status](https://travis-ci.org/d3plus/d3plus-plot.svg?branch=master)](https://travis-ci.org/d3plus/d3plus-plot) [![Dependency Status](http://img.shields.io/david/d3plus/d3plus-plot.svg?style=flat)](https://david-dm.org/d3plus/d3plus-plot) [![Gitter](https://img.shields.io/badge/-chat_on_gitter-brightgreen.svg?style=flat&logo=gitter-white)](https://gitter.im/d3plus/) [![1.0 progress](https://img.shields.io/badge/1.0_progress-80%25-yellowgreen.svg?style=flat)](https://github.com/d3plus/d3plus-plot/projects/1)
 
 A reusable javascript x/y plot built on D3.
 
@@ -515,4 +515,4 @@ new d3plus.AreaPlot()
 
 
 
-###### <sub>Documentation generated on Thu, 12 Apr 2018 20:07:11 GMT</sub>
+###### <sub>Documentation generated on Fri, 13 Apr 2018 15:19:22 GMT</sub>
