@@ -84,9 +84,7 @@ export default class Plot extends Viz {
     this._x2Axis = new AxisTop().align("start");
     this._xTest = new AxisBottom().align("end").gridSize(0);
     this._x2Test = new AxisTop().align("start").gridSize(0);
-    this._xConfig = {
-      title: "X Axis"
-    };
+    this._xConfig = {};
     this._x2Config = {
       padding: 0
     };
@@ -102,8 +100,7 @@ export default class Plot extends Viz {
           const domain = this._yAxis.domain();
           return domain[domain.length - 1] === d.id ? "transparent" : "#ccc";
         }
-      },
-      title: "Y Axis"
+      }
     };
     this._y2Config = {};
 
