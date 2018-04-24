@@ -423,6 +423,7 @@ export default class Plot extends Viz {
     this._xTest
       .domain(xDomain)
       .height(height)
+      .maxSize(height / 2)
       .range([undefined, undefined])
       .scale(xScale.toLowerCase())
       .select(testGroup.node())
@@ -535,6 +536,7 @@ export default class Plot extends Viz {
     this._xAxis
       .domain(xDomain)
       .height(height - (x2Height + topOffset + verticalMargin))
+      .maxSize(height / 2)
       .range([xOffsetLeft, width - (xDifference + horizontalMargin)])
       .scale(xScale.toLowerCase())
       .select(xGroup.node())
