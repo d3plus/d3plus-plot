@@ -184,6 +184,7 @@ export default class Plot extends Viz {
         }, {});
 
       data = data.sort((a, b) => {
+        if (this[`_${this._discrete}Sort`]) return this[`_${this._discrete}Sort`](a, b);
         const a1 = a[this._discrete], b1 = b[this._discrete];
         if (a1 - b1 !== 0) return a1 - b1;
         if (a.group !== b.group) return groupValues[b.group] - groupValues[a.group];
@@ -223,7 +224,12 @@ export default class Plot extends Viz {
         }
       });
 
-      data.sort((a, b) => a[this._discrete] - b[this._discrete]);
+      if (this[`_${this._discrete}Sort`]) {
+        data.sort(this[`_${this._discrete}Sort`]);
+      }
+      else {
+        data.sort((a, b) => a[this._discrete] - b[this._discrete]);
+      }
       const order = this._stackOrder;
 
       if (order instanceof Array) stackKeys.sort((a, b) => order.indexOf(a) - order.indexOf(b));
@@ -261,7 +267,12 @@ export default class Plot extends Viz {
         .concat(this._confidence && this._confidence[0] ? data.map(d => d.lci)  : [])
         .concat(this._confidence && this._confidence[1] ? data.map(d => d.hci) : []);
 
-      data.sort((a, b) => a[this._discrete] - b[this._discrete]);
+      if (this[`_${this._discrete}Sort`]) {
+        data.sort(this[`_${this._discrete}Sort`]);
+      }
+      else {
+        data.sort((a, b) => a[this._discrete] - b[this._discrete]);
+      }
 
       domains = {
         x: this._xSort ? Array.from(new Set(data.filter(d => d.x).sort((a, b) =>  this._xSort(a.data, b.data)).map(d => d.x))) : extent(xData, d => d),
