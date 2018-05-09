@@ -184,7 +184,7 @@ export default class Plot extends Viz {
         }, {});
 
       data = data.sort((a, b) => {
-        if (this[`_${this._discrete}Sort`]) return this[`_${this._discrete}Sort`](a, b);
+        if (this[`_${this._discrete}Sort`]) return this[`_${this._discrete}Sort`](a.data, b.data);
         const a1 = a[this._discrete], b1 = b[this._discrete];
         if (a1 - b1 !== 0) return a1 - b1;
         if (a.group !== b.group) return groupValues[b.group] - groupValues[a.group];
@@ -225,7 +225,7 @@ export default class Plot extends Viz {
       });
 
       if (this[`_${this._discrete}Sort`]) {
-        data.sort(this[`_${this._discrete}Sort`]);
+        data.sort((a, b) => this[`_${this._discrete}Sort`](a.data, b.data));
       }
       else {
         data.sort((a, b) => a[this._discrete] - b[this._discrete]);
@@ -268,7 +268,7 @@ export default class Plot extends Viz {
         .concat(this._confidence && this._confidence[1] ? data.map(d => d.hci) : []);
 
       if (this[`_${this._discrete}Sort`]) {
-        data.sort(this[`_${this._discrete}Sort`]);
+        data.sort((a, b) => this[`_${this._discrete}Sort`](a.data, b.data));
       }
       else {
         data.sort((a, b) => a[this._discrete] - b[this._discrete]);
