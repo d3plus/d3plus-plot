@@ -402,6 +402,7 @@ export default class Plot extends Viz {
       .domain(yDomain)
       .height(height)
       .maxSize(width / 2)
+      .range([undefined, undefined])
       .scale(yScale.toLowerCase())
       .select(testGroup.node())
       .ticks(yTicks)
@@ -416,6 +417,7 @@ export default class Plot extends Viz {
     this._y2Test
       .domain(y2Exists ? y2Domain : yDomain)
       .height(height)
+      .range([undefined, undefined])
       .scale(y2Exists ? y2Scale.toLowerCase() : yScale.toLowerCase())
       .select(testGroup.node())
       .ticks(y2Ticks ? y2Ticks : yTicks)
