@@ -414,18 +414,20 @@ export default class Plot extends Viz {
     let yBounds = this._yTest.outerBounds();
     let yWidth = yBounds.width ? yBounds.width + this._yTest.padding() : undefined;
 
-    this._y2Test
-      .domain(y2Exists ? y2Domain : yDomain)
-      .height(height)
-      .range([undefined, undefined])
-      .scale(y2Exists ? y2Scale.toLowerCase() : yScale.toLowerCase())
-      .select(testGroup.node())
-      .ticks(y2Ticks ? y2Ticks : yTicks)
-      .width(width)
-      .config(yC)
-      .config(defaultY2Config)
-      .config(this._y2Config)
-      .render();
+    if (y2Exists) {
+      this._y2Test
+        .domain(y2Exists ? y2Domain : yDomain)
+        .height(height)
+        .range([undefined, undefined])
+        .scale(y2Exists ? y2Scale.toLowerCase() : yScale.toLowerCase())
+        .select(testGroup.node())
+        .ticks(y2Ticks ? y2Ticks : [])
+        .width(width)
+        .config(yC)
+        .config(defaultY2Config)
+        .config(this._y2Config)
+        .render();
+    }
 
     let y2Bounds = this._y2Test.outerBounds();
     let y2Width = y2Bounds.width ? y2Bounds.width + this._y2Test.padding() : undefined;
@@ -447,19 +449,21 @@ export default class Plot extends Viz {
       .config(this._xConfig)
       .render();
 
-    this._x2Test
-      .domain(x2Exists ? x2Domain : xDomain)
-      .height(height)
-      .range([undefined, undefined])
-      .scale(x2Exists ? x2Scale.toLowerCase() : xScale.toLowerCase())
-      .select(testGroup.node())
-      .ticks(x2Exists ? x2Ticks : xTicks)
-      .width(width)
-      .config(xC)
-      .tickSize(0)
-      .config(defaultX2Config)
-      .config(this._x2Config)
-      .render();
+    if (x2Exists) {
+      this._x2Test
+        .domain(x2Exists ? x2Domain : xDomain)
+        .height(height)
+        .range([undefined, undefined])
+        .scale(x2Exists ? x2Scale.toLowerCase() : xScale.toLowerCase())
+        .select(testGroup.node())
+        .ticks(x2Exists ? x2Ticks : [])
+        .width(width)
+        .config(xC)
+        .tickSize(0)
+        .config(defaultX2Config)
+        .config(this._x2Config)
+        .render();
+    }
 
     const x2Bounds = this._x2Test.outerBounds();
     const x2Height = x2Bounds.height + this._x2Test.padding();
@@ -517,7 +521,8 @@ export default class Plot extends Viz {
     yWidth = yBounds.width ? yBounds.width + this._yTest.padding() : undefined;
     xOffsetLeft =  max([yWidth, this._xTest._getRange()[0], this._x2Test._getRange()[0]]);
 
-    this._y2Test
+    if (y2Exists) {
+      this._y2Test
       .config(yC)
       .domain(y2Exists ? y2Domain : yDomain)
       .gridSize(0)
@@ -530,6 +535,7 @@ export default class Plot extends Viz {
       .config(this._y2Config)
       .config(defaultY2Config)
       .render();
+    }
 
     y2Bounds = this._y2Test.outerBounds();
     y2Width = y2Bounds.width ? y2Bounds.width + this._y2Test.padding() : undefined;
@@ -561,18 +567,20 @@ export default class Plot extends Viz {
       .config(this._xConfig)
       .render();
 
-    this._x2Axis
-      .domain(x2Exists ? x2Domain : xDomain)
-      .height(height - (xHeight + topOffset + verticalMargin))
-      .range([xOffsetLeft, width - (x2Difference + horizontalMargin)])
-      .scale(x2Scale.toLowerCase())
-      .select(x2Group.node())
-      .ticks(x2Exists ? x2Ticks : xTicks)
-      .width(width)
-      .config(xC)
-      .config(defaultX2Config)
-      .config(this._x2Config)
-      .render();
+    if (x2Exists) {
+      this._x2Axis
+        .domain(x2Exists ? x2Domain : xDomain)
+        .height(height - (xHeight + topOffset + verticalMargin))
+        .range([xOffsetLeft, width - (x2Difference + horizontalMargin)])
+        .scale(x2Scale.toLowerCase())
+        .select(x2Group.node())
+        .ticks(x2Exists ? x2Ticks : [])
+        .width(width)
+        .config(xC)
+        .config(defaultX2Config)
+        .config(this._x2Config)
+        .render();
+    }
 
     x = (d, x) => {
       if (x === "x2") {
@@ -599,19 +607,21 @@ export default class Plot extends Viz {
       .config(this._yConfig)
       .render();
 
-    this._y2Axis
-      .config(yC)
-      .domain(y2Exists ? y2Domain : yDomain)
-      .gridSize(0)
-      .height(height)
-      .range([this._xAxis.outerBounds().y + x2Height, height - (y2Difference + topOffset + verticalMargin)])
-      .scale(y2Exists ? y2Scale.toLowerCase() : yScale.toLowerCase())
-      .select(y2Group.node())
-      .width(width - max([0, xOffsetRight - y2Width]))
-      .title(false)
-      .config(this._y2Config)
-      .config(defaultY2Config)
-      .render();
+    if (y2Exists) {
+      this._y2Axis
+        .config(yC)
+        .domain(y2Exists ? y2Domain : yDomain)
+        .gridSize(0)
+        .height(height)
+        .range([this._xAxis.outerBounds().y + x2Height, height - (y2Difference + topOffset + verticalMargin)])
+        .scale(y2Exists ? y2Scale.toLowerCase() : yScale.toLowerCase())
+        .select(y2Group.node())
+        .width(width - max([0, xOffsetRight - y2Width]))
+        .title(false)
+        .config(this._y2Config)
+        .config(defaultY2Config)
+        .render();
+    }
 
     y = (d, y) => {
       if (y === "y2") {
