@@ -416,12 +416,12 @@ export default class Plot extends Viz {
 
     if (y2Exists) {
       this._y2Test
-        .domain(y2Exists ? y2Domain : yDomain)
+        .domain(y2Domain)
         .height(height)
         .range([undefined, undefined])
-        .scale(y2Exists ? y2Scale.toLowerCase() : yScale.toLowerCase())
+        .scale(y2Scale.toLowerCase())
         .select(testGroup.node())
-        .ticks(y2Ticks ? y2Ticks : yTicks)
+        .ticks(y2Ticks)
         .width(width)
         .config(yC)
         .config(defaultY2Config)
@@ -451,12 +451,12 @@ export default class Plot extends Viz {
 
     if (x2Exists) {
       this._x2Test
-        .domain(x2Exists ? x2Domain : xDomain)
+        .domain(x2Domain)
         .height(height)
         .range([undefined, undefined])
-        .scale(x2Exists ? x2Scale.toLowerCase() : xScale.toLowerCase())
+        .scale(x2Scale.toLowerCase())
         .select(testGroup.node())
-        .ticks(x2Exists ? x2Ticks : xTicks)
+        .ticks(x2Ticks)
         .width(width)
         .config(xC)
         .tickSize(0)
@@ -524,11 +524,11 @@ export default class Plot extends Viz {
     if (y2Exists) {
       this._y2Test
       .config(yC)
-      .domain(y2Exists ? y2Domain : yDomain)
+      .domain(y2Domain)
       .gridSize(0)
       .height(height)
       .range([x2Height, height - (y2Difference + topOffset + verticalMargin)])
-      .scale(y2Exists ? y2Scale.toLowerCase() : yScale.toLowerCase())
+      .scale(y2Scale.toLowerCase())
       .select(testGroup.node())
       .width(width - max([0, xOffsetRight - y2Width]))
       .title(false)
@@ -569,12 +569,12 @@ export default class Plot extends Viz {
 
     if (x2Exists) {
       this._x2Axis
-        .domain(x2Exists ? x2Domain : xDomain)
+        .domain(x2Domain)
         .height(height - (xHeight + topOffset + verticalMargin))
         .range([xOffsetLeft, width - (x2Difference + horizontalMargin)])
         .scale(x2Scale.toLowerCase())
         .select(x2Group.node())
-        .ticks(x2Exists ? x2Ticks : [])
+        .ticks(x2Ticks)
         .width(width)
         .config(xC)
         .config(defaultX2Config)
