@@ -481,9 +481,8 @@ export default class Plot extends Viz {
     const xOffset = width - this._xTest._getRange()[1];
     const xDifference = xOffsetRight - xOffset + this._xTest.padding();
 
-    const x2Offset = width - this._x2Test._getRange()[1];
+    const x2Offset = this._x2Test._getRange()[1] !== undefined ? width - this._x2Test._getRange()[1] : width;
     const x2Difference = xOffsetRight - x2Offset + this._x2Test.padding();
-
     const xBounds = this._xTest.outerBounds();
     const xHeight = xBounds.height + this._xTest.padding();
 
@@ -491,7 +490,7 @@ export default class Plot extends Viz {
     const yAxisOffset = height - this._yTest._getRange()[1];
     const yDifference = isYAxisOrdinal ? yOffsetBottom - yAxisOffset + this._yTest.padding() : xHeight;
 
-    const y2AxisOffset = height - this._y2Test._getRange()[1];
+    const y2AxisOffset = this._y2Test._getRange()[1] !== undefined ? height - this._y2Test._getRange()[1] : height;
     const y2Difference = isYAxisOrdinal ? yOffsetBottom - y2AxisOffset + this._y2Test.padding() : xHeight;
 
     this._padding.left += xOffsetLeft;
