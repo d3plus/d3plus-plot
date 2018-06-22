@@ -57,17 +57,17 @@ export default class Plot extends Viz {
         let ariaLabelStr = "";
         if (d.nested) {
           ariaLabelStr = `${this._drawLabel(d.data, d.i)}`;
-          if (d.data.x) ariaLabelStr += `, x: ${d.data.x}`;
-          if (d.data.y) ariaLabelStr += `, y: ${d.data.y}`;
-          if (d.data.x2) ariaLabelStr += `, x2: ${d.data.x2}`;
-          if (d.data.y2) ariaLabelStr += `, y2: ${d.data.y2}`;
+          if (d.data.x !== undefined) ariaLabelStr += `, x: ${d.data.x}`;
+          if (d.data.y !== undefined) ariaLabelStr += `, y: ${d.data.y}`;
+          if (d.data.x2 !== undefined) ariaLabelStr += `, x2: ${d.data.x2}`;
+          if (d.data.y2 !== undefined) ariaLabelStr += `, y2: ${d.data.y2}`;
         }
         else {
           ariaLabelStr = `${this._drawLabel(d, i)}`;
-          if (d.x) ariaLabelStr += `, x: ${d.x}`;
-          if (d.y) ariaLabelStr += `, y: ${d.y}`;
-          if (d.x2) ariaLabelStr += `, x2: ${d.x2}`;
-          if (d.y2) ariaLabelStr += `, y2: ${d.y2}`;
+          if (d.x !== undefined) ariaLabelStr += `, x: ${d.x}`;
+          if (d.y !== undefined) ariaLabelStr += `, y: ${d.y}`;
+          if (d.x2 !== undefined) ariaLabelStr += `, x2: ${d.x2}`;
+          if (d.y2 !== undefined) ariaLabelStr += `, y2: ${d.y2}`;
         }
         return `${ariaLabelStr}.`;
       },
