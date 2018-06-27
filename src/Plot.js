@@ -53,6 +53,18 @@ export default class Plot extends Viz {
           fontResize: true
         }
       },
+      ariaLabel: (d, i) => {
+        let ariaLabelStr = "";
+        if (d.nested) ariaLabelStr = `${this._drawLabel(d.data, d.i)}`;
+        else {
+          ariaLabelStr = `${this._drawLabel(d, i)}`;
+          if (this._x(d, i) !== undefined) ariaLabelStr += `, x: ${this._x(d, i)}`;
+          if (this._y(d, i) !== undefined) ariaLabelStr += `, y: ${this._y(d, i)}`;
+          if (this._x2(d, i) !== undefined) ariaLabelStr += `, x2: ${this._x2(d, i)}`;
+          if (this._y2(d, i) !== undefined) ariaLabelStr += `, y2: ${this._y2(d, i)}`;
+        }
+        return `${ariaLabelStr}.`;
+      },
       Bar: {
         labelConfig: {
           textAnchor: () => this._discrete === "x" ? "middle" : "end",

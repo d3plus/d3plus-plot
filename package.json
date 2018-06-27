@@ -1,6 +1,6 @@
 {
   "name": "d3plus-plot",
-  "version": "0.7.8",
+  "version": "0.7.9",
   "description": "A reusable javascript x/y plot built on D3.",
   "main": "build/d3plus-plot.js",
   "jsnext:main": "es/index",
@@ -25,14 +25,14 @@
   "dependencies": {
     "d3-array": "^1.2.0",
     "d3-collection": "^1.0.4",
-    "d3-scale": "^2.0.0",
+    "d3-scale": "^2.1.0",
     "d3-selection": "^1.1.0",
     "d3-shape": "^1.2.0",
     "d3plus-axis": "^0.3.46",
     "d3plus-color": "^0.6.2",
     "d3plus-common": "^0.6.39",
     "d3plus-shape": "^0.14.11",
-    "d3plus-viz": "^0.11.12"
+    "d3plus-viz": "^0.11.13"
   },
   "scripts": {
     "build": "d3plus-build",
