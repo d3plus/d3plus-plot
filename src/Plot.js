@@ -397,14 +397,11 @@ export default class Plot extends Viz {
 
     this._xDomain = xDomain;
 
-    let testGroup = elem("g.d3plus-plot-test", {enter: {opacity: 0}, parent: this._select}),
-        x2Ticks = this._discrete === "x" && !x2Time ? domains.x2 : undefined,
-        xTicks = this._discrete === "x" && !xTime ? domains.x : undefined,
-        y2Ticks = this._discrete === "y" && !y2Time ? domains.y2 : undefined,
-        yTicks = this._discrete === "y" && !yTime ? domains.y : undefined;
-
-    y2Ticks = this._discrete === "x" && !y2Time ? domains.y2 : undefined;
-    //    yTicks = this._discrete === "x" && !yTime ? domains.y : undefined;
+    const testGroup = elem("g.d3plus-plot-test", {enter: {opacity: 0}, parent: this._select}),
+          x2Ticks = this._discrete === "x" && !x2Time ? domains.x2 : undefined,
+          xTicks = this._discrete === "x" && !xTime ? domains.x : undefined,
+          y2Ticks = this._discrete === "y" && !y2Time ? domains.y2 : undefined,
+          yTicks = this._discrete === "y" && !yTime ? domains.y : undefined;
 
     const yC = {
       gridConfig: {stroke: !this._discrete || this._discrete === "x" ? this._yTest.gridConfig().stroke : "transparent"}
