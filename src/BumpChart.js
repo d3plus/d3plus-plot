@@ -1,4 +1,5 @@
 import {constant} from "d3plus-common";
+import {date} from "d3plus-axis";
 
 import {default as Plot} from "./Plot";
 
@@ -51,7 +52,7 @@ export default class BumpChart extends Plot {
       tickFormat: val => {
         const data = this._formattedData;
         const xDomain = this._xDomain;
-        const startData = data.filter(d => d.x === xDomain[0]);
+        const startData = data.filter(d => this._time ? d.x.getTime() === xDomain[0].getTime() : d.x === xDomain[0]);
         const d = startData.find(d => d.y === val);
         return d ? this._drawLabel(d, d.i) : "";
       }
@@ -60,7 +61,7 @@ export default class BumpChart extends Plot {
       tickFormat: val => {
         const data = this._formattedData;
         const xDomain = this._xDomain;
-        const endData = data.filter(d => d.x === xDomain[xDomain.length - 1]);
+        const endData = data.filter(d => this._time ? d.x.getTime() === xDomain[xDomain.length - 1].getTime() : d.x === xDomain[xDomain.length - 1]);
         const d = endData.find(d => d.y === val);
         return d ? this._drawLabel(d, d.i) : "";
       }
