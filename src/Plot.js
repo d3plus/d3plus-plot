@@ -508,7 +508,6 @@ export default class Plot extends Viz {
     const x2Difference = xOffsetRight - x2Offset + this._x2Test.padding();
     const xBounds = this._xTest.outerBounds();
     const xHeight = xBounds.height + this._xTest.padding();
-
     const yTestRange = this._yTest._getRange();
     const y2TestRange = this._y2Test._getRange();
 
@@ -578,12 +577,12 @@ export default class Plot extends Viz {
 
     const y2Transform = `translate(-${this._margin.right}, ${this._margin.top + topOffset})`;
     const y2Group = elem("g.d3plus-plot-y2-axis", {parent, transition, enter: {transform: y2Transform}, update: {transform: y2Transform}});
-
+    const timeMargin = (xTime || x2Time) && y2Exists ? y2TestRange[0] : 0;
     this._xAxis
       .domain(xDomain)
       .height(height - (x2Height + topOffset + verticalMargin))
       .maxSize(height / 2)
-      .range([xOffsetLeft, width - (xDifference + horizontalMargin)])
+      .range([xOffsetLeft, width - (xDifference + horizontalMargin + timeMargin)])
       .scale(xScale.toLowerCase())
       .select(xGroup.node())
       .ticks(xTicks)
@@ -596,7 +595,7 @@ export default class Plot extends Viz {
       this._x2Axis
         .domain(x2Domain)
         .height(height - (xHeight + topOffset + verticalMargin))
-        .range([xOffsetLeft, width - (x2Difference + horizontalMargin)])
+        .range([xOffsetLeft, width - (x2Difference + horizontalMargin + timeMargin)])
         .scale(x2Scale.toLowerCase())
         .select(x2Group.node())
         .ticks(x2Ticks)
