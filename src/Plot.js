@@ -393,7 +393,7 @@ export default class Plot extends Viz {
     if (xTime) xDomain = [startTime, endTime];
     if (x2Time) x2Domain = [startTime, endTime];
     if (yTime) yDomain = [startTime, endTime];
-    if (y2Time) y2Domain = [startTime], endTime;
+    if (y2Time) y2Domain = [startTime, endTime];
 
     this._xDomain = xDomain;
 
@@ -503,7 +503,6 @@ export default class Plot extends Viz {
     let xOffsetRight = max([y2Width, width - xTestRange[1], width - x2TestRange[1]]);
     const xOffset = width - xTestRange[1];
     const xDifference = xOffsetRight - xOffset + this._xTest.padding();
-
     const x2Offset = x2TestRange[1] !== undefined ? width - x2TestRange[1] : width;
     const x2Difference = xOffsetRight - x2Offset + this._x2Test.padding();
     const xBounds = this._xTest.outerBounds();
@@ -577,7 +576,7 @@ export default class Plot extends Viz {
 
     const y2Transform = `translate(-${this._margin.right}, ${this._margin.top + topOffset})`;
     const y2Group = elem("g.d3plus-plot-y2-axis", {parent, transition, enter: {transform: y2Transform}, update: {transform: y2Transform}});
-    const timeMargin = (xTime || x2Time) && y2Exists ? y2TestRange[0] : 0;
+    const timeMargin = xTime || x2Time ? xOffset - this._xTest.padding() : 0;
     this._xAxis
       .domain(xDomain)
       .height(height - (x2Height + topOffset + verticalMargin))
