@@ -499,12 +499,12 @@ export default class Plot extends Viz {
 
     const isYAxisOrdinal = yScale === "Ordinal";
     const topOffset = isYAxisOrdinal ? this._yTest.shapeConfig().labelConfig.fontSize() : this._yTest.shapeConfig().labelConfig.fontSize() / 2;
-
+    
     let xOffsetRight = max([y2Width, width - xTestRange[1], width - x2TestRange[1]]);
     const xOffset = width - xTestRange[1];
     const xDifference = xTime || x2Time ? xOffsetRight : xOffsetRight - xOffset + this._xTest.padding();
     const x2Offset = x2TestRange[1] !== undefined ? width - x2TestRange[1] : width;
-    const x2Difference = xOffsetRight - x2Offset + this._x2Test.padding();
+    const x2Difference = xTime || x2Time ? xOffsetRight : xOffsetRight - x2Offset + this._x2Test.padding();
     const xBounds = this._xTest.outerBounds();
     const xHeight = xBounds.height + this._xTest.padding();
     const yTestRange = this._yTest._getRange();
@@ -526,7 +526,6 @@ export default class Plot extends Viz {
 
     const horizontalMargin = this._margin.left + this._margin.right;
     const verticalMargin = this._margin.top + this._margin.bottom;
-
     this._yTest
       .domain(yDomain)
       .height(height)
@@ -594,7 +593,7 @@ export default class Plot extends Viz {
       this._x2Axis
         .domain(x2Domain)
         .height(height - (xHeight + topOffset + verticalMargin))
-        .range([xOffsetLeft, width - (x2Difference + horizontalMargin + timeMargin)])
+        .range([xOffsetLeft, width - (x2Difference + horizontalMargin)])
         .scale(x2Scale.toLowerCase())
         .select(x2Group.node())
         .ticks(x2Ticks)
