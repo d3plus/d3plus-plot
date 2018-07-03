@@ -329,7 +329,7 @@ export default class Plot extends Viz {
 
     if (yDomain[0] === void 0) yDomain[0] = domains.y[0];
     if (yDomain[1] === void 0) yDomain[1] = domains.y[1];
-    // eslint
+
     let y2Domain = this._y2Domain ? this._y2Domain.slice() : domains.y2,
         y2Scale = this._y2Sort ? "Ordinal" : "Linear";
 
@@ -502,7 +502,7 @@ export default class Plot extends Viz {
 
     let xOffsetRight = max([y2Width, width - xTestRange[1], width - x2TestRange[1]]);
     const xOffset = width - xTestRange[1];
-    const xDifference = xOffsetRight - xOffset + this._xTest.padding();
+    const xDifference = xTime || x2Time ? xOffsetRight : xOffsetRight - xOffset + this._xTest.padding();
     const x2Offset = x2TestRange[1] !== undefined ? width - x2TestRange[1] : width;
     const x2Difference = xOffsetRight - x2Offset + this._x2Test.padding();
     const xBounds = this._xTest.outerBounds();
@@ -576,12 +576,12 @@ export default class Plot extends Viz {
 
     const y2Transform = `translate(-${this._margin.right}, ${this._margin.top + topOffset})`;
     const y2Group = elem("g.d3plus-plot-y2-axis", {parent, transition, enter: {transform: y2Transform}, update: {transform: y2Transform}});
-    const timeMargin = xTime || x2Time ? xOffset - this._xTest.padding() : 0;
+
     this._xAxis
       .domain(xDomain)
       .height(height - (x2Height + topOffset + verticalMargin))
       .maxSize(height / 2)
-      .range([xOffsetLeft, width - (xDifference + horizontalMargin + timeMargin)])
+      .range([xOffsetLeft, width - (xDifference + horizontalMargin)])
       .scale(xScale.toLowerCase())
       .select(xGroup.node())
       .ticks(xTicks)
