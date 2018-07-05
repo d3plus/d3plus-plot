@@ -387,16 +387,6 @@ export default class Plot extends Viz {
     yDomain = y.domain();
     y2Domain = y2.domain();
 
-    const startTime = date(data[0].discrete);
-    const endTime = date(data[data.length - 1].discrete);
-
-    if (xTime) xDomain = [startTime, endTime];
-    if (x2Time) x2Domain = [startTime, endTime];
-    if (yTime) yDomain = [startTime, endTime];
-    if (y2Time) y2Domain = [startTime, endTime];
-
-    this._xDomain = xDomain;
-
     const testGroup = elem("g.d3plus-plot-test", {enter: {opacity: 0}, parent: this._select}),
           x2Ticks = this._discrete === "x" && !x2Time ? domains.x2 : undefined,
           xTicks = this._discrete === "x" && !xTime ? domains.x : undefined,

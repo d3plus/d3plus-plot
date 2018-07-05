@@ -51,8 +51,7 @@ export default class BumpChart extends Plot {
     this.yConfig({
       tickFormat: val => {
         const data = this._formattedData;
-        const xDomain = this._xDomain;
-        const xMin = xDomain[0] instanceof Date ? xDomain[0].getTime() : xDomain[0];
+        const xMin = data[0].x instanceof Date ? data[0].x.getTime() : data[0].x;
         const startData = data.filter(d => (d.x instanceof Date ? d.x.getTime() : d.x) === xMin);
         const d = startData.find(d => d.y === val);
         return d ? this._drawLabel(d, d.i) : "";
@@ -61,8 +60,7 @@ export default class BumpChart extends Plot {
     this.y2Config({
       tickFormat: val => {
         const data = this._formattedData;
-        const xDomain = this._xDomain;
-        const xMax = xDomain[xDomain.length - 1] instanceof Date ? xDomain[xDomain.length - 1].getTime() : xDomain[xDomain.length - 1];
+        const xMax = data[data.length - 1].x instanceof Date ? data[data.length - 1].x.getTime() : data[data.length - 1].x;
         const endData = data.filter(d => (d.x instanceof Date ? d.x.getTime() : d.x) === xMax);
         const d = endData.find(d => d.y === val);
         return d ? this._drawLabel(d, d.i) : "";
