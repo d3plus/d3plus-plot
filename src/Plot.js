@@ -264,19 +264,19 @@ export default class Plot extends Viz {
     }
     else {
       const xData = this._discrete === "x" ? data.map(d => d.x) : data.map(d => d.x)
-        .concat(this._confidence && this._confidence[0] ? data.map(d => d.lci)  : [])
+        .concat(this._confidence && this._confidence[0] ? data.map(d => d.lci) : [])
         .concat(this._confidence && this._confidence[1] ? data.map(d => d.hci) : []);
 
       const x2Data = this._discrete === "x" ? data.map(d => d.x2) : data.map(d => d.x2)
-        .concat(this._confidence && this._confidence[0] ? data.map(d => d.lci)  : [])
+        .concat(this._confidence && this._confidence[0] ? data.map(d => d.lci) : [])
         .concat(this._confidence && this._confidence[1] ? data.map(d => d.hci) : []);
 
       const yData = this._discrete === "y" ? data.map(d => d.y) : data.map(d => d.y)
-        .concat(this._confidence && this._confidence[0] ? data.map(d => d.lci)  : [])
+        .concat(this._confidence && this._confidence[0] ? data.map(d => d.lci) : [])
         .concat(this._confidence && this._confidence[1] ? data.map(d => d.hci) : []);
 
       const y2Data = this._discrete === "y" ? data.map(d => d.y2) : data.map(d => d.y2)
-        .concat(this._confidence && this._confidence[0] ? data.map(d => d.lci)  : [])
+        .concat(this._confidence && this._confidence[0] ? data.map(d => d.lci) : [])
         .concat(this._confidence && this._confidence[1] ? data.map(d => d.hci) : []);
 
       if (this[`_${this._discrete}Sort`]) {
@@ -287,10 +287,10 @@ export default class Plot extends Viz {
       }
 
       domains = {
-        x: this._xSort ? Array.from(new Set(data.filter(d => d.x).sort((a, b) =>  this._xSort(a.data, b.data)).map(d => d.x))) : extent(xData, d => d),
-        x2: this._x2Sort ? Array.from(new Set(data.filter(d => d.x2).sort((a, b) =>  this._x2Sort(a.data, b.data)).map(d => d.x2))) : extent(x2Data, d => d),
-        y: this._ySort ? Array.from(new Set(data.filter(d => d.y).sort((a, b) =>  this._ySort(a.data, b.data)).map(d => d.y))) : extent(yData, d => d),
-        y2: this._y2Sort ? Array.from(new Set(data.filter(d => d.y2).sort((a, b) =>  this._y2Sort(a.data, b.data)).map(d => d.y2))) : extent(y2Data, d => d)
+        x: this._xSort ? Array.from(new Set(data.filter(d => d.x).sort((a, b) => this._xSort(a.data, b.data)).map(d => d.x))) : extent(xData, d => d),
+        x2: this._x2Sort ? Array.from(new Set(data.filter(d => d.x2).sort((a, b) => this._x2Sort(a.data, b.data)).map(d => d.x2))) : extent(x2Data, d => d),
+        y: this._ySort ? Array.from(new Set(data.filter(d => d.y).sort((a, b) => this._ySort(a.data, b.data)).map(d => d.y))) : extent(yData, d => d),
+        y2: this._y2Sort ? Array.from(new Set(data.filter(d => d.y2).sort((a, b) => this._y2Sort(a.data, b.data)).map(d => d.y2))) : extent(y2Data, d => d)
       };
     }
 
@@ -387,8 +387,6 @@ export default class Plot extends Viz {
     yDomain = y.domain();
     y2Domain = y2.domain();
 
-    this._xDomain = xDomain;
-
     const testGroup = elem("g.d3plus-plot-test", {enter: {opacity: 0}, parent: this._select}),
           x2Ticks = this._discrete === "x" && !x2Time ? domains.x2 : undefined,
           xTicks = this._discrete === "x" && !xTime ? domains.x : undefined,
@@ -483,7 +481,7 @@ export default class Plot extends Viz {
     const x2Bounds = this._x2Test.outerBounds();
     const x2Height = x2Bounds.height + this._x2Test.padding();
 
-    let xOffsetLeft =  max([yWidth, xTestRange[0], x2TestRange[0]]);
+    let xOffsetLeft = max([yWidth, xTestRange[0], x2TestRange[0]]);
 
     this._xTest
       .range([xOffsetLeft, undefined])
@@ -491,16 +489,14 @@ export default class Plot extends Viz {
 
     const isYAxisOrdinal = yScale === "Ordinal";
     const topOffset = isYAxisOrdinal ? this._yTest.shapeConfig().labelConfig.fontSize() : this._yTest.shapeConfig().labelConfig.fontSize() / 2;
-
+    
     let xOffsetRight = max([y2Width, width - xTestRange[1], width - x2TestRange[1]]);
     const xOffset = width - xTestRange[1];
-    const xDifference = xOffsetRight - xOffset + this._xTest.padding();
-
+    const xDifference = xTime || x2Time ? xOffsetRight : xOffsetRight - xOffset + this._xTest.padding();
     const x2Offset = x2TestRange[1] !== undefined ? width - x2TestRange[1] : width;
-    const x2Difference = xOffsetRight - x2Offset + this._x2Test.padding();
+    const x2Difference = xTime || x2Time ? xOffsetRight : xOffsetRight - x2Offset + this._x2Test.padding();
     const xBounds = this._xTest.outerBounds();
     const xHeight = xBounds.height + this._xTest.padding();
-
     const yTestRange = this._yTest._getRange();
     const y2TestRange = this._y2Test._getRange();
 
@@ -520,7 +516,6 @@ export default class Plot extends Viz {
 
     const horizontalMargin = this._margin.left + this._margin.right;
     const verticalMargin = this._margin.top + this._margin.bottom;
-
     this._yTest
       .domain(yDomain)
       .height(height)
@@ -536,22 +531,22 @@ export default class Plot extends Viz {
 
     yBounds = this._yTest.outerBounds();
     yWidth = yBounds.width ? yBounds.width + this._yTest.padding() : undefined;
-    xOffsetLeft =  max([yWidth, xTestRange[0], x2TestRange[0]]);
+    xOffsetLeft = max([yWidth, xTestRange[0], x2TestRange[0]]);
 
     if (y2Exists) {
       this._y2Test
-      .config(yC)
-      .domain(y2Domain)
-      .gridSize(0)
-      .height(height)
-      .range([x2Height, height - (y2Difference + topOffset + verticalMargin)])
-      .scale(y2Scale.toLowerCase())
-      .select(testGroup.node())
-      .width(width - max([0, xOffsetRight - y2Width]))
-      .title(false)
-      .config(this._y2Config)
-      .config(defaultY2Config)
-      .render();
+        .config(yC)
+        .domain(y2Domain)
+        .gridSize(0)
+        .height(height)
+        .range([x2Height, height - (y2Difference + topOffset + verticalMargin)])
+        .scale(y2Scale.toLowerCase())
+        .select(testGroup.node())
+        .width(width - max([0, xOffsetRight - y2Width]))
+        .title(false)
+        .config(this._y2Config)
+        .config(defaultY2Config)
+        .render();
     }
 
     y2Bounds = this._y2Test.outerBounds();
