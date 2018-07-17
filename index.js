@@ -3,4 +3,5 @@ export {default as BarChart} from "./src/BarChart";
 export {default as BumpChart} from "./src/BumpChart";
 export {default as LinePlot} from "./src/LinePlot";
 export {default as Plot} from "./src/Plot";
+export {default as Radar} from "./src/Radar";
 export {default as StackedArea} from "./src/StackedArea";
