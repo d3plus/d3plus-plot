@@ -29,8 +29,7 @@ export default class Radar extends Plot {
     this._discrete = "x";
     this._factor = 1; // CHECK
     this._legend = false;
-    this._levels = 6; // CHECK
-    this._shape = constant("Circle");
+    this._levels = 3; // CHECK
 
     this._shapeConfig = assign(this._shapeConfig, {
       Circle: {
@@ -38,6 +37,15 @@ export default class Radar extends Plot {
         labelConfig: {
           fontResize: true
         }
+      },
+      Area: {
+        fill: constant("none"),
+        strokeWidth: constant(1)
+      },
+
+      Path: {
+        fill: constant("red"),
+        fillOpacity: constant(0.7)
       }
     });
   }
@@ -56,42 +64,72 @@ export default class Radar extends Plot {
     const transform = `translate(${diameter / 2}, ${diameter / 2})`;
 
     const maxValue = Math.max(...this._data.map(d => d.value));
-    
+
+    const polarAxis = Array.from(new Set(this._data.map((d, i) => this._y(d, i))));
+    const spaceAxis = Array.from(new Set(this._data.map((d, i) => this._x(d, i))));
+
+    const totalAxis = polarAxis.length;
+    const tau = Math.PI * 2;
+    const s = tau / totalAxis;
+
     // TO-DO
-    const allAxis = this._data.map(d => d.skill);
-    const total = allAxis.length;
     const radius = this._factor * (diameter / 2);
+    const allAxis = this._data.map((d, i) => ({
+      __d3plus__: true,
+      __d3plusRadius__: this._factor * radius * ((i + 1) / totalAxis),
+      data: d,
+      i,
+      id: i
+    }));
 
-    for (let j = 0; j < this._levels; j++) {
-      const levelFactor = this._factor * radius * ((j + 1) / this._levels);
-      this._shapes.push(
-        new shapes.Circle()
-        .r(r)
-          .select(
-            elem("g.d3plus-Radar", {
-              parent: this._select,
-              enter: {transform},
-              update: {transform}
-            }).node()
-          )
-          .config(configPrep.bind(this)(this._shapeConfig, "shape", "Circle"))
-          .render()
-      );
-    }
-
+    
     this._shapes.push(
       new shapes.Circle()
-      .r(r)
+        .data(allAxis)
+        .r(d => d.__d3plusRadius__)
         .select(
-          elem("g.d3plus-Radar", {
+          elem("g.d3plus-Radar-item", {
             parent: this._select,
             enter: {transform},
             update: {transform}
           }).node()
         )
-        .config(configPrep.bind(this)(this._shapeConfig, "shape", "Circle"))
+        .config(configPrep.bind(this)(this._shapeConfig, "shape", "Area"))
         .render()
     );
+
+    spaceAxis.forEach(space => {
+      console.log(space);
+      const elm = this._data.filter((d, i) => this._x(d, i) === space);
+      const q = elm.map((d, i) => {
+        const angle = tau / totalAxis * i,
+              r = d.value / maxValue * radius;
+        return {
+          angle: tau / totalAxis * i,
+          x: r * Math.cos(angle),
+          y: r * Math.sin(angle)
+        };
+      });
+
+      const d = `M ${q[0].x} ${q[0].y} ${q
+        .map(i => `L ${i.x} ${i.y}`)
+        .join(" ")}`;
+
+      this._shapes.push(
+        new shapes.Path()
+          .data([0])
+          .d(d)
+          .select(
+            elem(`g.d3plus-Radar-item${space}`, {
+              parent: this._select,
+              enter: {transform},
+              update: {transform}
+            }).node()
+          )
+          .config(configPrep.bind(this)(this._shapeConfig, "shape", "Path"))
+          .render()
+      );
+    });
 
     return this;
   }
