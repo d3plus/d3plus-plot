@@ -10,6 +10,7 @@ import {
 } from "d3plus-common";
 
 import * as shapes from "d3plus-shape";
+import {TextBox} from "d3plus-text";
 import {default as Plot} from "./Plot";
 
 /**
@@ -29,8 +30,9 @@ export default class Radar extends Plot {
     this._discrete = "x";
     this._factor = 1; // CHECK
     this._legend = false;
-    this._levels = 3; // CHECK
+    this._levels = 6; // CHECK
 
+    this._shape = constant("Path");
     this._shapeConfig = assign(this._shapeConfig, {
       Circle: {
         opacity: d => d.__d3plusOpacity__ || 1,
@@ -40,14 +42,16 @@ export default class Radar extends Plot {
       },
       Area: {
         fill: constant("none"),
+        stroke: constant("#CCC"),
         strokeWidth: constant(1)
       },
-
       Path: {
-        fill: constant("red"),
-        fillOpacity: constant(0.7)
+        fillOpacity: constant(0.8)
       }
     });
+    this._xConfig = {
+      height: 0
+    };
   }
 
   /**
@@ -74,21 +78,16 @@ export default class Radar extends Plot {
 
     // TO-DO
     const radius = this._factor * (diameter / 2);
-    const allAxis = this._data.map((d, i) => ({
-      __d3plus__: true,
-      __d3plusRadius__: this._factor * radius * ((i + 1) / totalAxis),
-      data: d,
-      i,
-      id: i
+    const allAxis = Array.from(Array(this._levels).keys()).map((d, i) => ({
+      __d3plusRadius__: this._factor * radius * ((i + 1) / this._levels)
     }));
-
     
     this._shapes.push(
       new shapes.Circle()
         .data(allAxis)
         .r(d => d.__d3plusRadius__)
         .select(
-          elem("g.d3plus-Radar-item", {
+          elem("g.d3plus-Radar-circle", {
             parent: this._select,
             enter: {transform},
             update: {transform}
@@ -98,8 +97,54 @@ export default class Radar extends Plot {
         .render()
     );
 
-    spaceAxis.forEach(space => {
-      console.log(space);
+    const polarAxisLines = polarAxis.map((d, i) => {
+      const angle = tau / totalAxis * i;
+
+      return {
+        id: i,
+        angle: tau / totalAxis * i,
+        text: d,
+        x: (radius - 10) * Math.cos(angle),
+        y: (radius - 10) * Math.sin(angle)
+      };
+    });
+
+    this._shapes.push(
+      new TextBox()
+      .data(polarAxisLines)
+      .x(d => d.x)
+      .y(d => d.y)
+      .rotate(d => 50 * d.angle / Math.PI)
+      .select(
+        elem("g.d3plus-Radar-text", {
+          parent: this._select,
+          enter: {transform},
+          update: {transform}
+        }).node()
+      )
+      .render()
+    );
+
+    this._shapes.push(
+      new shapes.Area()
+        .data(polarAxisLines)
+        .x0(d => 0)
+        .y0(d => 0)
+        .x1(d => d.x)
+        .y1(d => d.y)
+        .select(
+          elem("g.d3plus-Radar-axis", {
+            parent: this._select,
+            enter: {transform},
+            update: {transform}
+          }).node()
+        )
+        .config(configPrep.bind(this)(this._shapeConfig, "shape", "Area"))
+        .render()
+    );
+
+    const groupPath = [];
+    spaceAxis.forEach((space, i) => {
       const elm = this._data.filter((d, i) => this._x(d, i) === space);
       const q = elm.map((d, i) => {
         const angle = tau / totalAxis * i,
@@ -112,24 +157,27 @@ export default class Radar extends Plot {
       });
 
       const d = `M ${q[0].x} ${q[0].y} ${q
-        .map(i => `L ${i.x} ${i.y}`)
+        .map(l => `L ${l.x} ${l.y}`)
         .join(" ")}`;
 
-      this._shapes.push(
-        new shapes.Path()
-          .data([0])
-          .d(d)
-          .select(
-            elem(`g.d3plus-Radar-item${space}`, {
-              parent: this._select,
-              enter: {transform},
-              update: {transform}
-            }).node()
-          )
-          .config(configPrep.bind(this)(this._shapeConfig, "shape", "Path"))
-          .render()
-      );
+      groupPath.push({id: i, d});
+
     });
+
+    this._shapes.push(
+      new shapes.Path()
+        .data(groupPath)
+        .d(d => d.d)
+        .select(
+          elem("g.d3plus-Radar-item", {
+            parent: this._select,
+            enter: {transform},
+            update: {transform}
+          }).node()
+        )
+        .config(configPrep.bind(this)(this._shapeConfig, "shape", "Path"))
+        .render()
+    );
 
     return this;
   }
