@@ -65,7 +65,7 @@ export default class Radar extends Plot {
           width = this._width - this._margin.left - this._margin.right;
 
     const diameter = Math.min(height, width);
-    const transform = `translate(${diameter / 2}, ${diameter / 2})`;
+    const transform = `translate(${(width - diameter / 4) / 1.7}, ${(height - diameter / 2)})`;
 
     const maxValue = Math.max(...this._data.map(d => d.value));
 
@@ -99,7 +99,7 @@ export default class Radar extends Plot {
 
     const polarAxisLines = polarAxis.map((d, i) => {
       const angle = tau / totalAxis * i;
-
+      console.log(180 * angle / Math.PI);
       return {
         id: i,
         angle: tau / totalAxis * i,
@@ -114,7 +114,7 @@ export default class Radar extends Plot {
       .data(polarAxisLines)
       .x(d => d.x)
       .y(d => d.y)
-      .rotate(d => 50 * d.angle / Math.PI)
+      .rotate(d => 9)
       .select(
         elem("g.d3plus-Radar-text", {
           parent: this._select,
