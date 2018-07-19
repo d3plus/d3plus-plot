@@ -32,6 +32,8 @@ export default class Radar extends Plot {
     this._legend = false;
     this._levels = 6; // CHECK
 
+    this._radarPadding = 100;
+
     this._shape = constant("Path");
     this._shapeConfig = assign(this._shapeConfig, {
       Circle: {
@@ -67,8 +69,8 @@ export default class Radar extends Plot {
     const height = this._height - this._margin.top - this._margin.bottom,
           width = this._width - this._margin.left - this._margin.right;
 
-    const diameter = Math.min(height, width);
-    const transform = `translate(${(width / 2)}, ${height / 2})`;
+    const diameter = Math.min(height, width) - this._radarPadding;
+    const transform = `translate(${width / 2}, ${height / 2})`;
 
     const maxValue = Math.max(...this._data.map(d => d.value));
 
@@ -106,21 +108,24 @@ export default class Radar extends Plot {
 
     const polarAxisLines = polarAxis.map((d, i) => {
       const angle = tau / totalAxis * i;
+      console.log(angle);
       return {
         id: i,
-        angle: tau / totalAxis * i,
+        angle: 360 / totalAxis * i,
         text: d,
-        x: (radius - 10) * Math.cos(angle),
-        y: (radius - 10) * Math.sin(angle)
+        x: radius * Math.cos(angle),
+        y: radius * Math.sin(angle)
       };
     });
 
     this._shapes.push(
       new TextBox()
         .data(polarAxisLines)
-        .x(d => d.x)
+        .x(d => Math.abs(d.angle) > 90 ? d.x : d.x)
         .y(d => d.y)
-        .rotate(d => 9)
+        .rotate(d => Math.abs(d.angle) > 90 ? d.angle + 180 : d.angle)
+        .rotateAnchor(d => [0, 0])
+        .textAnchor(d => Math.abs(d.angle) > 90 ? "start" : "start") // PAY ATENTION
         .select(
           elem("g.d3plus-Radar-text", {
             parent: this._select,
