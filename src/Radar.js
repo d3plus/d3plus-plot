@@ -1,4 +1,4 @@
-import * as d3 from "d3";
+import * as d3 from "d3-selection";
 
 import {
   accessor,
@@ -54,6 +54,7 @@ export default class Radar extends Plot {
     this._xConfig = {
       height: 0
     };
+    this._value = accessor("value");
   }
   _renderCircles(transform) {
     console.log("hellohello");
@@ -69,14 +70,15 @@ export default class Radar extends Plot {
     const height = this._height - this._margin.top - this._margin.bottom,
           width = this._width - this._margin.left - this._margin.right;
 
-    const diameter = Math.min(height, width) - this._radarPadding;
-    const transform = `translate(${width / 2}, ${height / 2})`;
+    const diameter = Math.min(height, width) - this._radarPadding,
+          transform = `translate(${width / 2}, ${height / 2})`;
 
-    const maxValue = Math.max(...this._data.map(d => d.value));
+    const maxValue = Math.max(...this._data.map((d, i) => this._value(d, i)));
 
     const polarAxis = Array.from(
       new Set(this._data.map((d, i) => this._y(d, i)))
     );
+
     const spaceAxis = Array.from(
       new Set(this._data.map((d, i) => this._x(d, i)))
     );
@@ -121,11 +123,11 @@ export default class Radar extends Plot {
     this._shapes.push(
       new TextBox()
         .data(polarAxisLines)
-        .x(d => Math.abs(d.angle) > 90 ? d.x : d.x)
-        .y(d => d.y)
         .rotate(d => Math.abs(d.angle) > 90 ? d.angle + 180 : d.angle)
         .rotateAnchor(d => [0, 0])
         .textAnchor(d => Math.abs(d.angle) > 90 ? "start" : "start") // PAY ATENTION
+        .x(d => d.x)
+        .y(d => d.y)
         .select(
           elem("g.d3plus-Radar-text", {
             parent: this._select,
@@ -191,4 +193,18 @@ export default class Radar extends Plot {
 
     return this;
   }
+
+    /**
+      @memberof Radar
+      @desc If *value* is specified, sets the value accessor to the specified function or number and returns the current class instance. If *value* is not specified, returns the current value accessor.
+      @param {Function|String} *value*
+      @example
+function value(d) {
+  return d.value;
+}
+  */
+ value(_) {
+  return arguments.length ? (this._value = typeof _ === "function" ? _ : accessor(_), this) : this._value;
+}
+}
 }
