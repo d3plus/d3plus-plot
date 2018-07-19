@@ -3,10 +3,11 @@
     @see https://github.com/d3plus/d3plus-viz#Viz
 */
 import {nest} from "d3-collection";
-import {accessor, assign, configPrep, constant, elem} from "d3plus-common";
 
+import {accessor, assign, configPrep, constant, elem} from "d3plus-common";
 import {Area, Circle, Path} from "d3plus-shape";
 import {TextBox} from "d3plus-text";
+
 import {default as Plot} from "./Plot";
 
 const tau = Math.PI * 2;
@@ -26,8 +27,7 @@ export default class Radar extends Plot {
   constructor() {
     super();
     this._discrete = "x";
-    this._legend = false;
-    this._levels = 6; // CHECK
+    this._levels = 6;
 
     this._radarPadding = 100;
 
@@ -51,6 +51,8 @@ export default class Radar extends Plot {
       height: 0
     };
     this._value = accessor("value");
+
+    this._y1 = false;
   }
 
   /**
@@ -58,7 +60,6 @@ export default class Radar extends Plot {
       @private
   */
   _draw(callback) {
-    super._draw(callback);
 
     const height = this._height - this._margin.top - this._margin.bottom,
           width = this._width - this._margin.left - this._margin.right;
@@ -73,10 +74,6 @@ export default class Radar extends Plot {
           nestedGroupData = nest()
         .key(this._x)
         .entries(this._data);
-
-    const spaceAxis = Array.from(
-      new Set(this._data.map((d, i) => this._x(d, i)))
-    );
 
     this._shapes.push(
       new Circle()
@@ -98,11 +95,10 @@ export default class Radar extends Plot {
       .map((d, i) => {
         const angle = tau / totalAxis * i;
         return {
-          id: i,
+          id: d.key,
           angle: 360 / totalAxis * i,
-          text: d.key,
-          x: radius * Math.cos(angle),
-          y: radius * Math.sin(angle)
+          x: ((Math.abs(angle) > Math.PI / 2 ? 60 : 0) + radius) * Math.cos(angle),
+          y: ((Math.abs(angle) > Math.PI / 2 ? 60 : 0) + radius) * Math.sin(angle)
         };
       })
       .sort((a, b) => a.key - b.key);
@@ -112,7 +108,10 @@ export default class Radar extends Plot {
         .data(polarAxis)
         .rotate(d => Math.abs(d.angle) > 90 ? d.angle + 180 : d.angle)
         .rotateAnchor([0, 0])
-        .textAnchor(d => Math.abs(d.angle) > 90 ? "start" : "start") // PAY ATENTION
+        .width(d => 60)
+        .height(30)
+        .text(d => d.id)
+        .textAnchor(d => Math.abs(d.angle) > 90 ? "end" : "start") // PAY ATENTION
         .x(d => d.x)
         .y(d => d.y)
         .select(
@@ -143,10 +142,10 @@ export default class Radar extends Plot {
         .render()
     );
 
-    const groupPath = nestedGroupData.map((h, x) => {
+    const groupData = nestedGroupData.map(h => {
       const q = h.values.map((d, i) => {
         const angle = tau / totalAxis * i,
-              r = d.value / maxValue * radius;
+              r = this._value(d, i) / maxValue * radius;
         return {
           x: r * Math.cos(angle),
           y: r * Math.sin(angle)
@@ -157,15 +156,15 @@ export default class Radar extends Plot {
         .map(l => `L ${l.x} ${l.y}`)
         .join(" ")}`;
 
-      return {id: x, d};
+      return {id: h.key, d};
     });
 
     this._shapes.push(
       new Path()
-        .data(groupPath)
+        .data(groupData)
         .d(d => d.d)
         .select(
-          elem("g.d3plus-Radar-item", {
+          elem("g.d3plus-Radar-items", {
             parent: this._select,
             enter: {transform},
             update: {transform}
@@ -174,6 +173,8 @@ export default class Radar extends Plot {
         .config(configPrep.bind(this)(this._shapeConfig, "shape", "Path"))
         .render()
     );
+
+    super._draw(callback);
 
     return this;
   }
