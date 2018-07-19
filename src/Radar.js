@@ -1,17 +1,15 @@
-import * as d3 from "d3-selection";
+/**
+    @external Viz
+    @see https://github.com/d3plus/d3plus-viz#Viz
+*/
+import {nest} from "d3-collection";
+import {accessor, assign, configPrep, constant, elem} from "d3plus-common";
 
-import {
-  accessor,
-  assign,
-  configPrep,
-  constant,
-  elem,
-  merge
-} from "d3plus-common";
-
-import * as shapes from "d3plus-shape";
+import {Area, Circle, Path} from "d3plus-shape";
 import {TextBox} from "d3plus-text";
 import {default as Plot} from "./Plot";
+
+const tau = Math.PI * 2;
 
 /**
     @class Radar
@@ -28,7 +26,6 @@ export default class Radar extends Plot {
   constructor() {
     super();
     this._discrete = "x";
-    this._factor = 1; // CHECK
     this._legend = false;
     this._levels = 6; // CHECK
 
@@ -37,10 +34,9 @@ export default class Radar extends Plot {
     this._shape = constant("Path");
     this._shapeConfig = assign(this._shapeConfig, {
       Circle: {
-        opacity: d => d.__d3plusOpacity__ || 1,
-        labelConfig: {
-          fontResize: true
-        }
+        fill: constant("none"),
+        stroke: constant("#CCC"),
+        strokeWidth: constant(1)
       },
       Area: {
         fill: constant("none"),
@@ -56,9 +52,6 @@ export default class Radar extends Plot {
     };
     this._value = accessor("value");
   }
-  _renderCircles(transform) {
-    console.log("hellohello");
-  }
 
   /**
       Extends the draw behavior of the abstract Plot class.
@@ -70,33 +63,22 @@ export default class Radar extends Plot {
     const height = this._height - this._margin.top - this._margin.bottom,
           width = this._width - this._margin.left - this._margin.right;
 
-    const diameter = Math.min(height, width) - this._radarPadding,
+    const radius = (Math.min(height, width) - this._radarPadding) / 2,
           transform = `translate(${width / 2}, ${height / 2})`;
 
-    const maxValue = Math.max(...this._data.map((d, i) => this._value(d, i)));
-
-    const polarAxis = Array.from(
-      new Set(this._data.map((d, i) => this._y(d, i)))
-    );
+    const maxValue = Math.max(...this._data.map((d, i) => this._value(d, i))),
+          nestedData = nest()
+        .key(this._y)
+        .entries(this._data);
 
     const spaceAxis = Array.from(
       new Set(this._data.map((d, i) => this._x(d, i)))
     );
 
-    const totalAxis = polarAxis.length;
-    const tau = Math.PI * 2;
-    const s = tau / totalAxis;
-
-    // TO-DO
-    const radius = this._factor * (diameter / 2);
-    const allAxis = Array.from(Array(this._levels).keys()).map((d, i) => ({
-      __d3plusRadius__: this._factor * radius * ((i + 1) / this._levels)
-    }));
-
     this._shapes.push(
-      new shapes.Circle()
-        .data(allAxis)
-        .r(d => d.__d3plusRadius__)
+      new Circle()
+        .data(Array.from(Array(this._levels).keys()))
+        .r((d, i) => radius * ((i + 1) / this._levels))
         .select(
           elem("g.d3plus-Radar-circle", {
             parent: this._select,
@@ -108,23 +90,26 @@ export default class Radar extends Plot {
         .render()
     );
 
-    const polarAxisLines = polarAxis.map((d, i) => {
-      const angle = tau / totalAxis * i;
-      console.log(angle);
-      return {
-        id: i,
-        angle: 360 / totalAxis * i,
-        text: d,
-        x: radius * Math.cos(angle),
-        y: radius * Math.sin(angle)
-      };
-    });
+    const totalAxis = nestedData.length;
+    const polarAxis = nestedData
+      .map(d => d.key)
+      .sort((a, b) => a - b)
+      .map((d, i) => {
+        const angle = tau / totalAxis * i;
+        return {
+          id: i,
+          angle: 360 / totalAxis * i,
+          text: d,
+          x: radius * Math.cos(angle),
+          y: radius * Math.sin(angle)
+        };
+      });
 
     this._shapes.push(
       new TextBox()
-        .data(polarAxisLines)
+        .data(polarAxis)
         .rotate(d => Math.abs(d.angle) > 90 ? d.angle + 180 : d.angle)
-        .rotateAnchor(d => [0, 0])
+        .rotateAnchor([0, 0])
         .textAnchor(d => Math.abs(d.angle) > 90 ? "start" : "start") // PAY ATENTION
         .x(d => d.x)
         .y(d => d.y)
@@ -139,8 +124,8 @@ export default class Radar extends Plot {
     );
 
     this._shapes.push(
-      new shapes.Area()
-        .data(polarAxisLines)
+      new Area()
+        .data(polarAxis)
         .x0(d => 0)
         .y0(d => 0)
         .x1(d => d.x)
@@ -156,14 +141,12 @@ export default class Radar extends Plot {
         .render()
     );
 
-    const groupPath = [];
-    spaceAxis.forEach((space, i) => {
-      const elm = this._data.filter((d, i) => this._x(d, i) === space);
+    const groupPath = spaceAxis.map((h, x) => {
+      const elm = this._data.filter((d, i) => this._x(d, i) === h);
       const q = elm.map((d, i) => {
         const angle = tau / totalAxis * i,
               r = d.value / maxValue * radius;
         return {
-          angle: tau / totalAxis * i,
           x: r * Math.cos(angle),
           y: r * Math.sin(angle)
         };
@@ -173,11 +156,11 @@ export default class Radar extends Plot {
         .map(l => `L ${l.x} ${l.y}`)
         .join(" ")}`;
 
-      groupPath.push({id: i, d});
+      return {id: x, d};
     });
 
     this._shapes.push(
-      new shapes.Path()
+      new Path()
         .data(groupPath)
         .d(d => d.d)
         .select(
@@ -194,7 +177,7 @@ export default class Radar extends Plot {
     return this;
   }
 
-    /**
+  /**
       @memberof Radar
       @desc If *value* is specified, sets the value accessor to the specified function or number and returns the current class instance. If *value* is not specified, returns the current value accessor.
       @param {Function|String} *value*
@@ -203,8 +186,9 @@ function value(d) {
   return d.value;
 }
   */
- value(_) {
-  return arguments.length ? (this._value = typeof _ === "function" ? _ : accessor(_), this) : this._value;
-}
-}
+  value(_) {
+    return arguments.length
+      ? (this._value = typeof _ === "function" ? _ : accessor(_), this)
+      : this._value;
+  }
 }
