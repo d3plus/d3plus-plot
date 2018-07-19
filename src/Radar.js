@@ -53,6 +53,9 @@ export default class Radar extends Plot {
       height: 0
     };
   }
+  _renderCircles(transform) {
+    console.log("hellohello");
+  }
 
   /**
       Extends the draw behavior of the abstract Plot class.
@@ -65,12 +68,16 @@ export default class Radar extends Plot {
           width = this._width - this._margin.left - this._margin.right;
 
     const diameter = Math.min(height, width);
-    const transform = `translate(${(width - diameter / 4) / 1.7}, ${(height - diameter / 2)})`;
+    const transform = `translate(${(width / 2)}, ${height / 2})`;
 
     const maxValue = Math.max(...this._data.map(d => d.value));
 
-    const polarAxis = Array.from(new Set(this._data.map((d, i) => this._y(d, i))));
-    const spaceAxis = Array.from(new Set(this._data.map((d, i) => this._x(d, i))));
+    const polarAxis = Array.from(
+      new Set(this._data.map((d, i) => this._y(d, i)))
+    );
+    const spaceAxis = Array.from(
+      new Set(this._data.map((d, i) => this._x(d, i)))
+    );
 
     const totalAxis = polarAxis.length;
     const tau = Math.PI * 2;
@@ -81,7 +88,7 @@ export default class Radar extends Plot {
     const allAxis = Array.from(Array(this._levels).keys()).map((d, i) => ({
       __d3plusRadius__: this._factor * radius * ((i + 1) / this._levels)
     }));
-    
+
     this._shapes.push(
       new shapes.Circle()
         .data(allAxis)
@@ -99,7 +106,6 @@ export default class Radar extends Plot {
 
     const polarAxisLines = polarAxis.map((d, i) => {
       const angle = tau / totalAxis * i;
-      console.log(180 * angle / Math.PI);
       return {
         id: i,
         angle: tau / totalAxis * i,
@@ -111,18 +117,18 @@ export default class Radar extends Plot {
 
     this._shapes.push(
       new TextBox()
-      .data(polarAxisLines)
-      .x(d => d.x)
-      .y(d => d.y)
-      .rotate(d => 9)
-      .select(
-        elem("g.d3plus-Radar-text", {
-          parent: this._select,
-          enter: {transform},
-          update: {transform}
-        }).node()
-      )
-      .render()
+        .data(polarAxisLines)
+        .x(d => d.x)
+        .y(d => d.y)
+        .rotate(d => 9)
+        .select(
+          elem("g.d3plus-Radar-text", {
+            parent: this._select,
+            enter: {transform},
+            update: {transform}
+          }).node()
+        )
+        .render()
     );
 
     this._shapes.push(
@@ -161,7 +167,6 @@ export default class Radar extends Plot {
         .join(" ")}`;
 
       groupPath.push({id: i, d});
-
     });
 
     this._shapes.push(
