@@ -67,8 +67,11 @@ export default class Radar extends Plot {
           transform = `translate(${width / 2}, ${height / 2})`;
 
     const maxValue = Math.max(...this._data.map((d, i) => this._value(d, i))),
-          nestedData = nest()
+          nestedAxisData = nest()
         .key(this._y)
+        .entries(this._data),
+          nestedGroupData = nest()
+        .key(this._x)
         .entries(this._data);
 
     const spaceAxis = Array.from(
@@ -80,30 +83,29 @@ export default class Radar extends Plot {
         .data(Array.from(Array(this._levels).keys()))
         .r((d, i) => radius * ((i + 1) / this._levels))
         .select(
-          elem("g.d3plus-Radar-circle", {
+          elem("g.d3plus-Radar-radial-circles", {
             parent: this._select,
             enter: {transform},
             update: {transform}
           }).node()
         )
-        .config(configPrep.bind(this)(this._shapeConfig, "shape", "Area"))
+        .config(this._shapeConfig.Area)
         .render()
     );
 
-    const totalAxis = nestedData.length;
-    const polarAxis = nestedData
-      .map(d => d.key)
-      .sort((a, b) => a - b)
+    const totalAxis = nestedAxisData.length;
+    const polarAxis = nestedAxisData
       .map((d, i) => {
         const angle = tau / totalAxis * i;
         return {
           id: i,
           angle: 360 / totalAxis * i,
-          text: d,
+          text: d.key,
           x: radius * Math.cos(angle),
           y: radius * Math.sin(angle)
         };
-      });
+      })
+      .sort((a, b) => a.key - b.key);
 
     this._shapes.push(
       new TextBox()
@@ -141,9 +143,8 @@ export default class Radar extends Plot {
         .render()
     );
 
-    const groupPath = spaceAxis.map((h, x) => {
-      const elm = this._data.filter((d, i) => this._x(d, i) === h);
-      const q = elm.map((d, i) => {
+    const groupPath = nestedGroupData.map((h, x) => {
+      const q = h.values.map((d, i) => {
         const angle = tau / totalAxis * i,
               r = d.value / maxValue * radius;
         return {
@@ -173,6 +174,14 @@ export default class Radar extends Plot {
         .config(configPrep.bind(this)(this._shapeConfig, "shape", "Path"))
         .render()
     );
+
+    return this;
+  }
+
+  hover(_) {
+    this._hover = _;
+    this._shapes.forEach(s => s.hover(_));
+    if (this._legend) this._legendClass.hover(_);
 
     return this;
   }
