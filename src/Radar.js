@@ -96,22 +96,26 @@ export default class Radar extends Plot {
         const angle = tau / totalAxis * i;
         return {
           id: d.key,
-          angle: 360 / totalAxis * i,
-          x: ((Math.abs(angle) > Math.PI / 2 ? 60 : 0) + radius) * Math.cos(angle),
-          y: ((Math.abs(angle) > Math.PI / 2 ? 60 : 0) + radius) * Math.sin(angle)
+          anchorAngle: angle,
+          angle: 360 - 360 / totalAxis * i,
+          x: (radius ) * Math.cos(angle),
+          y: (radius ) * Math.sin(angle)
         };
       })
       .sort((a, b) => a.key - b.key);
 
-    this._shapes.push(
+      console.log(polarAxis)
+
+      this._shapes.push(
       new TextBox()
         .data(polarAxis)
-        .rotate(d => Math.abs(d.angle) > 90 ? d.angle + 180 : d.angle)
-        .rotateAnchor([0, 0])
-        .width(d => 60)
-        .height(30)
+        .rotate(d => d.angle < 90 || d.angle > 270 ? -d.angle : -d.angle + 180)
+        .rotateAnchor([40, 7])
+        .verticalAlign("middle")
+        .width(80)
+        .height(14)
         .text(d => d.id)
-        .textAnchor(d => Math.abs(d.angle) > 90 ? "end" : "start") // PAY ATENTION
+        .textAnchor(d => Math.abs(d.angle) > 90 ? "middle" : "middle") // PAY ATENTION
         .x(d => d.x)
         .y(d => d.y)
         .select(
