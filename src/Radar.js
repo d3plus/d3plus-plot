@@ -3,9 +3,9 @@
     @see https://github.com/d3plus/d3plus-viz#Viz
 */
 import {nest} from "d3-collection";
-
+import * as d3 from "d3-selection";
 import {accessor, assign, configPrep, constant, elem} from "d3plus-common";
-import {Area, Circle, Path} from "d3plus-shape";
+import {Area, Circle, Line, Path} from "d3plus-shape";
 import {TextBox} from "d3plus-text";
 
 import {default as Plot} from "./Plot";
@@ -39,7 +39,12 @@ export default class Radar extends Plot {
         strokeWidth: constant(1)
       },
       Area: {
+        labelConfig: {
+          color: "#000"
+        },
         fill: constant("none"),
+        fillOpacity: 1,
+        opacity: 1,
         stroke: constant("#CCC"),
         strokeWidth: constant(1)
       },
@@ -60,7 +65,6 @@ export default class Radar extends Plot {
       @private
   */
   _draw(callback) {
-
     const height = this._height - this._margin.top - this._margin.bottom,
           width = this._width - this._margin.left - this._margin.right;
 
@@ -75,6 +79,7 @@ export default class Radar extends Plot {
         .key(this._x)
         .entries(this._data);
 
+    
     this._shapes.push(
       new Circle()
         .data(Array.from(Array(this._levels).keys()))
@@ -90,32 +95,35 @@ export default class Radar extends Plot {
         .render()
     );
 
+
     const totalAxis = nestedAxisData.length;
     const polarAxis = nestedAxisData
       .map((d, i) => {
         const angle = tau / totalAxis * i;
         return {
           id: d.key,
-          anchorAngle: angle,
+          anchorAngle: (tau - angle) % tau,
           angle: 360 - 360 / totalAxis * i,
-          x: (radius ) * Math.cos(angle),
-          y: (radius ) * Math.sin(angle)
+          quadrant: parseInt(360 - 360 / totalAxis * i / 90) % 4 + 1,
+          x: radius * Math.cos(angle),
+          y: radius * Math.sin(angle)
         };
       })
       .sort((a, b) => a.key - b.key);
 
-      console.log(polarAxis)
+    console.log(polarAxis[2]);
 
-      this._shapes.push(
+
+    this._shapes.push(
       new TextBox()
         .data(polarAxis)
-        .rotate(d => d.angle < 90 || d.angle > 270 ? -d.angle : -d.angle + 180)
-        .rotateAnchor([40, 7])
-        .verticalAlign("middle")
-        .width(80)
+        .rotate(
+          d => d.angle < 90 || d.angle > 270 ? -d.angle : -d.angle + 180
+        )
+        .rotateAnchor([0, 0])
+        .textAnchor(d => [1, 4].includes(d.quadrant) ? "start" : "end")
         .height(14)
         .text(d => d.id)
-        .textAnchor(d => Math.abs(d.angle) > 90 ? "middle" : "middle") // PAY ATENTION
         .x(d => d.x)
         .y(d => d.y)
         .select(
@@ -128,13 +136,14 @@ export default class Radar extends Plot {
         .render()
     );
 
+    d3.selectAll("g.d3plus-Radar-text text")
+    .attr("x", 0)
+    .attr("y", 5);
+
     this._shapes.push(
-      new Area()
+      new Path()
         .data(polarAxis)
-        .x0(d => 0)
-        .y0(d => 0)
-        .x1(d => d.x)
-        .y1(d => d.y)
+        .d(d => `M${0},${0} ${-d.x},${-d.y}`)
         .select(
           elem("g.d3plus-Radar-axis", {
             parent: this._select,
@@ -142,7 +151,7 @@ export default class Radar extends Plot {
             update: {transform}
           }).node()
         )
-        .config(configPrep.bind(this)(this._shapeConfig, "shape", "Area"))
+        .config(this._shapeConfig.Area)
         .render()
     );
 
@@ -163,6 +172,7 @@ export default class Radar extends Plot {
       return {id: h.key, d};
     });
 
+    
     this._shapes.push(
       new Path()
         .data(groupData)
