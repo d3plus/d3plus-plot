@@ -29,6 +29,18 @@ export default class Radar extends Plot {
     this._discrete = "x";
     this._levels = 6;
 
+    this._on.mouseenter = () => {};
+    this._on["mouseleave.shape"] = () => {
+      this.hover(false);
+    };
+    const defaultMouseMove = this._on["mousemove.shape"];
+    this._on["mousemove.shape"] = (d, i) => {
+      defaultMouseMove(d, i);
+      const id = this._id(d, i);
+
+      this.hover((h, x) => h.a === id);
+    };
+
     this._radarPadding = 100;
 
     this._shape = constant("Path");
@@ -39,17 +51,17 @@ export default class Radar extends Plot {
         strokeWidth: constant(1)
       },
       Area: {
-        labelConfig: {
-          color: "#000"
-        },
         fill: constant("none"),
-        fillOpacity: 1,
-        opacity: 1,
         stroke: constant("#CCC"),
         strokeWidth: constant(1)
       },
       Path: {
-        fillOpacity: constant(0.8)
+        stroke: constant("#000"),
+        strokeWidth: constant(5),
+        fillOpacity: constant(0.8),
+        hoverStyle: {
+          "stroke-width": 20
+        }
       }
     });
     this._xConfig = {
@@ -79,7 +91,6 @@ export default class Radar extends Plot {
         .key(this._x)
         .entries(this._data);
 
-    
     this._shapes.push(
       new Circle()
         .data(Array.from(Array(this._levels).keys()))
@@ -95,14 +106,12 @@ export default class Radar extends Plot {
         .render()
     );
 
-
     const totalAxis = nestedAxisData.length;
     const polarAxis = nestedAxisData
       .map((d, i) => {
         const angle = tau / totalAxis * i;
         return {
           id: d.key,
-          anchorAngle: (tau - angle) % tau,
           angle: 360 - 360 / totalAxis * i,
           quadrant: parseInt(360 - 360 / totalAxis * i / 90) % 4 + 1,
           x: radius * Math.cos(angle),
@@ -110,9 +119,6 @@ export default class Radar extends Plot {
         };
       })
       .sort((a, b) => a.key - b.key);
-
-    console.log(polarAxis[2]);
-
 
     this._shapes.push(
       new TextBox()
@@ -137,8 +143,9 @@ export default class Radar extends Plot {
     );
 
     d3.selectAll("g.d3plus-Radar-text text")
-    .attr("x", 0)
-    .attr("y", 5);
+      .data(polarAxis)
+      .attr("x", d => d.x < 0 ? -10 : 10)
+      .attr("y", 5);
 
     this._shapes.push(
       new Path()
@@ -172,7 +179,6 @@ export default class Radar extends Plot {
       return {id: h.key, d};
     });
 
-    
     this._shapes.push(
       new Path()
         .data(groupData)
