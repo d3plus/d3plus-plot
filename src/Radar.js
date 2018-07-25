@@ -5,7 +5,7 @@
 import {nest} from "d3-collection";
 import * as d3 from "d3-selection";
 import {accessor, assign, configPrep, constant, elem} from "d3plus-common";
-import {Area, Circle, Line, Path} from "d3plus-shape";
+import {Circle, Path} from "d3plus-shape";
 import {TextBox} from "d3plus-text";
 
 import {default as Plot} from "./Plot";
@@ -46,23 +46,12 @@ export default class Radar extends Plot {
     this._shape = constant("Path");
     this._shapeConfig = assign(this._shapeConfig, {
       Circle: {
+        r: accessor("r", 200),
         fill: constant("none"),
         stroke: constant("#CCC"),
         strokeWidth: constant(1)
       },
-      Area: {
-        fill: constant("none"),
-        stroke: constant("#CCC"),
-        strokeWidth: constant(1)
-      },
-      Path: {
-        stroke: constant("#000"),
-        strokeWidth: constant(5),
-        fillOpacity: constant(0.8),
-        hoverStyle: {
-          "stroke-width": 20
-        }
-      }
+      Path: {}
     });
     this._xConfig = {
       height: 0
@@ -91,10 +80,14 @@ export default class Radar extends Plot {
         .key(this._x)
         .entries(this._data);
 
+    const circularAxis = Array.from(Array(this._levels).keys()).map(d => ({
+      id: d,
+      r: radius * ((d + 1) / this._levels)
+    }));
+
     this._shapes.push(
       new Circle()
-        .data(Array.from(Array(this._levels).keys()))
-        .r((d, i) => radius * ((i + 1) / this._levels))
+        .data(circularAxis)
         .select(
           elem("g.d3plus-Radar-radial-circles", {
             parent: this._select,
@@ -102,7 +95,7 @@ export default class Radar extends Plot {
             update: {transform}
           }).node()
         )
-        .config(this._shapeConfig.Area)
+        .config(configPrep.bind(this)(this._shapeConfig, "shape", "Circle"))
         .render()
     );
 
@@ -158,7 +151,7 @@ export default class Radar extends Plot {
             update: {transform}
           }).node()
         )
-        .config(this._shapeConfig.Area)
+        .config(this._shapeConfig.Circle)
         .render()
     );
 
