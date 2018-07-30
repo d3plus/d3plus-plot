@@ -38,7 +38,7 @@ export default class Radar extends Plot {
       defaultMouseMove(d, i);
       const id = this._id(d, i);
 
-      this.hover((h, x) => h.a === id);
+      this.hover((h, x) => true);
     };
 
     this._radarPadding = 100;
@@ -46,7 +46,7 @@ export default class Radar extends Plot {
     this._shape = constant("Path");
     this._shapeConfig = assign(this._shapeConfig, {
       Circle: {
-        r: accessor("r", 200),
+        r: accessor("r", 0),
         fill: constant("none"),
         stroke: constant("#CCC"),
         strokeWidth: constant(1)
@@ -192,6 +192,12 @@ export default class Radar extends Plot {
     return this;
   }
 
+  /**
+      @memberof Radar
+      @desc If *value* is specified, sets the hover method to the specified function and returns the current class instance.
+      @param {Function} [*value*]
+      @chainable
+   */
   hover(_) {
     this._hover = _;
     this._shapes.forEach(s => s.hover(_));
