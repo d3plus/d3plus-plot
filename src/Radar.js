@@ -38,7 +38,7 @@ export default class Radar extends Plot {
       defaultMouseMove(d, i);
       const id = this._id(d, i);
 
-      this.hover((h, x) => true);
+      this.hover((h, x) => this._x(h, x) === id);
     };
 
     this._radarPadding = 100;
@@ -51,7 +51,9 @@ export default class Radar extends Plot {
         stroke: constant("#CCC"),
         strokeWidth: constant(1)
       },
-      Path: {}
+      Path: {
+        fillOpacity: 0.7
+      }
     });
     this._xConfig = {
       height: 0
@@ -106,7 +108,7 @@ export default class Radar extends Plot {
         return {
           id: d.key,
           angle: 360 - 360 / totalAxis * i,
-          quadrant: parseInt(360 - 360 / totalAxis * i / 90) % 4 + 1,
+          quadrant: parseInt(360 - 360 / totalAxis * i / 90, 10) % 4 + 1,
           x: radius * Math.cos(angle),
           y: radius * Math.sin(angle)
         };
@@ -204,6 +206,18 @@ export default class Radar extends Plot {
     if (this._legend) this._legendClass.hover(_);
 
     return this;
+  }
+
+  /**
+      @memberof Radar
+      @desc If *value* is specified, sets the padding of the chart and returns the current class instance. If *value* is not specified, returns the current radarPadding. By default, the radarPadding is 100.
+      @param {Number} [*value* = 100]
+      @chainable
+  */
+  radarPadding(_) {
+    return arguments.length
+      ? (this._radarPadding = _, this)
+      : this._radarPadding;
   }
 
   /**
