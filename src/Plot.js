@@ -11,8 +11,8 @@ import {Viz} from "d3plus-viz";
 
 import {default as BarBuffer} from "./buffers/Bar.js";
 import {default as CircleBuffer} from "./buffers/Circle.js";
-import {default as RectBuffer} from "./buffers/Rect.js";
 import {default as LineBuffer} from "./buffers/Line.js";
+import {default as RectBuffer} from "./buffers/Rect.js";
 
 function defaultSize(d) {
   return this._sizeScaleD3(this._size ? this._size(d) : null);
