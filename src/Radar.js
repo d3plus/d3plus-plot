@@ -7,8 +7,7 @@ import * as d3 from "d3-selection";
 import {accessor, assign, configPrep, constant, elem} from "d3plus-common";
 import {Circle, Path} from "d3plus-shape";
 import {TextBox} from "d3plus-text";
-
-import {default as Plot} from "./Plot";
+import {Viz} from "d3plus-viz";
 
 const tau = Math.PI * 2;
 
@@ -17,7 +16,7 @@ const tau = Math.PI * 2;
     @extends Plot
     @desc Creates a radar visualization based on an array of data.
 */
-export default class Radar extends Plot {
+export default class Radar extends Viz {
 
   /**
       @memberof LinePlot
@@ -59,8 +58,8 @@ export default class Radar extends Plot {
       height: 0
     };
     this._value = accessor("value");
-
-    this._y1 = false;
+    this._x = accessor("x");
+    this._y = accessor("y");
   }
 
   /**
@@ -233,5 +232,51 @@ function value(d) {
     return arguments.length
       ? (this._value = typeof _ === "function" ? _ : accessor(_), this)
       : this._value;
+  }
+
+  /**
+      @memberof Plot
+      @desc Sets the x accessor to the specified function or number. If *value* is not specified, returns the current x accessor.
+      @param {Function|Number} *value*
+      @chainable
+  */
+  x(_) {
+    if (arguments.length) {
+      if (typeof _ === "function") this._x = _;
+      else {
+        this._x = accessor(_);
+        if (!this._aggs[_] && this._discrete === "x") {
+          this._aggs[_] = a => {
+            const v = Array.from(new Set(a));
+            return v.length === 1 ? v[0] : v;
+          };
+        }
+      }
+      return this;
+    }
+    else return this._x;
+  }
+
+  /**
+      @memberof Plot
+      @desc Sets the y accessor to the specified function or number. If *value* is not specified, returns the current y accessor.
+      @param {Function|Number} *value*
+      @chainable
+  */
+  y(_) {
+    if (arguments.length) {
+      if (typeof _ === "function") this._y = _;
+      else {
+        this._y = accessor(_);
+        if (!this._aggs[_] && this._discrete === "y") {
+          this._aggs[_] = a => {
+            const v = Array.from(new Set(a));
+            return v.length === 1 ? v[0] : v;
+          };
+        }
+      }
+      return this;
+    }
+    else return this._y;
   }
 }
