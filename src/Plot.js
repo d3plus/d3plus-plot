@@ -85,6 +85,8 @@ export default class Plot extends Viz {
         width: d => defaultSize.bind(this)(d) * 2
       }
     });
+    this._shapeOrder = ["Area", "Path", "Bar", "Box", "Line", "Rect", "Circle"];
+    this._shapeSort = (a, b) => this._shapeOrder.indexOf(a) - this._shapeOrder.indexOf(b);
     this._sizeMax = 20;
     this._sizeMin = 5;
     this._sizeScale = "sqrt";
@@ -368,7 +370,11 @@ export default class Plot extends Viz {
         y = scales[`scale${yScale}`]().domain(domains.y.reverse()).range(range(0, height + 1, height / (domains.y.length - 1))),
         y2 = scales[`scale${y2Scale}`]().domain(domains.y2.reverse()).range(range(0, height + 1, height / (domains.y2.length - 1)));
 
-    const shapeData = nest().key(d => d.shape).entries(data);
+    const shapeData = nest()
+      .key(d => d.shape)
+      .entries(data)
+      .sort((a, b) => this._shapeSort(a.key, b.key));
+
     const oppScale = this._discrete === "x" ? yScale : xScale;
     if (this._xConfig.scale !== "log" && this._yConfig.scale !== "log" && oppScale !== "Ordinal") {
       shapeData.forEach(d => {
@@ -839,6 +845,16 @@ export default class Plot extends Viz {
   */
   groupPadding(_) {
     return arguments.length ? (this._groupPadding = _, this) : this._groupPadding;
+  }
+
+  /**
+      @memberof Plot
+      @desc A JavaScript [sort comparator function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) that receives each shape Class (ie. "Circle", "Line", etc) as it's comparator arguments. Shapes are drawn in groups based on their type, so you are defining the layering order for all shapes of said type.
+      @param {Function} *value*
+      @chainable
+  */
+  shapeSort(_) {
+    return arguments.length ? (this._shapeSort = _, this) : this._shapeSort;
   }
 
   /**
