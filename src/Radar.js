@@ -19,44 +19,30 @@ const tau = Math.PI * 2;
 export default class Radar extends Viz {
 
   /**
-      @memberof LinePlot
+      @memberof Radar
       @desc Invoked when creating a new class instance, and overrides any default parameters inherited from Plot.
       @private
   */
   constructor() {
     super();
-    this._discrete = "x";
+
+    this._axisConfig = {
+      fill: constant("none"),
+      stroke: constant("#CCC"),
+      strokeWidth: constant(1)
+    };
+    this._hover = true;
     this._levels = 6;
-
-    this._on.mouseenter = () => {};
-    this._on["mouseleave.shape"] = () => {
-      this.hover(false);
-    };
-    const defaultMouseMove = this._on["mousemove.shape"];
-    this._on["mousemove.shape"] = (d, i) => {
-      defaultMouseMove(d, i);
-      const id = this._id(d, i);
-
-      this.hover((h, x) => this._x(h, x) === id);
-    };
 
     this._radarPadding = 100;
 
     this._shape = constant("Path");
     this._shapeConfig = assign(this._shapeConfig, {
       Circle: {
-        r: accessor("r", 0),
-        fill: constant("none"),
-        stroke: constant("#CCC"),
-        strokeWidth: constant(1)
+        r: accessor("r", 0)
       },
-      Path: {
-        fillOpacity: 0.7
-      }
+      Path: {}
     });
-    this._xConfig = {
-      height: 0
-    };
     this._value = accessor("value");
     this._x = accessor("x");
     this._y = accessor("y");
@@ -67,6 +53,7 @@ export default class Radar extends Viz {
       @private
   */
   _draw(callback) {
+    super._draw(callback);
     const height = this._height - this._margin.top - this._margin.bottom,
           width = this._width - this._margin.left - this._margin.right;
 
@@ -86,19 +73,18 @@ export default class Radar extends Viz {
       r: radius * ((d + 1) / this._levels)
     }));
 
-    this._shapes.push(
-      new Circle()
-        .data(circularAxis)
-        .select(
-          elem("g.d3plus-Radar-radial-circles", {
-            parent: this._select,
-            enter: {transform},
-            update: {transform}
-          }).node()
-        )
-        .config(configPrep.bind(this)(this._shapeConfig, "shape", "Circle"))
-        .render()
-    );
+    new Circle()
+      .data(circularAxis)
+      .select(
+        elem("g.d3plus-Radar-radial-circles", {
+          parent: this._select,
+          enter: {transform},
+          update: {transform}
+        }).node()
+      )
+      .config(configPrep.bind(this)(this._shapeConfig, "shape", "Circle"))
+      .config(this._axisConfig)
+      .render();
 
     const totalAxis = nestedAxisData.length;
     const polarAxis = nestedAxisData
@@ -114,8 +100,7 @@ export default class Radar extends Viz {
       })
       .sort((a, b) => a.key - b.key);
 
-    this._shapes.push(
-      new TextBox()
+    /* new TextBox()
         .data(polarAxis)
         .rotate(
           d => d.angle < 90 || d.angle > 270 ? -d.angle : -d.angle + 180
@@ -134,27 +119,50 @@ export default class Radar extends Viz {
           }).node()
         )
         .render()
-    );
+    ;*/
 
-    d3.selectAll("g.d3plus-Radar-text text")
+    /*  d3.selectAll("g.d3plus-Radar-text text")
       .data(polarAxis)
       .attr("x", d => d.x < 0 ? -10 : 10)
       .attr("y", 5);
+*/
+    new Circle()
+      .data(polarAxis)
+      .rotate(d => d.angle < 90 || d.angle > 270 ? -d.angle : -d.angle + 180)
+      .r(10)
+      .x(d => d.x)
+      .y(d => d.y)
+      .label(d => d.id)
+      .labelBounds(() => ({x: 15, y: -15, width: 80, height: 30}))
+      .labelConfig({
+        // rotateAnchor: [0, 0],
+        fontColor: "black",
+        verticalAlign: "middle",
+        x: d => d.x
+      })
+      .select(
+        elem("g.d3plus-Radar-text", {
+          parent: this._select,
+          enter: {transform},
+          update: {transform}
+        }).node()
+      )
+      .textAnchor(d => [1, 4].includes(d.quadrant) ? "start" : "end")
+      // .rotate(-60)
+      .render();
 
-    this._shapes.push(
-      new Path()
-        .data(polarAxis)
-        .d(d => `M${0},${0} ${-d.x},${-d.y}`)
-        .select(
-          elem("g.d3plus-Radar-axis", {
-            parent: this._select,
-            enter: {transform},
-            update: {transform}
-          }).node()
-        )
-        .config(this._shapeConfig.Circle)
-        .render()
-    );
+    new Path()
+      .data(polarAxis)
+      .d(d => `M${0},${0} ${-d.x},${-d.y}`)
+      .select(
+        elem("g.d3plus-Radar-axis", {
+          parent: this._select,
+          enter: {transform},
+          update: {transform}
+        }).node()
+      )
+      .config(this._axisConfig)
+      .render();
 
     const groupData = nestedGroupData.map(h => {
       const q = h.values.map((d, i) => {
@@ -187,22 +195,6 @@ export default class Radar extends Viz {
         .config(configPrep.bind(this)(this._shapeConfig, "shape", "Path"))
         .render()
     );
-
-    super._draw(callback);
-
-    return this;
-  }
-
-  /**
-      @memberof Radar
-      @desc If *value* is specified, sets the hover method to the specified function and returns the current class instance.
-      @param {Function} [*value*]
-      @chainable
-   */
-  hover(_) {
-    this._hover = _;
-    this._shapes.forEach(s => s.hover(_));
-    if (this._legend) this._legendClass.hover(_);
 
     return this;
   }
@@ -278,5 +270,13 @@ function value(d) {
       return this;
     }
     else return this._y;
+  }
+
+  hover(_) {
+    this._hover = _;
+    this._shapes.forEach(s => s.hover(_));
+    if (this._legend) this._legendClass.hover(_);
+
+    return this;
   }
 }
