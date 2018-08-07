@@ -8,6 +8,7 @@ import {accessor, assign, configPrep, constant, elem} from "d3plus-common";
 import {Circle, Path} from "d3plus-shape";
 import {TextBox} from "d3plus-text";
 import {Viz} from "d3plus-viz";
+import {text} from "../node_modules/d3-request";
 
 const tau = Math.PI * 2;
 
@@ -33,9 +34,7 @@ export default class Radar extends Viz {
     };
     this._hover = true;
     this._levels = 6;
-
     this._radarPadding = 100;
-
     this._shape = constant("Path");
     this._shapeConfig = assign(this._shapeConfig, {
       Circle: {
@@ -73,7 +72,7 @@ export default class Radar extends Viz {
       r: radius * ((d + 1) / this._levels)
     }));
 
-    new Circle()
+    /*new Circle()
       .data(circularAxis)
       .select(
         elem("g.d3plus-Radar-radial-circles", {
@@ -82,24 +81,77 @@ export default class Radar extends Viz {
           update: {transform}
         }).node()
       )
-      .config(configPrep.bind(this)(this._shapeConfig, "shape", "Circle"))
       .config(this._axisConfig)
-      .render();
+      .render();*/
 
     const totalAxis = nestedAxisData.length;
     const polarAxis = nestedAxisData
       .map((d, i) => {
-        const angle = tau / totalAxis * i;
+        const textWidth = 100;
+        const fontSize =
+          this._shapeConfig.labelConfig.fontSize &&
+            this._shapeConfig.labelConfig.fontSize(d, i) ||
+          11;
+
+        const lineHeight = fontSize * 1.4;
+        const height = lineHeight * 2;
+        const padding = 5,
+              radians = tau / totalAxis * i;
+        
+        const quadrant =
+          parseInt(360 - 360 / totalAxis * i / 90, 10) % 4 + 1;
+        let angle = -(360 - 360 / totalAxis * i);
+
+        let textAnchor = "start";
+        let x = padding + 5;
+
+        if (quadrant === 2 || quadrant === 3) {
+          x =  -textWidth * 2 + padding;
+          textAnchor = "end";
+          angle += 180;
+        }
+
+        const labelBounds = {
+          x,
+          y: -fontSize,
+          textWidth,
+          height
+        };
+
         return {
           id: d.key,
-          angle: 360 - 360 / totalAxis * i,
-          quadrant: parseInt(360 - 360 / totalAxis * i / 90, 10) % 4 + 1,
-          x: radius * Math.cos(angle),
-          y: radius * Math.sin(angle)
+          angle,
+          quadrant,
+          textAnchor,
+          labelBounds,
+          x: radius * Math.cos(radians),
+          y: radius * Math.sin(radians)
         };
       })
       .sort((a, b) => a.key - b.key);
 
+    /*   new Circle()
+        .data([{id: "alpha", x: 200, y: 200, r: 10}])
+        .label("My Label")
+        .labelBounds(d => ({x: -50, y: -d.y / 2, width: 100, height: 30}))
+        .labelConfig({
+          fontColor: "black",
+          rotateAnchor: [0, 0],
+          textAnchor: "end",
+          verticalAlign: "middle"
+          //x: 100,
+          //y: 100
+        })
+        .select(
+          elem("g.d3plus-Radar-radial-d", {
+            parent: this._select,
+            enter: {transform},
+            update: {transform}
+          }).node()
+        )
+        .rotate(-120 + 180)
+        .render();
+*/
     /* new TextBox()
         .data(polarAxis)
         .rotate(
@@ -126,19 +178,19 @@ export default class Radar extends Viz {
       .attr("x", d => d.x < 0 ? -10 : 10)
       .attr("y", 5);
 */
+    console.log(transform);
     new Circle()
       .data(polarAxis)
-      .rotate(d => d.angle < 90 || d.angle > 270 ? -d.angle : -d.angle + 180)
-      .r(10)
+      .rotate(d => d.angle)
+      .r(3)
       .x(d => d.x)
       .y(d => d.y)
       .label(d => d.id)
-      .labelBounds(() => ({x: 15, y: -15, width: 80, height: 30}))
+      .labelBounds(d => d.labelBounds)
       .labelConfig({
-        // rotateAnchor: [0, 0],
+        textAnchor: d => d.data.textAnchor,
         fontColor: "black",
-        verticalAlign: "middle",
-        x: d => d.x
+        verticalAlign: "top"
       })
       .select(
         elem("g.d3plus-Radar-text", {
@@ -147,11 +199,9 @@ export default class Radar extends Viz {
           update: {transform}
         }).node()
       )
-      .textAnchor(d => [1, 4].includes(d.quadrant) ? "start" : "end")
-      // .rotate(-60)
       .render();
 
-    new Path()
+    /*new Path()
       .data(polarAxis)
       .d(d => `M${0},${0} ${-d.x},${-d.y}`)
       .select(
@@ -162,7 +212,7 @@ export default class Radar extends Viz {
         }).node()
       )
       .config(this._axisConfig)
-      .render();
+      .render();*/
 
     const groupData = nestedGroupData.map(h => {
       const q = h.values.map((d, i) => {
@@ -181,7 +231,7 @@ export default class Radar extends Viz {
       return {id: h.key, d};
     });
 
-    this._shapes.push(
+    /*this._shapes.push(
       new Path()
         .data(groupData)
         .d(d => d.d)
@@ -194,7 +244,7 @@ export default class Radar extends Viz {
         )
         .config(configPrep.bind(this)(this._shapeConfig, "shape", "Path"))
         .render()
-    );
+    );*/
 
     return this;
   }
