@@ -44,7 +44,7 @@ This creates an x/y plot using the default shape ([Circle](http://d3plus.org/doc
 
 ### More Examples
 
- * [Sorting Shapes on an X/Y Plot](http://d3plus.org/examples/d3plus-plot/shapeSort/)<sup> ***New***</sup>
+ * [Sorting Shapes on an X/Y Plot](http://d3plus.org/examples/d3plus-plot/shapeSort/)
  * [Line Plot Sorting](http://d3plus.org/examples/d3plus-plot/line-plot-sort/)
  * [Secondary Axis Only](http://d3plus.org/examples/d3plus-plot/secondary-axis-only/)
  * [Confidence Interval](http://d3plus.org/examples/d3plus-plot/confidence-interval/)
@@ -527,4 +527,4 @@ new d3plus.AreaPlot()
 
 
 
-###### <sub>Documentation generated on Fri, 03 Aug 2018 14:23:05 GMT</sub>
+###### <sub>Documentation generated on Wed, 15 Aug 2018 14:12:25 GMT</sub>
