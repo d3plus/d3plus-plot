@@ -30,16 +30,18 @@ export default class BoxWhisker extends Plot {
       }
     });
 
-    this._drawLabel = (d, i) => {
-      if (!d) return "";
-      while (d.__d3plus__ && d.data) {
-        d = d.data;
-        i = d.i;
+    this._tooltipConfig = assign(this._tooltipConfig, {
+      title: (d, i) => {
+        if (!d) return "";
+        while (d.__d3plus__ && d.data) {
+          d = d.data;
+          i = d.i;
+        }
+        if (this._label) return this._label(d, i);
+        const l = this._ids(d, i).slice(0, this._drawDepth);
+        return l[l.length - 1];
       }
-      if (this._label) return this._label(d, i);
-      const l = this._ids(d, i).slice(0, this._drawDepth);
-      return l[l.length - 1];
-    };
+    });
 
   }
 
