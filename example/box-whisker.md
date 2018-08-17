@@ -1,5 +1,7 @@
 # Box and Whisker Chart
 
+In descriptive statistics, a box and whisker plot is a method for graphically depicting groups of numerical data through their quartiles and outliers.
+
 The [BoxWhisker](http://d3plus.org/docs/#BoxWhisker) class defaults to being vertical. For the vertical box, we have to specify the x-axis to be the id and y-axis to be the value. We also need to group data by id and value in order to render the Box and Whisker correctly.
 
 ```js
