@@ -119,7 +119,6 @@ export default class Radar extends Viz {
           height
         };
 
-        console.log(x);
         return {
           id: d.key,
           angle,
@@ -132,7 +131,7 @@ export default class Radar extends Viz {
         };
       })
       .sort((a, b) => a.key - b.key);
-    console.log(polarAxis);
+
     new Rect()
       .data(polarAxis)
       .rotate(d => d.angle)
