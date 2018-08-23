@@ -3,12 +3,9 @@
     @see https://github.com/d3plus/d3plus-viz#Viz
 */
 import {nest} from "d3-collection";
-import * as d3 from "d3-selection";
 import {accessor, assign, configPrep, constant, elem} from "d3plus-common";
 import {Circle, Path, Rect} from "d3plus-shape";
-import {TextBox} from "d3plus-text";
 import {Viz} from "d3plus-viz";
-import {text} from "../node_modules/d3-request";
 
 const tau = Math.PI * 2;
 
@@ -87,7 +84,7 @@ export default class Radar extends Viz {
     const totalAxis = nestedAxisData.length;
     const polarAxis = nestedAxisData
       .map((d, i) => {
-        const textWidth = 100;
+        const width = 100;
         const fontSize =
           this._shapeConfig.labelConfig.fontSize &&
             this._shapeConfig.labelConfig.fontSize(d, i) ||
@@ -107,7 +104,7 @@ export default class Radar extends Viz {
         let x = padding;
 
         if (quadrant === 2 || quadrant === 3) {
-          x = -textWidth - padding;
+          x = -width - padding;
           textAnchor = "end";
           angle += 180;
         }
@@ -115,14 +112,13 @@ export default class Radar extends Viz {
         const labelBounds = {
           x,
           y: -height / 2,
-          width: textWidth,
+          width,
           height
         };
 
         return {
           id: d.key,
           angle,
-          quadrant,
           textAnchor,
           labelBounds,
           rotateAnchor: [-x, height / 2],
@@ -142,14 +138,10 @@ export default class Radar extends Viz {
       .label(d => d.id)
       .labelBounds(d => d.labelBounds)
       .labelConfig({
-        height: 31,
-        width: 100,
         padding: 0,
-        strokeWidth: 2,
         textAnchor: d => d.data.textAnchor,
         rotateAnchor: d => d.data.data.rotateAnchor,
         fontColor: "black",
-        fontSize: 12,
         verticalAlign: "middle"
       })
       .select(
