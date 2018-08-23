@@ -95,23 +95,22 @@ export default class Radar extends Viz {
 
         const lineHeight = fontSize * 1.4;
         const height = lineHeight * 2;
-        const padding = 5,
+        const padding = 10,
               radians = tau / totalAxis * i;
-        
+
         const quadrant =
           parseInt(360 - 360 / totalAxis * i / 90, 10) % 4 + 1;
-        //let angle = -(360 - 360 / totalAxis * i);
-        let angle = 360 / totalAxis * i
+
+        let angle = 360 / totalAxis * i;
 
         let textAnchor = "start";
         let x = padding;
 
-        
-        //if (quadrant === 2 || quadrant === 3) {
-          //x =  -2 * textWidth;
-          //textAnchor = "end";
-          //angle += 180;
-        //}
+        if (quadrant === 2 || quadrant === 3) {
+          x = -textWidth - padding;
+          textAnchor = "end";
+          angle += 180;
+        }
 
         const labelBounds = {
           x,
@@ -120,42 +119,36 @@ export default class Radar extends Viz {
           height
         };
 
+        console.log(x);
         return {
           id: d.key,
           angle,
           quadrant,
           textAnchor,
           labelBounds,
+          rotateAnchor: [-x, height / 2],
           x: radius * Math.cos(radians),
           y: radius * Math.sin(radians)
         };
       })
       .sort((a, b) => a.key - b.key);
-
     console.log(polarAxis);
     new Rect()
       .data(polarAxis)
       .rotate(d => d.angle)
-      .width(50)
-      .height(50)
-      .fill("red")
-      .strokeWidth(1)
+      .width(0)
+      .height(0)
       .x(d => d.x)
       .y(d => d.y)
       .label(d => d.id)
-      .labelBounds({
-        x: 10,
-        y: -25,
-        width: 300,
-        height: 50
-      })
+      .labelBounds(d => d.labelBounds)
       .labelConfig({
-        height: 50,
-        width: 120,
-        rotateAnchor: [-10, 25],
+        height: 31,
+        width: 100,
         padding: 0,
         strokeWidth: 2,
-        textAnchor: "start",
+        textAnchor: d => d.data.textAnchor,
+        rotateAnchor: d => d.data.data.rotateAnchor,
         fontColor: "black",
         fontSize: 12,
         verticalAlign: "middle"
