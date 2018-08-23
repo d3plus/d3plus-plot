@@ -5,7 +5,7 @@
 import {nest} from "d3-collection";
 import * as d3 from "d3-selection";
 import {accessor, assign, configPrep, constant, elem} from "d3plus-common";
-import {Circle, Path} from "d3plus-shape";
+import {Circle, Path, Rect} from "d3plus-shape";
 import {TextBox} from "d3plus-text";
 import {Viz} from "d3plus-viz";
 import {text} from "../node_modules/d3-request";
@@ -72,7 +72,7 @@ export default class Radar extends Viz {
       r: radius * ((d + 1) / this._levels)
     }));
 
-    /*new Circle()
+    new Circle()
       .data(circularAxis)
       .select(
         elem("g.d3plus-Radar-radial-circles", {
@@ -82,7 +82,7 @@ export default class Radar extends Viz {
         }).node()
       )
       .config(this._axisConfig)
-      .render();*/
+      .render();
 
     const totalAxis = nestedAxisData.length;
     const polarAxis = nestedAxisData
@@ -100,21 +100,23 @@ export default class Radar extends Viz {
         
         const quadrant =
           parseInt(360 - 360 / totalAxis * i / 90, 10) % 4 + 1;
-        let angle = -(360 - 360 / totalAxis * i);
+        //let angle = -(360 - 360 / totalAxis * i);
+        let angle = 360 / totalAxis * i
 
         let textAnchor = "start";
-        let x = padding + 5;
+        let x = padding;
 
-        if (quadrant === 2 || quadrant === 3) {
-          x =  -textWidth * 2 + padding;
-          textAnchor = "end";
-          angle += 180;
-        }
+        
+        //if (quadrant === 2 || quadrant === 3) {
+          //x =  -2 * textWidth;
+          //textAnchor = "end";
+          //angle += 180;
+        //}
 
         const labelBounds = {
           x,
-          y: -fontSize,
-          textWidth,
+          y: -height / 2,
+          width: textWidth,
           height
         };
 
@@ -130,67 +132,33 @@ export default class Radar extends Viz {
       })
       .sort((a, b) => a.key - b.key);
 
-    /*   new Circle()
-        .data([{id: "alpha", x: 200, y: 200, r: 10}])
-        .label("My Label")
-        .labelBounds(d => ({x: -50, y: -d.y / 2, width: 100, height: 30}))
-        .labelConfig({
-          fontColor: "black",
-          rotateAnchor: [0, 0],
-          textAnchor: "end",
-          verticalAlign: "middle"
-          //x: 100,
-          //y: 100
-        })
-        .select(
-          elem("g.d3plus-Radar-radial-d", {
-            parent: this._select,
-            enter: {transform},
-            update: {transform}
-          }).node()
-        )
-        .rotate(-120 + 180)
-        .render();
-*/
-    /* new TextBox()
-        .data(polarAxis)
-        .rotate(
-          d => d.angle < 90 || d.angle > 270 ? -d.angle : -d.angle + 180
-        )
-        .rotateAnchor([0, 0])
-        .textAnchor(d => [1, 4].includes(d.quadrant) ? "start" : "end")
-        .height(14)
-        .text(d => d.id)
-        .x(d => d.x)
-        .y(d => d.y)
-        .select(
-          elem("g.d3plus-Radar-text", {
-            parent: this._select,
-            enter: {transform},
-            update: {transform}
-          }).node()
-        )
-        .render()
-    ;*/
-
-    /*  d3.selectAll("g.d3plus-Radar-text text")
-      .data(polarAxis)
-      .attr("x", d => d.x < 0 ? -10 : 10)
-      .attr("y", 5);
-*/
-    console.log(transform);
-    new Circle()
+    console.log(polarAxis);
+    new Rect()
       .data(polarAxis)
       .rotate(d => d.angle)
-      .r(3)
+      .width(50)
+      .height(50)
+      .fill("red")
+      .strokeWidth(1)
       .x(d => d.x)
       .y(d => d.y)
       .label(d => d.id)
-      .labelBounds(d => d.labelBounds)
+      .labelBounds({
+        x: 10,
+        y: -25,
+        width: 300,
+        height: 50
+      })
       .labelConfig({
-        textAnchor: d => d.data.textAnchor,
+        height: 50,
+        width: 120,
+        rotateAnchor: [-10, 25],
+        padding: 0,
+        strokeWidth: 2,
+        textAnchor: "start",
         fontColor: "black",
-        verticalAlign: "top"
+        fontSize: 12,
+        verticalAlign: "middle"
       })
       .select(
         elem("g.d3plus-Radar-text", {
@@ -201,7 +169,7 @@ export default class Radar extends Viz {
       )
       .render();
 
-    /*new Path()
+    new Path()
       .data(polarAxis)
       .d(d => `M${0},${0} ${-d.x},${-d.y}`)
       .select(
@@ -212,7 +180,7 @@ export default class Radar extends Viz {
         }).node()
       )
       .config(this._axisConfig)
-      .render();*/
+      .render();
 
     const groupData = nestedGroupData.map(h => {
       const q = h.values.map((d, i) => {
@@ -231,7 +199,7 @@ export default class Radar extends Viz {
       return {id: h.key, d};
     });
 
-    /*this._shapes.push(
+    this._shapes.push(
       new Path()
         .data(groupData)
         .d(d => d.d)
@@ -244,7 +212,7 @@ export default class Radar extends Viz {
         )
         .config(configPrep.bind(this)(this._shapeConfig, "shape", "Path"))
         .render()
-    );*/
+    );
 
     return this;
   }
