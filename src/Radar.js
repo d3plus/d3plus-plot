@@ -271,12 +271,4 @@ function value(d) {
     }
     else return this._y;
   }
-
-  hover(_) {
-    this._hover = _;
-    this._shapes.forEach(s => s.hover(_));
-    if (this._legend) this._legendClass.hover(_);
-
-    return this;
-  }
 }
