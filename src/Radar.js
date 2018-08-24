@@ -25,7 +25,7 @@ export default class Radar extends Viz {
     super();
 
     this._axisConfig = {
-      fill: constant("none"),
+      fill: constant("none"),      
       stroke: constant("#CCC"),
       strokeWidth: constant(1)
     };
@@ -37,7 +37,12 @@ export default class Radar extends Viz {
       Circle: {
         r: accessor("r", 0)
       },
-      Path: {}
+      Path: {
+        strokeWidth: constant(0),
+        hoverStyle: {
+          strokeWidth: constant(0)
+        }
+      }
     });
     this._value = accessor("value");
     this._x = accessor("x");
@@ -178,7 +183,7 @@ export default class Radar extends Viz {
 
       const d = `M ${q[0].x} ${q[0].y} ${q
         .map(l => `L ${l.x} ${l.y}`)
-        .join(" ")}`;
+        .join(" ")} L ${q[0].x} ${q[0].y}`;
 
       return {id: h.key, d};
     });
