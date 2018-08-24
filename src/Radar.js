@@ -25,7 +25,7 @@ export default class Radar extends Viz {
     super();
 
     this._axisConfig = {
-      fill: constant("none"),      
+      fill: constant("none"),
       stroke: constant("#CCC"),
       strokeWidth: constant(1)
     };
@@ -37,12 +37,7 @@ export default class Radar extends Viz {
       Circle: {
         r: accessor("r", 0)
       },
-      Path: {
-        strokeWidth: constant(0),
-        hoverStyle: {
-          strokeWidth: constant(0)
-        }
-      }
+      Path: {}
     });
     this._value = accessor("value");
     this._x = accessor("x");
@@ -98,10 +93,8 @@ export default class Radar extends Viz {
         const lineHeight = fontSize * 1.4;
         const height = lineHeight * 2;
         const padding = 10,
+              quadrant = parseInt(360 - 360 / totalAxis * i / 90, 10) % 4 + 1,
               radians = tau / totalAxis * i;
-
-        const quadrant =
-          parseInt(360 - 360 / totalAxis * i / 90, 10) % 4 + 1;
 
         let angle = 360 / totalAxis * i;
 
@@ -173,11 +166,11 @@ export default class Radar extends Viz {
 
     const groupData = nestedGroupData.map(h => {
       const q = h.values.map((d, i) => {
-        const angle = tau / totalAxis * i,
-              r = this._value(d, i) / maxValue * radius;
+        const r = this._value(d, i) / maxValue * radius,
+              radians = tau / totalAxis * i;
         return {
-          x: r * Math.cos(angle),
-          y: r * Math.sin(angle)
+          x: r * Math.cos(radians),
+          y: r * Math.sin(radians)
         };
       });
 
