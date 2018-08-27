@@ -1,6 +1,6 @@
-# Radar Charts
+# Radar Chart
 
-[Radar](http://d3plus.org/docs/#Radar) chart are a way of comparing multiple quantitative variables. This makes them useful for seeing which variables have similar values or if there are any outliers amongst each variable. 
+[Radar](http://d3plus.org/docs/#Radar) charts are a way of comparing multiple quantitative variables. This makes them useful for seeing which variables have similar values or if there are any outliers amongst each variable. 
 
 When constructing data to be used with a Radar chart, you define the metrics used as the y-axis, and the unique shape identifier in the x-axis. Every shape must have the same metrics to compare in the y-axis.
 
