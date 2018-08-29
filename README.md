@@ -44,8 +44,9 @@ This creates an x/y plot using the default shape ([Circle](http://d3plus.org/doc
 
 ### More Examples
 
+ * [Radar Chart](http://d3plus.org/examples/d3plus-plot/radar-chart/)<sup> ***New***</sup>
+ * [Sorting Shapes on an X/Y Plot](http://d3plus.org/examples/d3plus-plot/shapeSort/)<sup> ***New***</sup>
  * [Box and Whisker Chart](http://d3plus.org/examples/d3plus-plot/box-whisker/)<sup> ***New***</sup>
- * [Sorting Shapes on an X/Y Plot](http://d3plus.org/examples/d3plus-plot/shapeSort/)
  * [Line Plot Sorting](http://d3plus.org/examples/d3plus-plot/line-plot-sort/)
  * [Secondary Axis Only](http://d3plus.org/examples/d3plus-plot/secondary-axis-only/)
  * [Confidence Interval](http://d3plus.org/examples/d3plus-plot/confidence-interval/)
@@ -55,15 +56,15 @@ This creates an x/y plot using the default shape ([Circle](http://d3plus.org/doc
  * [Custom Chart Annotations](http://d3plus.org/examples/d3plus-plot/annotations/)
  * [Stacked Area Chart](http://d3plus.org/examples/d3plus-plot/stacked-area/)
  * [Horizontal Stacked Area Chart](http://d3plus.org/examples/d3plus-plot/stacked-area-flip/)
- * [Line Plot](http://d3plus.org/examples/d3plus-plot/line-plot/)
  * [Changing the Stroke Width of a Line Plot](http://d3plus.org/examples/d3plus-plot/line-plot-strokeWidth/)
+ * [Line Plot](http://d3plus.org/examples/d3plus-plot/line-plot/)
  * [Changing Grid Styles](http://d3plus.org/examples/d3plus-plot/grid-config/)
  * [Stacked Bar Chart](http://d3plus.org/examples/d3plus-plot/bar-chart-stacked/)
  * [Bar Chart](http://d3plus.org/examples/d3plus-plot/bar-chart/)
- * [Custom Bar Chart Padding](http://d3plus.org/examples/d3plus-plot/bar-chart-padding/)
  * [Horizontal Bar Chart](http://d3plus.org/examples/d3plus-plot/bar-chart-horizontal/)
- * [Area Chart](http://d3plus.org/examples/d3plus-plot/area/)
+ * [Custom Bar Chart Padding](http://d3plus.org/examples/d3plus-plot/bar-chart-padding/)
  * [Advanced Axis Configuration](http://d3plus.org/examples/d3plus-plot/axis-config/)
+ * [Area Chart](http://d3plus.org/examples/d3plus-plot/area/)
 
 ## API Reference
 
@@ -74,6 +75,7 @@ This creates an x/y plot using the default shape ([Circle](http://d3plus.org/doc
 * [BumpChart](#BumpChart)
 * [LinePlot](#LinePlot)
 * [Plot](#Plot)
+* [Radar](#Radar)
 * [StackedArea](#StackedArea)
 
 ---
@@ -257,6 +259,8 @@ This is a global class, and extends all of the methods and functionality of <cod
     * [.y2Domain(*value*)](#Plot.y2Domain) ↩︎
     * [.ySort(*value*)](#Plot.ySort) ↩︎
     * [.y2Sort(*value*)](#Plot.y2Sort) ↩︎
+    * [.x(*value*)](#Plot.x) ↩︎
+    * [.y(*value*)](#Plot.y) ↩︎
 
 
 <a name="new_Plot_new" href="#new_Plot_new">#</a> new **Plot**()
@@ -526,6 +530,67 @@ Defines a custom sorting comparitor function to be used for discrete y2 axes.
 
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
+
+<a name="Plot.x" href="#Plot.x">#</a> Plot.**x**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L235)
+
+Sets the x accessor to the specified function or number. If *value* is not specified, returns the current x accessor.
+
+
+This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
+
+
+<a name="Plot.y" href="#Plot.y">#</a> Plot.**y**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L258)
+
+Sets the y accessor to the specified function or number. If *value* is not specified, returns the current y accessor.
+
+
+This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
+
+---
+
+<a name="Radar"></a>
+#### **Radar** [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L12)
+
+
+This is a global class, and extends all of the methods and functionality of [<code>Plot</code>](#Plot).
+
+
+* [Radar](#Radar) ⇐ [<code>Plot</code>](#Plot)
+    * [new Radar()](#new_Radar_new)
+    * [.radarPadding([*value*])](#Radar.radarPadding) ↩︎
+    * [.value(*value*)](#Radar.value)
+
+
+<a name="new_Radar_new" href="#new_Radar_new">#</a> new **Radar**()
+
+Creates a radar visualization based on an array of data.
+
+
+
+
+
+<a name="Radar.radarPadding" href="#Radar.radarPadding">#</a> Radar.**radarPadding**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L208)
+
+If *value* is specified, sets the padding of the chart and returns the current class instance. If *value* is not specified, returns the current radarPadding. By default, the radarPadding is 100.
+
+
+This is a static method of [<code>Radar</code>](#Radar), and is chainable with other methods of this Class.
+
+
+<a name="Radar.value" href="#Radar.value">#</a> Radar.**value**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L223)
+
+If *value* is specified, sets the value accessor to the specified function or number and returns the current class instance. If *value* is not specified, returns the current value accessor.
+
+
+This is a static method of [<code>Radar</code>](#Radar).
+
+
+```js
+function value(d) {
+  return d.value;
+}
+```
+
 ---
 
 <a name="StackedArea"></a>
@@ -552,4 +617,4 @@ new d3plus.AreaPlot()
 
 
 
-###### <sub>Documentation generated on Fri, 17 Aug 2018 16:41:09 GMT</sub>
+###### <sub>Documentation generated on Wed, 29 Aug 2018 03:01:55 GMT</sub>
