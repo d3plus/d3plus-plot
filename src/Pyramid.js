@@ -26,6 +26,7 @@ export default class Pyramid extends Plot {
     this._discrete = "y";
     this._shape = constant("Bar");
     this._stacked = true;
+    this.x("x");
     this._xConfig = {
       tickFormat: d => Math.abs(d)
     };
@@ -40,10 +41,7 @@ export default class Pyramid extends Plot {
     this._filteredData.map((d, i) => ({
       __d3plus__: true,
       data: assign(d, {
-        __d3plusPopulation__:
-          this._groupBy[0](d, i) === "female"
-            ? this._x(d, i) * -1
-            : this._x(d, i)
+        x: this._filteredData.indexOf(this._filteredData.find((h, x) => this._groupBy[0](h, x) === this._groupBy[0](d, i))) ? -this._x(d, i) : this._x(d, i)
       }),
       i,
       hci: this._confidence && this._confidence[1] && this._confidence[1](d, i),
@@ -52,14 +50,9 @@ export default class Pyramid extends Plot {
         .join("_"),
       lci: this._confidence && this._confidence[0] && this._confidence[0](d, i),
       shape: this._shape(d, i),
-      x:
-        this._groupBy[0](d, i) === "female"
-          ? this._x(d, i) * -1
-          : this._x(d, i),
       y: this._y(d, i)
     }));
 
-    this.x("__d3plusPopulation__");
     super._draw(callback);
 
     return this;
