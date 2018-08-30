@@ -1,4 +1,4 @@
-# Population Pyramid Chart
+# Pyramid Chart
 
 ```js
 var data = [
@@ -12,6 +12,6 @@ var data = [
 
 new d3plus.Pyramid()
   .data(data)
-  .groupBy(["sex"])
+  .groupBy("sex")
   .render();
 ```
