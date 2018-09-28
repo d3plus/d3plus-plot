@@ -94,6 +94,7 @@ export default class Plot extends Viz {
     this._sizeScale = "sqrt";
     this._stackOffset = d3Shape.stackOffsetDiverging;
     this._stackOrder = d3Shape.stackOrderNone;
+    this._timelineConfig = assign(this._timelineConfig, {brushing: true});
     this._x = accessor("x");
     this._x2 = accessor("x2");
     this._xAxis = new AxisBottom().align("end");
