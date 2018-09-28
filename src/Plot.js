@@ -15,6 +15,10 @@ import {default as CircleBuffer} from "./buffers/Circle.js";
 import {default as LineBuffer} from "./buffers/Line.js";
 import {default as RectBuffer} from "./buffers/Rect.js";
 
+/**
+    @desc Logic for determining default sizes of shapes using the sizeScaleD3 internal function.
+    @private
+*/
 function defaultSize(d) {
   return this._sizeScaleD3(this._size ? this._size(d) : null);
 }

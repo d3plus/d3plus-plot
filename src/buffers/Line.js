@@ -1,5 +1,14 @@
 import {max} from "d3-array";
 
+/**
+    Adds a buffer to either side of the non-discrete axis.
+    @param {Array} data
+    @param {D3Scale} x
+    @param {D3Scale} y
+    @param {Object} [config]
+    @param {Number} [buffer] Defaults to the radius of the largest Circle.
+    @private
+*/
 export default function({data, x, y, x2, y2}) {
   const xKey = x2 ? "x2" : "x";
   const yKey = y2 ? "y2" : "y";
