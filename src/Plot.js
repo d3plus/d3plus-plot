@@ -280,12 +280,11 @@ export default class Plot extends Viz {
       else {
         data.sort((a, b) => a[this._discrete] - b[this._discrete]);
       }
+
       const order = this._stackOrder;
-      // console.log(order instanceof Array ? d3Shape.stackOrderNone : order);
 
       if (order instanceof Array) stackKeys.sort((a, b) => order.indexOf(a) - order.indexOf(b));
       else if (order === d3Shape.stackOrderNone) stackKeys.sort((a, b) => a.localeCompare(b));
-      else if (true) stackKeys.sort((a, b) => a.localeCompare(b));
 
       console.log(stackKeys);
       stackData = d3Shape.stack()
@@ -301,8 +300,6 @@ export default class Plot extends Viz {
         [this._discrete]: extent(data, d => d[this._discrete]),
         [opp]: [min(stackData.map(g => min(g.map(p => p[0])))), max(stackData.map(g => max(g.map(p => p[1]))))]
       };
-
-      console.log(domains);
 
     }
     else {
