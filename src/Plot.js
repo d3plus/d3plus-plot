@@ -24,6 +24,35 @@ function defaultSize(d) {
 }
 
 /**
+    @desc Logic for determining stackOrder ascending using groups.
+    @private
+*/
+function stackOrderAscending(series) {
+  const sums = series.map(stackSum);
+  const keys = series.map(d => d.key.split("_")[0]);
+  return d3Shape.stackOrderNone(series).sort((a, b) => keys[b].localeCompare(keys[a]) || sums[a] - sums[b]);
+}
+
+/**
+    @desc Logic for determining stackOrder descending using groups.
+    @private
+*/
+function stackOrderDescending(series) {
+  return stackOrderAscending(series).reverse();
+}
+
+/**
+    @desc Logic for determining default sum of shapes using the stackSum function used in d3Shape.
+    @private
+*/
+function stackSum(series) {
+  let i = -1, s = 0, v;
+  const n = series.length;
+  while (++i < n) if (v = +series[i][1]) s += v;
+  return s;
+}
+
+/**
     @class Plot
     @extends Viz
     @desc Creates an x/y plot based on an array of data.
@@ -97,7 +126,7 @@ export default class Plot extends Viz {
     this._sizeMin = 5;
     this._sizeScale = "sqrt";
     this._stackOffset = d3Shape.stackOffsetDiverging;
-    this._stackOrder = d3Shape.stackOrderDescending;
+    this._stackOrder = stackOrderDescending;
     this._timelineConfig = assign(this._timelineConfig, {brushing: true});
     this._x = accessor("x");
     this._x2 = accessor("x2");
@@ -252,10 +281,13 @@ export default class Plot extends Viz {
         data.sort((a, b) => a[this._discrete] - b[this._discrete]);
       }
       const order = this._stackOrder;
+      // console.log(order instanceof Array ? d3Shape.stackOrderNone : order);
 
       if (order instanceof Array) stackKeys.sort((a, b) => order.indexOf(a) - order.indexOf(b));
       else if (order === d3Shape.stackOrderNone) stackKeys.sort((a, b) => a.localeCompare(b));
+      else if (true) stackKeys.sort((a, b) => a.localeCompare(b));
 
+      console.log(stackKeys);
       stackData = d3Shape.stack()
         .keys(stackKeys)
         .offset(this._stackOffset)
@@ -269,6 +301,8 @@ export default class Plot extends Viz {
         [this._discrete]: extent(data, d => d[this._discrete]),
         [opp]: [min(stackData.map(g => min(g.map(p => p[0])))), max(stackData.map(g => max(g.map(p => p[1]))))]
       };
+
+      console.log(domains);
 
     }
     else {
