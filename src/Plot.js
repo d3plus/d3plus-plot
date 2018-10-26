@@ -286,7 +286,6 @@ export default class Plot extends Viz {
       if (order instanceof Array) stackKeys.sort((a, b) => order.indexOf(a) - order.indexOf(b));
       else if (order === d3Shape.stackOrderNone) stackKeys.sort((a, b) => a.localeCompare(b));
 
-      console.log(stackKeys);
       stackData = d3Shape.stack()
         .keys(stackKeys)
         .offset(this._stackOffset)
