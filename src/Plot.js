@@ -961,7 +961,12 @@ export default class Plot extends Viz {
       @chainable
   */
   stackOrder(_) {
-    return arguments.length ? (this._stackOrder = typeof _ === "string" ? d3Shape[`stackOrder${_.charAt(0).toUpperCase() + _.slice(1)}`] : _, this) : this._stackOrder;
+    if (arguments.length) {
+      if (typeof _ === "string") this._stackOrder = _ === "ascending" ? stackOrderAscending : _ === "descending" ? stackOrderDescending : d3Shape[`stackOrder${_.charAt(0).toUpperCase() + _.slice(1)}`];
+      else this._stackOrder = _;
+      return this;
+    }
+    else return this._stackOrder;
   }
 
   /**
