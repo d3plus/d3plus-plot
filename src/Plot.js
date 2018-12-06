@@ -24,6 +24,35 @@ function defaultSize(d) {
 }
 
 /**
+    @desc Logic for determining stackOrder ascending using groups.
+    @private
+*/
+function stackOrderAscending(series) {
+  const sums = series.map(stackSum);
+  const keys = series.map(d => d.key.split("_")[0]);
+  return d3Shape.stackOrderNone(series).sort((a, b) => keys[b].localeCompare(keys[a]) || sums[a] - sums[b]);
+}
+
+/**
+    @desc Logic for determining stackOrder descending using groups.
+    @private
+*/
+function stackOrderDescending(series) {
+  return stackOrderAscending(series).reverse();
+}
+
+/**
+    @desc Logic for determining default sum of shapes using the stackSum function used in d3Shape.
+    @private
+*/
+function stackSum(series) {
+  let i = -1, s = 0, v;
+  const n = series.length;
+  while (++i < n) if (v = +series[i][1]) s += v;
+  return s;
+}
+
+/**
     @class Plot
     @extends Viz
     @desc Creates an x/y plot based on an array of data.
@@ -97,7 +126,7 @@ export default class Plot extends Viz {
     this._sizeMin = 5;
     this._sizeScale = "sqrt";
     this._stackOffset = d3Shape.stackOffsetDiverging;
-    this._stackOrder = d3Shape.stackOrderDescending;
+    this._stackOrder = stackOrderDescending;
     this._timelineConfig = assign(this._timelineConfig, {brushing: true});
     this._x = accessor("x");
     this._x2 = accessor("x2");
@@ -251,6 +280,7 @@ export default class Plot extends Viz {
       else {
         data.sort((a, b) => a[this._discrete] - b[this._discrete]);
       }
+
       const order = this._stackOrder;
 
       if (order instanceof Array) stackKeys.sort((a, b) => order.indexOf(a) - order.indexOf(b));
@@ -931,7 +961,12 @@ export default class Plot extends Viz {
       @chainable
   */
   stackOrder(_) {
-    return arguments.length ? (this._stackOrder = typeof _ === "string" ? d3Shape[`stackOrder${_.charAt(0).toUpperCase() + _.slice(1)}`] : _, this) : this._stackOrder;
+    if (arguments.length) {
+      if (typeof _ === "string") this._stackOrder = _ === "ascending" ? stackOrderAscending : _ === "descending" ? stackOrderDescending : d3Shape[`stackOrder${_.charAt(0).toUpperCase() + _.slice(1)}`];
+      else this._stackOrder = _;
+      return this;
+    }
+    else return this._stackOrder;
   }
 
   /**
