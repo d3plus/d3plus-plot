@@ -1,3 +1,5 @@
+/* eslint no-cond-assign: 0 */
+
 import {extent, max, merge, min, range, sum} from "d3-array";
 import {nest} from "d3-collection";
 import * as scales from "d3-scale";
