@@ -56,13 +56,13 @@ export default class Radar extends Viz {
     const radius = (Math.min(height, width) - this._radarPadding) / 2,
           transform = `translate(${width / 2}, ${height / 2})`;
 
-    const maxValue = Math.max(...this._data.map((d, i) => this._value(d, i))),
+    const maxValue = Math.max(...this._filteredData.map((d, i) => this._value(d, i))),
           nestedAxisData = nest()
         .key(this._y)
-        .entries(this._data),
+        .entries(this._filteredData),
           nestedGroupData = nest()
         .key(this._x)
-        .entries(this._data);
+        .entries(this._filteredData);
 
     const circularAxis = Array.from(Array(this._levels).keys()).map(d => ({
       id: d,
