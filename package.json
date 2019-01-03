@@ -47,6 +47,7 @@
     "d3plus-dev": "^0.6.9"
   },
   "module": "es/index",
+  "sideEffects": false,
   "files": [
     "bin",
     "build/d3plus-plot.js",
