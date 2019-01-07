@@ -40,8 +40,6 @@ export default class Radar extends Viz {
       Path: {}
     });
     this._value = accessor("value");
-    this._x = accessor("x");
-    this._y = accessor("y");
   }
 
   /**
@@ -58,11 +56,22 @@ export default class Radar extends Viz {
 
     const maxValue = Math.max(...this._filteredData.map((d, i) => this._value(d, i))),
           nestedAxisData = nest()
-        .key(this._y)
+        .key(this._groupBy[1])
         .entries(this._filteredData),
           nestedGroupData = nest()
-        .key(this._x)
+        .key(this._groupBy[0])
         .entries(this._filteredData);
+
+    const groupBy = this._groupBy[0](this._filteredData[0]), 
+          item = this._filteredData[0];
+    
+    let id = "";
+    for (const property in this._filteredData[0]) {
+      if (groupBy === item[property]) {
+        id = property;
+        break;
+      }
+    }
 
     const circularAxis = Array.from(Array(this._levels).keys()).map(d => ({
       id: d,
@@ -178,7 +187,7 @@ export default class Radar extends Viz {
         .map(l => `L ${l.x} ${l.y}`)
         .join(" ")} L ${q[0].x} ${q[0].y}`;
 
-      return {id: h.key, d};
+      return {[id]: h.key, d};
     });
 
     this._shapes.push(
@@ -226,49 +235,4 @@ function value(d) {
       : this._value;
   }
 
-  /**
-      @memberof Plot
-      @desc Sets the x accessor to the specified function or number. If *value* is not specified, returns the current x accessor.
-      @param {Function|Number} *value*
-      @chainable
-  */
-  x(_) {
-    if (arguments.length) {
-      if (typeof _ === "function") this._x = _;
-      else {
-        this._x = accessor(_);
-        if (!this._aggs[_] && this._discrete === "x") {
-          this._aggs[_] = a => {
-            const v = Array.from(new Set(a));
-            return v.length === 1 ? v[0] : v;
-          };
-        }
-      }
-      return this;
-    }
-    else return this._x;
-  }
-
-  /**
-      @memberof Plot
-      @desc Sets the y accessor to the specified function or number. If *value* is not specified, returns the current y accessor.
-      @param {Function|Number} *value*
-      @chainable
-  */
-  y(_) {
-    if (arguments.length) {
-      if (typeof _ === "function") this._y = _;
-      else {
-        this._y = accessor(_);
-        if (!this._aggs[_] && this._discrete === "y") {
-          this._aggs[_] = a => {
-            const v = Array.from(new Set(a));
-            return v.length === 1 ? v[0] : v;
-          };
-        }
-      }
-      return this;
-    }
-    else return this._y;
-  }
 }
