@@ -29,6 +29,7 @@ export default class Radar extends Viz {
       stroke: constant("#CCC"),
       strokeWidth: constant(1)
     };
+    this._discrete = "size";
     this._hover = true;
     this._levels = 6;
     this._radarPadding = 100;
@@ -39,6 +40,7 @@ export default class Radar extends Viz {
       },
       Path: {}
     });
+    this._size = accessor("size");
     this._value = accessor("value");
   }
 
@@ -51,23 +53,26 @@ export default class Radar extends Viz {
     const height = this._height - this._margin.top - this._margin.bottom,
           width = this._width - this._margin.left - this._margin.right;
 
-    const radius = (Math.min(height, width) - this._radarPadding) / 2,
+    const depth = this._depth || 0,
+          radius = (Math.min(height, width) - this._radarPadding) / 2,
           transform = `translate(${width / 2}, ${height / 2})`;
 
-    const maxValue = Math.max(...this._filteredData.map((d, i) => this._value(d, i))),
-          nestedAxisData = nest()
-        .key(this._groupBy[1])
+    const nestedAxisData = nest()
+        .key(this._size)
         .entries(this._filteredData),
           nestedGroupData = nest()
-        .key(this._groupBy[0])
+        .key(this._groupBy[depth])
+        .key(this._size)
         .entries(this._filteredData);
+        
+    const maxValue = Math.max(...nestedGroupData.map(h => h.values.map(d => d.values.reduce((sum, x, i) => sum + this._value(x, i), 0))).flat());
 
-    const groupBy = this._groupBy[0](this._filteredData[0]), 
+    const group = this._groupBy[depth](this._filteredData[0]),
           item = this._filteredData[0];
-    
+
     let id = "";
     for (const property in this._filteredData[0]) {
-      if (groupBy === item[property]) {
+      if (group === item[property]) {
         id = property;
         break;
       }
@@ -175,7 +180,8 @@ export default class Radar extends Viz {
 
     const groupData = nestedGroupData.map(h => {
       const q = h.values.map((d, i) => {
-        const r = this._value(d, i) / maxValue * radius,
+        const value = d.values.reduce((sum, x, j) => sum + this._value(x, j), 0);
+        const r = value / maxValue * radius,
               radians = tau / totalAxis * i;
         return {
           x: r * Math.cos(radians),
@@ -218,6 +224,16 @@ export default class Radar extends Viz {
     return arguments.length
       ? (this._radarPadding = _, this)
       : this._radarPadding;
+  }
+
+  /**
+      @memberof Radar
+      @desc If *value* is specified, sets the sum accessor to the specified function or number and returns the current class instance. If *value* is not specified, returns the current size accessor.
+      @param {String} *value*
+      @chainable
+  */
+  size(_) {
+    return arguments.length ? (this._size = typeof _ === "function" ? _ : accessor(_), this) : this._size;
   }
 
   /**
