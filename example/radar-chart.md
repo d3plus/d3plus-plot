@@ -24,6 +24,7 @@ var data = [
 
 new d3plus.Radar()
   .data(data)
-  .groupBy(["id", "metric"])
+  .groupBy("id")
+  .size("metric")
   .render();
 ```
