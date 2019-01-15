@@ -8,23 +8,23 @@ When constructing data to be used with a Radar chart, you define the metrics use
 
 ```js
 var data = [
-  { id: "alpha", metric: "Central", value: 170.992 },
-  { id: "alpha", metric: "Kirkdale", value: 40 },
-  { id: "alpha", metric: "Kensington", value: 240 },
-  { id: "alpha", metric: "Everton", value: 90 },
-  { id: "alpha", metric: "Picton", value: 160 },
-  { id: "alpha", metric: "Riverside", value: 30 },
-  { id: "beta", metric: "Central", value: 320 },
-  { id: "beta", metric: "Kirkdale", value: 97.5 },
-  { id: "beta", metric: "Kensington", value: 40 },
-  { id: "beta", metric: "Everton", value: 110 },
-  { id: "beta", metric: "Picton", value: 40 },
-  { id: "beta", metric: "Riverside", value: 110 }
+  { id: "alpha", axis: "Central", value: 170.992 },
+  { id: "alpha", axis: "Kirkdale", value: 40 },
+  { id: "alpha", axis: "Kensington", value: 240 },
+  { id: "alpha", axis: "Everton", value: 90 },
+  { id: "alpha", axis: "Picton", value: 160 },
+  { id: "alpha", axis: "Riverside", value: 30 },
+  { id: "beta", axis: "Central", value: 320 },
+  { id: "beta", axis: "Kirkdale", value: 97.5 },
+  { id: "beta", axis: "Kensington", value: 40 },
+  { id: "beta", axis: "Everton", value: 110 },
+  { id: "beta", axis: "Picton", value: 40 },
+  { id: "beta", axis: "Riverside", value: 110 }
 ];
 
 new d3plus.Radar()
   .data(data)
   .groupBy("id")
-  .size("metric")
+  .metric("axis")
   .render();
 ```
