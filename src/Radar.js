@@ -29,9 +29,10 @@ export default class Radar extends Viz {
       stroke: constant("#CCC"),
       strokeWidth: constant(1)
     };
-    this._discrete = "size";
+    this._discrete = "metric";
     this._hover = true;
     this._levels = 6;
+    this._metric = accessor("metric");
     this._radarPadding = 100;
     this._shape = constant("Path");
     this._shapeConfig = assign(this._shapeConfig, {
@@ -40,7 +41,6 @@ export default class Radar extends Viz {
       },
       Path: {}
     });
-    this._size = accessor("size");
     this._value = accessor("value");
   }
 
@@ -58,11 +58,11 @@ export default class Radar extends Viz {
           transform = `translate(${width / 2}, ${height / 2})`;
 
     const nestedAxisData = nest()
-        .key(this._size)
+        .key(this._metric)
         .entries(this._filteredData),
           nestedGroupData = nest()
         .key(this._groupBy[depth])
-        .key(this._size)
+        .key(this._metric)
         .entries(this._filteredData);
         
     const maxValue = Math.max(...nestedGroupData.map(h => h.values.map(d => d.values.reduce((sum, x, i) => sum + this._value(x, i), 0))).flat());
@@ -216,6 +216,16 @@ export default class Radar extends Viz {
 
   /**
       @memberof Radar
+      @desc If *value* is specified, sets the sum accessor to the specified function or number and returns the current class instance. If *value* is not specified, returns the current size accessor.
+      @param {String} *value*
+      @chainable
+  */
+  metric(_) {
+    return arguments.length ? (this._metric = typeof _ === "function" ? _ : accessor(_), this) : this._metric;
+  }
+
+  /**
+      @memberof Radar
       @desc If *value* is specified, sets the padding of the chart and returns the current class instance. If *value* is not specified, returns the current radarPadding. By default, the radarPadding is 100.
       @param {Number} [*value* = 100]
       @chainable
@@ -224,16 +234,6 @@ export default class Radar extends Viz {
     return arguments.length
       ? (this._radarPadding = _, this)
       : this._radarPadding;
-  }
-
-  /**
-      @memberof Radar
-      @desc If *value* is specified, sets the sum accessor to the specified function or number and returns the current class instance. If *value* is not specified, returns the current size accessor.
-      @param {String} *value*
-      @chainable
-  */
-  size(_) {
-    return arguments.length ? (this._size = typeof _ === "function" ? _ : accessor(_), this) : this._size;
   }
 
   /**
