@@ -181,7 +181,7 @@ export default class Radar extends Viz {
 
     const groupData = nestedGroupData.map(h => {
       const q = h.values.map((d, i) => {
-        const value = d.values.reduce((sum, x, j) => sum + this._value(x, j), 0);
+        const value = sum(d.values, (x, i) => this._value(x, i));
         const r = value / maxValue * radius,
               radians = tau / totalAxis * i;
         return {
@@ -194,12 +194,13 @@ export default class Radar extends Viz {
         .map(l => `L ${l.x} ${l.y}`)
         .join(" ")} L ${q[0].x} ${q[0].y}`;
 
-      return {[id]: h.key, d};
+      return {[id]: h.key, d, __d3plusShape__: true, data: h.values};
     });
 
     this._shapes.push(
       new Path()
         .data(groupData)
+        .id(d => d.id)
         .d(d => d.d)
         .select(
           elem("g.d3plus-Radar-items", {
