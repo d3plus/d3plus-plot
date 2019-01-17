@@ -62,13 +62,13 @@ export default class Radar extends Viz {
         .key(this._metric)
         .entries(this._filteredData),
           nestedGroupData = nest()
-        .key(this._groupBy[depth])
+        .key(this._id)
         .key(this._metric)
         .entries(this._filteredData);
         
     const maxValue = max(nestedGroupData.map(h => h.values.map(d => sum(d.values, (x, i) => this._value(x, i)))).flat());
 
-    const group = this._groupBy[depth](this._filteredData[0]),
+    const group = this._id(this._filteredData[0]),
           item = this._filteredData[0];
 
     let id = "";
