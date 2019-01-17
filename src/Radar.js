@@ -2,6 +2,7 @@
     @external Viz
     @see https://github.com/d3plus/d3plus-viz#Viz
 */
+import {max, sum} from "d3-array";
 import {nest} from "d3-collection";
 import {accessor, assign, configPrep, constant, elem} from "d3plus-common";
 import {Circle, Path, Rect} from "d3plus-shape";
@@ -65,7 +66,7 @@ export default class Radar extends Viz {
         .key(this._metric)
         .entries(this._filteredData);
         
-    const maxValue = Math.max(...nestedGroupData.map(h => h.values.map(d => d.values.reduce((sum, x, i) => sum + this._value(x, i), 0))).flat());
+    const maxValue = max(nestedGroupData.map(h => h.values.map(d => sum(d.values, (x, i) => this._value(x, i)))).flat());
 
     const group = this._groupBy[depth](this._filteredData[0]),
           item = this._filteredData[0];
