@@ -2,7 +2,7 @@
     @external Viz
     @see https://github.com/d3plus/d3plus-viz#Viz
 */
-import {max, sum} from "d3-array";
+import {max, merge, sum} from "d3-array";
 import {nest} from "d3-collection";
 import {accessor, assign, configPrep, constant, elem} from "d3plus-common";
 import {Circle, Path, Rect} from "d3plus-shape";
@@ -194,13 +194,12 @@ export default class Radar extends Viz {
         .map(l => `L ${l.x} ${l.y}`)
         .join(" ")} L ${q[0].x} ${q[0].y}`;
 
-      return {[id]: h.key, d, __d3plusShape__: true, data: h.values};
+      return {id: h.key, d, __d3plus__: true, data: assign(...merge(h.values.map(d => d.values)))};
     });
 
     this._shapes.push(
       new Path()
         .data(groupData)
-        .id(d => d.id)
         .d(d => d.d)
         .select(
           elem("g.d3plus-Radar-items", {
@@ -218,8 +217,8 @@ export default class Radar extends Viz {
 
   /**
       @memberof Radar
-      @desc If *value* is specified, sets the sum accessor to the specified function or number and returns the current class instance. If *value* is not specified, returns the current size accessor.
-      @param {String} *value*
+      @desc Defines the value used as axis. If *value* is specified, sets the accessor to the specified metric function. If *value* is not specified, returns the current metric accessor.
+      @param {Function|String} *value*
       @chainable
   */
   metric(_) {
