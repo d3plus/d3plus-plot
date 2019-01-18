@@ -140,8 +140,8 @@ export default class Radar extends Viz {
       .labelBounds(d => d.labelBounds)
       .labelConfig({
         padding: 0,
-        textAnchor: d => d.data.textAnchor,
-        rotateAnchor: d => d.data.data.rotateAnchor,
+        textAnchor: d => d.textAnchor,
+        rotateAnchor: d => d.data.rotateAnchor,
         fontColor: "black",
         verticalAlign: "middle"
       })
