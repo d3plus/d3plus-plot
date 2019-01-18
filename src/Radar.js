@@ -54,8 +54,7 @@ export default class Radar extends Viz {
     const height = this._height - this._margin.top - this._margin.bottom,
           width = this._width - this._margin.left - this._margin.right;
 
-    const depth = this._depth || 0,
-          radius = (Math.min(height, width) - this._radarPadding) / 2,
+    const radius = (Math.min(height, width) - this._radarPadding) / 2,
           transform = `translate(${width / 2}, ${height / 2})`;
 
     const nestedAxisData = nest()
@@ -65,19 +64,8 @@ export default class Radar extends Viz {
         .key(this._id)
         .key(this._metric)
         .entries(this._filteredData);
-        
+
     const maxValue = max(nestedGroupData.map(h => h.values.map(d => sum(d.values, (x, i) => this._value(x, i)))).flat());
-
-    const group = this._id(this._filteredData[0]),
-          item = this._filteredData[0];
-
-    let id = "";
-    for (const property in this._filteredData[0]) {
-      if (group === item[property]) {
-        id = property;
-        break;
-      }
-    }
 
     const circularAxis = Array.from(Array(this._levels).keys()).map(d => ({
       id: d,
