@@ -44,7 +44,7 @@ This creates an x/y plot using the default shape ([Circle](http://d3plus.org/doc
 
 ### More Examples
 
- * [Radar Chart](http://d3plus.org/examples/d3plus-plot/radar-chart/)
+ * [Radar Chart](http://d3plus.org/examples/d3plus-plot/radar-chart/)<sup> ***New***</sup>
  * [Sorting Shapes on an X/Y Plot](http://d3plus.org/examples/d3plus-plot/shapeSort/)
  * [Box and Whisker Chart](http://d3plus.org/examples/d3plus-plot/box-whisker/)
  * [Line Plot Sorting](http://d3plus.org/examples/d3plus-plot/line-plot-sort/)
@@ -63,8 +63,8 @@ This creates an x/y plot using the default shape ([Circle](http://d3plus.org/doc
  * [Bar Chart](http://d3plus.org/examples/d3plus-plot/bar-chart/)
  * [Horizontal Bar Chart](http://d3plus.org/examples/d3plus-plot/bar-chart-horizontal/)
  * [Custom Bar Chart Padding](http://d3plus.org/examples/d3plus-plot/bar-chart-padding/)
- * [Advanced Axis Configuration](http://d3plus.org/examples/d3plus-plot/axis-config/)
  * [Area Chart](http://d3plus.org/examples/d3plus-plot/area/)
+ * [Advanced Axis Configuration](http://d3plus.org/examples/d3plus-plot/axis-config/)
 
 ## API Reference
 
@@ -259,8 +259,6 @@ This is a global class, and extends all of the methods and functionality of <cod
     * [.y2Domain(*value*)](#Plot.y2Domain) ↩︎
     * [.ySort(*value*)](#Plot.ySort) ↩︎
     * [.y2Sort(*value*)](#Plot.y2Sort) ↩︎
-    * [.x(*value*)](#Plot.x) ↩︎
-    * [.y(*value*)](#Plot.y) ↩︎
 
 
 <a name="new_Plot_new" href="#new_Plot_new">#</a> new **Plot**()
@@ -530,26 +528,10 @@ Defines a custom sorting comparitor function to be used for discrete y2 axes.
 
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
-
-<a name="Plot.x" href="#Plot.x">#</a> Plot.**x**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L235)
-
-Sets the x accessor to the specified function or number. If *value* is not specified, returns the current x accessor.
-
-
-This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
-
-
-<a name="Plot.y" href="#Plot.y">#</a> Plot.**y**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L258)
-
-Sets the y accessor to the specified function or number. If *value* is not specified, returns the current y accessor.
-
-
-This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
-
 ---
 
 <a name="Radar"></a>
-#### **Radar** [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L12)
+#### **Radar** [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L13)
 
 
 This is a global class, and extends all of the methods and functionality of [<code>Plot</code>](#Plot).
@@ -557,6 +539,7 @@ This is a global class, and extends all of the methods and functionality of [<co
 
 * [Radar](#Radar) ⇐ [<code>Plot</code>](#Plot)
     * [new Radar()](#new_Radar_new)
+    * [.metric(*value*)](#Radar.metric) ↩︎
     * [.radarPadding([*value*])](#Radar.radarPadding) ↩︎
     * [.value(*value*)](#Radar.value)
 
@@ -569,7 +552,15 @@ Creates a radar visualization based on an array of data.
 
 
 
-<a name="Radar.radarPadding" href="#Radar.radarPadding">#</a> Radar.**radarPadding**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L208)
+<a name="Radar.metric" href="#Radar.metric">#</a> Radar.**metric**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L212)
+
+Defines the value used as axis. If *value* is specified, sets the accessor to the specified metric function. If *value* is not specified, returns the current metric accessor.
+
+
+This is a static method of [<code>Radar</code>](#Radar), and is chainable with other methods of this Class.
+
+
+<a name="Radar.radarPadding" href="#Radar.radarPadding">#</a> Radar.**radarPadding**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L222)
 
 If *value* is specified, sets the padding of the chart and returns the current class instance. If *value* is not specified, returns the current radarPadding. By default, the radarPadding is 100.
 
@@ -577,7 +568,7 @@ If *value* is specified, sets the padding of the chart and returns the current c
 This is a static method of [<code>Radar</code>](#Radar), and is chainable with other methods of this Class.
 
 
-<a name="Radar.value" href="#Radar.value">#</a> Radar.**value**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L223)
+<a name="Radar.value" href="#Radar.value">#</a> Radar.**value**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L237)
 
 If *value* is specified, sets the value accessor to the specified function or number and returns the current class instance. If *value* is not specified, returns the current value accessor.
 
@@ -617,4 +608,4 @@ new d3plus.AreaPlot()
 
 
 
-###### <sub>Documentation generated on Thu, 03 Jan 2019 23:05:13 GMT</sub>
+###### <sub>Documentation generated on Fri, 18 Jan 2019 16:55:19 GMT</sub>
