@@ -44,7 +44,7 @@ This creates an x/y plot using the default shape ([Circle](http://d3plus.org/doc
 
 ### More Examples
 
- * [Radar Chart](http://d3plus.org/examples/d3plus-plot/radar-chart/)<sup> ***New***</sup>
+ * [Radar Chart](http://d3plus.org/examples/d3plus-plot/radar-chart/)
  * [Sorting Shapes on an X/Y Plot](http://d3plus.org/examples/d3plus-plot/shapeSort/)
  * [Box and Whisker Chart](http://d3plus.org/examples/d3plus-plot/box-whisker/)
  * [Line Plot Sorting](http://d3plus.org/examples/d3plus-plot/line-plot-sort/)
@@ -608,4 +608,4 @@ new d3plus.AreaPlot()
 
 
 
-###### <sub>Documentation generated on Fri, 18 Jan 2019 16:55:19 GMT</sub>
+###### <sub>Documentation generated on Fri, 08 Mar 2019 16:38:24 GMT</sub>
