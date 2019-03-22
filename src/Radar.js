@@ -41,17 +41,10 @@ export default class Radar extends Viz {
       }
     };
     this._discrete = "metric";
-    this._hover = true;
     this._levels = 6;
     this._metric = accessor("metric");
-    this._radarPadding = 100;
+    this._outerPadding = 100;
     this._shape = constant("Path");
-    this._shapeConfig = assign(this._shapeConfig, {
-      Circle: {
-        r: accessor("r", 0)
-      },
-      Path: {}
-    });
     this._value = accessor("value");
   }
 
@@ -64,7 +57,7 @@ export default class Radar extends Viz {
     const height = this._height - this._margin.top - this._margin.bottom,
           width = this._width - this._margin.left - this._margin.right;
 
-    const radius = (Math.min(height, width) - this._radarPadding) / 2,
+    const radius = (Math.min(height, width) - this._outerPadding) / 2,
           transform = `translate(${width / 2}, ${height / 2})`;
 
     const nestedAxisData = nest()
@@ -97,7 +90,7 @@ export default class Radar extends Viz {
     const totalAxis = nestedAxisData.length;
     const polarAxis = nestedAxisData
       .map((d, i) => {
-        const width = 100;
+        const width = this._outerPadding;
         const fontSize =
           this._shapeConfig.labelConfig.fontSize &&
             this._shapeConfig.labelConfig.fontSize(d, i) ||
@@ -229,14 +222,12 @@ export default class Radar extends Viz {
 
   /**
       @memberof Radar
-      @desc If *value* is specified, sets the padding of the chart and returns the current class instance. If *value* is not specified, returns the current radarPadding. By default, the radarPadding is 100.
+      @desc Determines how much pixel spaces to give the outer labels.
       @param {Number} [*value* = 100]
       @chainable
   */
-  radarPadding(_) {
-    return arguments.length
-      ? (this._radarPadding = _, this)
-      : this._radarPadding;
+  outerPadding(_) {
+    return arguments.length ? (this._outerPadding = _, this) : this._outerPadding;
   }
 
   /**
@@ -249,9 +240,7 @@ function value(d) {
 }
   */
   value(_) {
-    return arguments.length
-      ? (this._value = typeof _ === "function" ? _ : accessor(_), this)
-      : this._value;
+    return arguments.length ? (this._value = typeof _ === "function" ? _ : accessor(_), this) : this._value;
   }
 
 }
