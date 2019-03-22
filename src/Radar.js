@@ -3,9 +3,10 @@
     @see https://github.com/d3plus/d3plus-viz#Viz
 */
 
-import {max, merge, sum} from "d3-array";
+import {min, max, sum} from "d3-array";
 import {nest} from "d3-collection";
-import {accessor, assign, configPrep, constant, elem} from "d3plus-common";
+import {mouse} from "d3-selection";
+import {accessor, assign, configPrep, constant, elem, merge} from "d3plus-common";
 import {Circle, Path, Rect} from "d3plus-shape";
 import {Viz} from "d3plus-viz";
 
@@ -57,7 +58,7 @@ export default class Radar extends Viz {
     const height = this._height - this._margin.top - this._margin.bottom,
           width = this._width - this._margin.left - this._margin.right;
 
-    const radius = (Math.min(height, width) - this._outerPadding) / 2,
+    const radius = (min([height, width]) - this._outerPadding) / 2,
           transform = `translate(${width / 2}, ${height / 2})`;
 
     const nestedAxisData = nest()
@@ -165,6 +166,7 @@ export default class Radar extends Viz {
       .render();
 
     const groupData = nestedGroupData.map(h => {
+
       const q = h.values.map((d, i) => {
         const value = sum(d.values, (x, i) => this._value(x, i));
         const r = value / maxValue * radius,
@@ -179,8 +181,32 @@ export default class Radar extends Viz {
         .map(l => `L ${l.x} ${l.y}`)
         .join(" ")} L ${q[0].x} ${q[0].y}`;
 
-      return {id: h.key, d, __d3plus__: true, data: assign(...merge(h.values.map(d => d.values)))};
+      return {
+        arr: h.values.map(d => merge(d.values)),
+        id: h.key,
+        points: q,
+        d,
+        __d3plus__: true,
+        data: merge(h.values.map(d => merge(d.values)))
+      };
+
     });
+
+    const pathConfig = configPrep.bind(this)(this._shapeConfig, "shape", "Path");
+    const events = Object.keys(pathConfig.on);
+    pathConfig.on = {};
+    for (let e = 0; e < events.length; e++) {
+      const event = events[e];
+      pathConfig.on[event] = (d, i) => {
+        const x = d.points.map(p => p.x + width / 2);
+        const y = d.points.map(p => p.y + height / 2);
+        const cursor = mouse(this._select.node());
+        const xDist = x.map(p => Math.abs(p - cursor[0]));
+        const yDist = y.map(p => Math.abs(p - cursor[1]));
+        const dists = xDist.map((d, i) => d + yDist[i]);
+        this._on[event].bind(this)(d.arr[dists.indexOf(min(dists))], i);
+      };
+    }
 
     this._shapes.push(
       new Path()
@@ -193,7 +219,7 @@ export default class Radar extends Viz {
             update: {transform}
           }).node()
         )
-        .config(configPrep.bind(this)(this._shapeConfig, "shape", "Path"))
+        .config(pathConfig)
         .render()
     );
 
