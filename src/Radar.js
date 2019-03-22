@@ -58,7 +58,7 @@ export default class Radar extends Viz {
     const height = this._height - this._margin.top - this._margin.bottom,
           width = this._width - this._margin.left - this._margin.right;
 
-    const radius = (min([height, width]) - this._outerPadding) / 2,
+    const radius = min([height, width]) / 2 - this._outerPadding,
           transform = `translate(${width / 2}, ${height / 2})`;
 
     const nestedAxisData = nest()
