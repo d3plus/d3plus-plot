@@ -531,16 +531,17 @@ This is a static method of [<code>Plot</code>](#Plot), and is chainable with oth
 ---
 
 <a name="Radar"></a>
-#### **Radar** [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L13)
+#### **Radar** [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L15)
 
 
-This is a global class, and extends all of the methods and functionality of [<code>Plot</code>](#Plot).
+This is a global class, and extends all of the methods and functionality of <code>Viz</code>.
 
 
-* [Radar](#Radar) ⇐ [<code>Plot</code>](#Plot)
+* [Radar](#Radar) ⇐ <code>Viz</code>
     * [new Radar()](#new_Radar_new)
+    * [.axisConfig(*value*)](#Radar.axisConfig) ↩︎
     * [.metric(*value*)](#Radar.metric) ↩︎
-    * [.radarPadding([*value*])](#Radar.radarPadding) ↩︎
+    * [.outerPadding([*value*])](#Radar.outerPadding) ↩︎
     * [.value(*value*)](#Radar.value)
 
 
@@ -552,7 +553,15 @@ Creates a radar visualization based on an array of data.
 
 
 
-<a name="Radar.metric" href="#Radar.metric">#</a> Radar.**metric**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L212)
+<a name="Radar.axisConfig" href="#Radar.axisConfig">#</a> Radar.**axisConfig**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L235)
+
+Sets the config method used for the radial spokes, circles, and labels.
+
+
+This is a static method of [<code>Radar</code>](#Radar), and is chainable with other methods of this Class.
+
+
+<a name="Radar.metric" href="#Radar.metric">#</a> Radar.**metric**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L245)
 
 Defines the value used as axis. If *value* is specified, sets the accessor to the specified metric function. If *value* is not specified, returns the current metric accessor.
 
@@ -560,15 +569,15 @@ Defines the value used as axis. If *value* is specified, sets the accessor to th
 This is a static method of [<code>Radar</code>](#Radar), and is chainable with other methods of this Class.
 
 
-<a name="Radar.radarPadding" href="#Radar.radarPadding">#</a> Radar.**radarPadding**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L222)
+<a name="Radar.outerPadding" href="#Radar.outerPadding">#</a> Radar.**outerPadding**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L255)
 
-If *value* is specified, sets the padding of the chart and returns the current class instance. If *value* is not specified, returns the current radarPadding. By default, the radarPadding is 100.
+Determines how much pixel spaces to give the outer labels.
 
 
 This is a static method of [<code>Radar</code>](#Radar), and is chainable with other methods of this Class.
 
 
-<a name="Radar.value" href="#Radar.value">#</a> Radar.**value**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L237)
+<a name="Radar.value" href="#Radar.value">#</a> Radar.**value**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L268)
 
 If *value* is specified, sets the value accessor to the specified function or number and returns the current class instance. If *value* is not specified, returns the current value accessor.
 
@@ -608,4 +617,4 @@ new d3plus.AreaPlot()
 
 
 
-###### <sub>Documentation generated on Thu, 14 Mar 2019 15:28:34 GMT</sub>
+###### <sub>Documentation generated on Fri, 22 Mar 2019 15:48:55 GMT</sub>
