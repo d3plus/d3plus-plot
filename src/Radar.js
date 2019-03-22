@@ -27,9 +27,18 @@ export default class Radar extends Viz {
     super();
 
     this._axisConfig = {
-      fill: constant("none"),
-      stroke: constant("#CCC"),
-      strokeWidth: constant(1)
+      shapeConfig: {
+        fill: constant("none"),
+        labelConfig: {
+          fontColor: "#000",
+          padding: 0,
+          textAnchor: d => d.textAnchor,
+          rotateAnchor: d => d.data.rotateAnchor,
+          verticalAlign: "middle"
+        },
+        stroke: "#ccc",
+        strokeWidth: constant(1)
+      }
     };
     this._discrete = "metric";
     this._hover = true;
@@ -82,7 +91,7 @@ export default class Radar extends Viz {
           update: {transform}
         }).node()
       )
-      .config(this._axisConfig)
+      .config(configPrep.bind(this)(this._axisConfig.shapeConfig, "shape", "Circle"))
       .render();
 
     const totalAxis = nestedAxisData.length;
@@ -139,13 +148,7 @@ export default class Radar extends Viz {
       .y(d => d.y)
       .label(d => d.id)
       .labelBounds(d => d.labelBounds)
-      .labelConfig({
-        padding: 0,
-        textAnchor: d => d.textAnchor,
-        rotateAnchor: d => d.data.rotateAnchor,
-        fontColor: "black",
-        verticalAlign: "middle"
-      })
+      .labelConfig(this._axisConfig.shapeConfig.labelConfig)
       .select(
         elem("g.d3plus-Radar-text", {
           parent: this._select,
@@ -165,7 +168,7 @@ export default class Radar extends Viz {
           update: {transform}
         }).node()
       )
-      .config(this._axisConfig)
+      .config(configPrep.bind(this)(this._axisConfig.shapeConfig, "shape", "Path"))
       .render();
 
     const groupData = nestedGroupData.map(h => {
@@ -202,6 +205,16 @@ export default class Radar extends Viz {
     );
 
     return this;
+  }
+
+  /**
+      @memberof Radar
+      @desc Sets the config method used for the radial spokes, circles, and labels.
+      @param {Object} *value*
+      @chainable
+  */
+  axisConfig(_) {
+    return arguments.length ? (this._axisConfig = assign(this._axisConfig, _), this) : this._axisConfig;
   }
 
   /**
