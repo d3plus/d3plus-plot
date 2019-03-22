@@ -2,6 +2,7 @@
     @external Viz
     @see https://github.com/d3plus/d3plus-viz#Viz
 */
+
 import {max, merge, sum} from "d3-array";
 import {nest} from "d3-collection";
 import {accessor, assign, configPrep, constant, elem} from "d3plus-common";
@@ -12,14 +13,14 @@ const tau = Math.PI * 2;
 
 /**
     @class Radar
-    @extends Plot
+    @extends Viz
     @desc Creates a radar visualization based on an array of data.
 */
 export default class Radar extends Viz {
 
   /**
       @memberof Radar
-      @desc Invoked when creating a new class instance, and overrides any default parameters inherited from Plot.
+      @desc Invoked when creating a new class instance, and overrides any default parameters inherited from Viz.
       @private
   */
   constructor() {
@@ -46,7 +47,7 @@ export default class Radar extends Viz {
   }
 
   /**
-      Extends the draw behavior of the abstract Plot class.
+      Extends the draw behavior of the abstract Viz class.
       @private
   */
   _draw(callback) {
