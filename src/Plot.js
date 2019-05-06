@@ -179,6 +179,7 @@ export default class Plot extends Viz {
       id: this._ids(d, i).slice(0, this._drawDepth + 1).join("_"),
       lci: this._confidence && this._confidence[0] && this._confidence[0](d, i),
       shape: this._shape(d, i),
+      isAggregation: d._isAggregation,
       x: this._x(d, i),
       x2: this._x2(d, i),
       y: this._y(d, i),
@@ -240,6 +241,8 @@ export default class Plot extends Viz {
         const a1 = a[this._discrete], b1 = b[this._discrete];
         if (a1 - b1 !== 0) return a1 - b1;
         if (a.group !== b.group) return groupValues[b.group] - groupValues[a.group];
+        if (a.isAggregation && !b.isAggregation) return 1;
+        if (!a.isAggregation && b.isAggregation) return -1;
         return b[opp] - a[opp];
       });
 
