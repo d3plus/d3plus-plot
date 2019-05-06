@@ -1,6 +1,6 @@
 # Bar Chart Axis and Grid Configuration
 
-[BarChart](http://d3plus.org/docs/#BarChart) axes and grids can be set to custom color by setting the `stroke` property of `barConfig` and `gridConfig` to custom color nested inside [xConfig](http://d3plus.org/docs/#Plot.xConfig) or [yConfig](http://d3plus.org/docs/#Plot.yConfig) depending on the axis we want to change.
+You can change the color, width etc. of [BarChart](http://d3plus.org/docs/#BarChart) axes and grids by specifying `stroke`, `stroke-width` attributes inside `barConfig` and `gridConfig`.
 
 ```js
 var data = [
@@ -9,11 +9,7 @@ var data = [
   {id: "beta",  x: 4, y: 17},
   {id: "beta",  x: 5, y:  8},
 ];
-```
 
-We can also change other properties of axes and grid as shown in following example:
-
-```js
 new d3plus.BarChart()
   .config({
     data,
@@ -48,7 +44,7 @@ new d3plus.BarChart()
       barConfig: {
         "stroke": "green",
         "stroke-width": 2
-      }
+      },
       // hide secondary y-axis grid lines
       gridConfig: {
         opacity: 0

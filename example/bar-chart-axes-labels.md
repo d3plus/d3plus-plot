@@ -1,6 +1,6 @@
-# Bar Chart Title Configuration
+# Bar Chart Axes Labels
 
-To add title to a [BarChart](http://d3plus.org/docs/#BarChart), you can set the value to title property of [xConfig](http://d3plus.org/docs/#Plot.xConfig) or [yConfig](http://d3plus.org/docs/#Plot.yConfig).
+To add label to the axes of a [BarChart](http://d3plus.org/docs/#BarChart), set title property of [xConfig](http://d3plus.org/docs/#Plot.xConfig) and [yConfig](http://d3plus.org/docs/#Plot.yConfig).
 
 ```js
 var data = [
@@ -10,7 +10,7 @@ var data = [
   {id: "beta",  x: 5, y:  8}
 ];
 ```
-Following example sets title for x and y axis along and also sets title color:
+Following example sets label for x and y axes:
 
 ```js
 new d3plus.BarChart()
@@ -23,7 +23,7 @@ new d3plus.BarChart()
     xConfig: {
       title: "X - Axis",
       titleConfig: {
-        fontColor: "green"
+        fontColor: "green"  
       },
     },
     yConfig: {

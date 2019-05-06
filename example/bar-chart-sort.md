@@ -1,6 +1,6 @@
 # Bar Chart Sort
 
-In a [BarChart](http://d3plus.org/docs/#BarChart) class, you can sort the data by passing a sorting function to [xSort](http://d3plus.org/docs/#Plot.xSort) or [ySort](http://d3plus.org/docs/#Plot.ySort) property of the barchart.
+In a [BarChart](http://d3plus.org/docs/#BarChart), you can sort the data by setting [xSort](http://d3plus.org/docs/#Plot.xSort) or [ySort](http://d3plus.org/docs/#Plot.ySort) to a sorting function.
 
 ```js
 var data = [

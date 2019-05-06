@@ -1,6 +1,6 @@
-# Stacked Area Chart 100% Share
+# Stacked Area Share Chart
 
-[StackedArea](http://d3plus.org/docs/#StackedArea) can be set to 100% share chart by setting [stackOffset](http://d3plus.org/docs/#Plot.stackOffset) property to "expand".
+[StackedArea](http://d3plus.org/docs/#StackedArea) chart can be changed to plot share of each `groupBy` category by setting [stackOffset](http://d3plus.org/docs/#Plot.stackOffset) property to `expand`.
 
 ```js
 var data = [

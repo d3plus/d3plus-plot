@@ -1,6 +1,6 @@
-# Radar Chart
+# Radar Timeline
 
-In a [Radar](http://d3plus.org/docs/#Radar) class, to show timeline, set the `time` property to a value corresponding to "time" in your data.
+In a [Radar](http://d3plus.org/docs/#Radar) chart, to show timeline, set the `time` property.
 
 ```js
 var data = [

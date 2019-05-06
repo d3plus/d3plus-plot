@@ -1,6 +1,6 @@
-# Bar Chart Ticks
+# Bar Chart Ticks Formatting
 
-[BarChart](http://d3plus.org/docs/#BarChart) axes ticks can be changed by passing value or function to the `tickFormat` property of [xConfig](http://d3plus.org/docs/#Plot.xConfig) or [yConfig](http://d3plus.org/docs/#Plot.yConfig).
+[BarChart](http://d3plus.org/docs/#BarChart) axes tick labels can be changed by setting `tickFormat` property of [xConfig](http://d3plus.org/docs/#Plot.xConfig) and [yConfig](http://d3plus.org/docs/#Plot.yConfig).
 
 
 ```js
