@@ -1,6 +1,6 @@
 # Line Plot Smooth Curve
 
-To draw smooth curves in a [LinePlot](http://d3plus.org/docs/#LinePlot) you can set `curve` property to `catmullRom` to the nested [.shapeConfig( )](http://d3plus.org/docs/#Plot.shapeConfig) of "Line":
+To plot smooth curves in a [LinePlot](http://d3plus.org/docs/#LinePlot), set `curve` property to `catmullRom` as shown below:
 
 ```js
 const data = [

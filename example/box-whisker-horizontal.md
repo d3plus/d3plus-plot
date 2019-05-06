@@ -1,6 +1,8 @@
 # Box and Whisker Horizontal Chart
 
-The [BoxWhisker](http://d3plus.org/docs/#BoxWhisker) class defaults to being vertical, so there are a few methods that need to be make the box-whisker drawn horizontal.
+The [BoxWhisker](http://d3plus.org/docs/#BoxWhisker) class defaults to being vertical, you can make it horizontal as shown below.
+
+For this, declare the y-axis as the [discrete](http://d3plus.org/docs/#Plot.discrete) axis, and set the `orient` property of the `Box` nested in [.shapeConfig( )](http://d3plus.org/docs/#Plot.shapeConfig) to "horizontal":
 
 ```js
 var data = [
@@ -21,11 +23,7 @@ var data = [
   {id: "beta", value: 14},
   {id: "beta", value: 30},
 ];
-```
 
-In addition to switching the x and y accessor to reference the opposite key in or data, we also need to define the y-axis as the [discrete](http://d3plus.org/docs/#Plot.discrete) axis, and set the `orient` property of the `Box` nested in [.shapeConfig( )](http://d3plus.org/docs/#Plot.shapeConfig) to "horizontal":
-
-```js
 new d3plus.BoxWhisker()
   .config({
     data,
