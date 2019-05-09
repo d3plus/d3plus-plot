@@ -3,7 +3,7 @@
 To plot smooth curves in a [LinePlot](http://d3plus.org/docs/#LinePlot), set `curve` property to `catmullRom` as shown below:
 
 ```js
-const data = [
+const myData = [
   {fruit: "apple", price: 5, year: 2014},
   {fruit: "banana",  price: 4, year: 2014},
   {fruit: "apple", price: 7, year: 2015},
@@ -18,7 +18,7 @@ const data = [
 
 new d3plus.LinePlot()
   .config({
-    data,
+    data: myData,
     groupBy: "fruit",
     x: "year",
     y: "price",

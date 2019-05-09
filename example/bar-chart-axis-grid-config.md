@@ -3,7 +3,7 @@
 You can change the color, width etc. of [BarChart](http://d3plus.org/docs/#BarChart) axes and grids by specifying `stroke`, `stroke-width` attributes inside `barConfig` and `gridConfig`.
 
 ```js
-var data = [
+var myData = [
   {id: "alpha", x: 5, y: 25},
   {id: "alpha", x: 6, y: 13},
   {id: "beta",  x: 4, y: 17},
@@ -12,7 +12,7 @@ var data = [
 
 new d3plus.BarChart()
   .config({
-    data,
+    data: myData,
     discrete: "y",
     groupBy: "id",
     x: "y",

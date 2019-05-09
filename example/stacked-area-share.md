@@ -3,7 +3,7 @@
 [StackedArea](http://d3plus.org/docs/#StackedArea) chart can be changed to plot share of each `groupBy` category by setting [stackOffset](http://d3plus.org/docs/#Plot.stackOffset) property to `expand`.
 
 ```js
-var data = [
+var myData = [
   {id: "alpha", x: 4, y:  7},
   {id: "alpha", x: 5, y: 25},
   {id: "alpha", x: 6, y: 13},
@@ -17,7 +17,7 @@ var data = [
 
 new d3plus.StackedArea()
   .config({
-    data,
+    data: myData,
     groupBy: "id",
     stackOffset: "expand"
   })
