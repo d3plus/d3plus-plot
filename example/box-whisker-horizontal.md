@@ -5,7 +5,7 @@ The [BoxWhisker](http://d3plus.org/docs/#BoxWhisker) class defaults to being ver
 For this, declare the y-axis as the [discrete](http://d3plus.org/docs/#Plot.discrete) axis, and set the `orient` property of the `Box` nested in [.shapeConfig( )](http://d3plus.org/docs/#Plot.shapeConfig) to "horizontal":
 
 ```js
-var data = [
+var myData = [
   {id: "alpha", value: 300},
   {id: "alpha", value: 20},
   {id: "alpha", value: 180},
@@ -26,7 +26,7 @@ var data = [
 
 new d3plus.BoxWhisker()
   .config({
-    data,
+    data: myData,
     discrete: "y",
     groupBy: ["id", "value"],
     x: "value",

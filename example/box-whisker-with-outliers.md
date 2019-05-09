@@ -3,7 +3,7 @@
 If a data value is very far away from the quartiles (either much less than Q1 or much greater than Q3), it is designated as an outlier. Instead of being shown using the whiskers of the [BoxWhisker](http://d3plus.org/docs/#BoxWhisker), outliers are shown as separately plotted points.
 
 ```js
-var data = [
+var myData = [
   {id: "alpha", value: 840},
   {id: "alpha", value: 940},
   {id: "alpha", value: 780},
@@ -34,7 +34,7 @@ var data = [
 
 new d3plus.BoxWhisker()
   .config({
-    data,
+    data: myData,
     groupBy: ["id", "value"],
     x: "id",
     y: "value",

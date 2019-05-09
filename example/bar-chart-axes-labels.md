@@ -3,7 +3,7 @@
 To add label to the axes of a [BarChart](http://d3plus.org/docs/#BarChart), set title property of [xConfig](http://d3plus.org/docs/#Plot.xConfig) and [yConfig](http://d3plus.org/docs/#Plot.yConfig).
 
 ```js
-var data = [
+var myData = [
   {id: "alpha", x: 5, y: 25},
   {id: "alpha", x: 6, y: 13},
   {id: "beta",  x: 4, y: 17},
@@ -15,7 +15,7 @@ Following example sets label for x and y axes:
 ```js
 new d3plus.BarChart()
   .config({
-    data,
+    data: myData,
     discrete: "y",
     groupBy: "id",
     x: "y",

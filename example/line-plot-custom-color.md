@@ -3,7 +3,7 @@
 You can set custom colors for each line in a [LinePlot](http://d3plus.org/docs/#LinePlot) by setting the `Line.stroke` property inside [.shapeConfig( )](http://d3plus.org/docs/#Plot.shapeConfig):
 
 ```js
-const data = [
+const myData = [
   {fruit: "apple", price: 5, year: 2014},
   {fruit: "banana",  price: 4, year: 2014},
   {fruit: "cherry", price: 7, year: 2014},
@@ -31,13 +31,15 @@ const assignColor = d => {
 
 new d3plus.LinePlot()
   .config({
-    data,
+    data: myData,
     groupBy: "fruit",
     x: "year",
     y: "price",
     shapeConfig: {
       Line: {
-        stroke: d => assignColor(d.fruit),
+        stroke: function(d) {
+          return assignColor(d.fruit);
+        },
         curve: "catmullRom"
       }
     }

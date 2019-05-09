@@ -3,7 +3,7 @@
 In a [Radar](http://d3plus.org/docs/#Radar) chart, to show timeline, set the `time` property.
 
 ```js
-var data = [
+var myData = [
   {Geography: "Midwest", sport: "Soccer", total: 20, year: 2017},
   {Geography: "West", sport: "Soccer", total: 10, year: 2017},
   {Geography: "Southwest", sport: "Soccer", total: 20, year: 2017},
@@ -28,7 +28,7 @@ var data = [
 
 new d3plus.Radar()
   .config({
-    data,
+    data: myData,
     groupBy: "sport",
     metric: "Geography",
     value: "total",
