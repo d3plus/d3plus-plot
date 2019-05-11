@@ -1,6 +1,6 @@
 # Bar Chart Axes Labels
 
-To add label to the axes of a [BarChart](http://d3plus.org/docs/#BarChart), set title property of [xConfig](http://d3plus.org/docs/#Plot.xConfig) and [yConfig](http://d3plus.org/docs/#Plot.yConfig).
+To add labels to the axes of a [BarChart](http://d3plus.org/docs/#BarChart), simply set the title property of [xConfig](http://d3plus.org/docs/#Plot.xConfig) and [yConfig](http://d3plus.org/docs/#Plot.yConfig).
 
 ```js
 var myData = [
