@@ -1,6 +1,6 @@
-# Bar Chart Axis and Grid Configuration
+# Bar Chart Axis and Grid Styling
 
-You can change the color, width etc. of [BarChart](http://d3plus.org/docs/#BarChart) axes and grids by specifying `stroke`, `stroke-width` attributes inside `barConfig` and `gridConfig`.
+You can change the styles of the [BarChart](http://d3plus.org/docs/#BarChart) axes and gridlines by setting specific [Axis](http://d3plus.org/docs/#Axis) properties nested within `xConfig` and `yConfig`. Here, we are changing the `barConfig` (the "zeroline" of the axis), the `gridConfig` (the background gridlines), and the `shapeConfig` (the [Shape](http://d3plus.org/docs/#Shape) configuration user to rendering the tick marks and their labels).
 
 ```js
 var myData = [
