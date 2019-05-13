@@ -23,10 +23,10 @@ new d3plus.BarChart()
     y: "Population Percentage",
     tooltipConfig: {
       title: function(d) {
-        return `Commute Time: ${d["Travel Time"]}`;
+        return "Commute Time: " + d["Travel Time"];
       },
       tbody: [
-        ["Percentage", function(d) { return `${d["Population Percentage"]}%` }],
+        ["Percentage", function(d) { return d["Population Percentage"] + "%" }],
         ["Year", function(d) { return d.year }]
       ]
     },

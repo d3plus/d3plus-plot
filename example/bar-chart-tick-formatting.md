@@ -27,10 +27,10 @@ new d3plus.BarChart()
     y: "Population Percentage",
     yConfig: {
       tickFormat: function(d) {
-        return `${d}%`;
+        return d + "%";
       },
       title: "Percentage of Population"
-    }
+    },
     shapeConfig: {label: false},
     legend: false
   })
