@@ -6,13 +6,13 @@ By default, the [groupBy](http://d3plus.org/docs/#Viz.groupBy) value is used as 
 
 ```js
 var myData = [
-  {"Travel Time": "< 5 Minutes",     "Population Percentage": 2,  year: 2018},
-  {"Travel Time": "15 - 24 Minutes", "Population Percentage": 30, year: 2018},
-  {"Travel Time": "35 - 44 Minutes", "Population Percentage": 7,  year: 2018},
-  {"Travel Time": "45 - 89 Minutes", "Population Percentage": 11, year: 2018},
-  {"Travel Time": "5 - 14 Minutes",  "Population Percentage": 20, year: 2018},
-  {"Travel Time": "90+ Minutes",     "Population Percentage": 5,  year: 2018},
-  {"Travel Time": "25 - 34 Minutes", "Population Percentage": 25, year: 2018}
+  {"Travel Time": "< 5 Minutes",     "Population Percentage":  2},
+  {"Travel Time": "15 - 24 Minutes", "Population Percentage": 30},
+  {"Travel Time": "35 - 44 Minutes", "Population Percentage":  7},
+  {"Travel Time": "45 - 89 Minutes", "Population Percentage": 11},
+  {"Travel Time": "5 - 14 Minutes",  "Population Percentage": 20},
+  {"Travel Time": "90+ Minutes",     "Population Percentage":  5},
+  {"Travel Time": "25 - 34 Minutes", "Population Percentage": 25}
 ];
 
 new d3plus.BarChart()
@@ -26,8 +26,7 @@ new d3plus.BarChart()
         return "Commute Time: " + d["Travel Time"];
       },
       tbody: [
-        ["Percentage", function(d) { return d["Population Percentage"] + "%" }],
-        ["Year", function(d) { return d.year }]
+        ["Percentage", function(d) { return d["Population Percentage"] + "%" }]
       ]
     },
     legend: false
