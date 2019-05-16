@@ -1,6 +1,6 @@
 # Horizontal Box and Whisker Chart
 
-The [BoxWhisker](http://d3plus.org/docs/#BoxWhisker) class defaults to creating vertical boxes. To change the orientation to horizontal, declare the y-axis as the [discrete](http://d3plus.org/docs/#Plot.discrete) axis, and set the `orient` property of the `Box` nested in [.shapeConfig( )](http://d3plus.org/docs/#Plot.shapeConfig) to "horizontal".
+The [BoxWhisker](http://d3plus.org/docs/#BoxWhisker) class defaults to creating vertical boxes. To change the orientation to horizontal, declare the y-axis as the [discrete](http://d3plus.org/docs/#Plot.discrete) axis, and set the `orient` property of the `Box` nested in [.shapeConfig( )](http://d3plus.org/docs/#Viz.shapeConfig) to "horizontal".
 
 ```js
 var myData = [
