@@ -1,6 +1,6 @@
 # Line Plot Custom Color
 
-You can set custom colors for each line in a [LinePlot](http://d3plus.org/docs/#LinePlot) by setting the `Line.stroke` property inside [.shapeConfig( )](http://d3plus.org/docs/#Plot.shapeConfig):
+You can set custom colors for each line in a [LinePlot](http://d3plus.org/docs/#LinePlot) by setting the `Line.stroke` property inside [.shapeConfig( )](http://d3plus.org/docs/#Viz.shapeConfig):
 
 ```js
 var myData = [
