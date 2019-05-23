@@ -1,29 +1,29 @@
-# Changing Legend Size
+# Changing the Size of Legend Shapes
 
- To change the [Legend]() size, set the height and width properties of [shapeConfig](http://d3plus.org/docs/#Viz.shapeConfig) inside [legendConfig](http://d3plus.org/docs/#Viz.legendConfig):
+ To change the sizing of the shapes used in the [Legend](http://d3plus.org/docs/#Legend) class, set the width and height properties of [shapeConfig](http://d3plus.org/docs/#Legend.shapeConfig) via the pass-through [legendConfig](http://d3plus.org/docs/#Viz.legendConfig) method.
 
  ```js
 var myData = [
-  {"Travel Time": "< 5 Minutes",     "Population Percentage": 2},
-  {"Travel Time": "15 - 24 Minutes", "Population Percentage": 30},
-  {"Travel Time": "35 - 44 Minutes", "Population Percentage": 7},
-  {"Travel Time": "45 - 89 Minutes", "Population Percentage": 11},
-  {"Travel Time": "5 - 14 Minutes",  "Population Percentage": 20},
-  {"Travel Time": "90+ Minutes",     "Population Percentage": 5},
-  {"Travel Time": "25 - 34 Minutes", "Population Percentage": 25}
+  {id: "alpha", xAxis: 4, yAxis:  7},
+  {id: "alpha", xAxis: 5, yAxis: 25},
+  {id: "alpha", xAxis: 6, yAxis: 13},
+  {id: "beta",  xAxis: 4, yAxis: 17},
+  {id: "beta",  xAxis: 5, yAxis:  8},
+  {id: "beta",  xAxis: 6, yAxis: 13}
 ];
+
  new d3plus.BarChart()
   .config({
     data: myData,
-    groupBy: "Travel Time",
-    x: "Travel Time",
-    y: "Population Percentage",
+    groupBy: "id",
     legendConfig: {
       shapeConfig: {
         height: 25,
         width: 15
       }
-    }
+    },
+    x: "xAxis",
+    y: "yAxis"
   })
   .render();
 ```
