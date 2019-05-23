@@ -1,6 +1,6 @@
 # Disabling Tooltips
 
-To disable tooltip in a [D3plus](http://d3plus.org) chart, set the [tooltip](http://d3plus.org/docs/#Viz.tooltip) property to `false`:
+To hide the default tooltips in any D3plus chart, set the [tooltip](http://d3plus.org/docs/#Viz.tooltip) property to `false`.
 
  ```js
 var myData = [
