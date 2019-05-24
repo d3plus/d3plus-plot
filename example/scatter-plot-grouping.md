@@ -1,6 +1,6 @@
 # Scatter Plot Grouping
 
- With the help of a [Simple X/Y Plot](http://d3plus.org/docs/#Plot), you can group scatter plot by passing the `groupBy` property an array instead of a single key. Based on the keys (and order) you pass it in the array, [ X/Y Plot](http://d3plus.org/docs/#Plot) will group scattered plot.
+ You can group the bubbles in a Scatter Plot by passing the [`groupBy`](https://d3plus.org/docs/#Viz.groupBy) property a nested Array of keys instead of a single key. This enables automatic shape groupings/nestings and click behavior to dive into groups. The default level shown is defined using the [`depth`](https://d3plus.org/docs/#Viz.depth) method.
 
  ```js
 var myData = [
@@ -15,12 +15,13 @@ var myData = [
  new d3plus.Plot()
   .config({
     data: myData,
+    depth: 0,
     groupBy: ["group", "name"],
-    x: "value",
-    y: "weight",
     size: "value",
+    sizeMax: 100,
     sizeMin: 20,
-    sizeMax: 100
+    x: "value",
+    y: "weight"
   })
   .render();
 ```

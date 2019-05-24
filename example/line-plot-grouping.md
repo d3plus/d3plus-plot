@@ -1,6 +1,6 @@
 # Line Plot Grouping
 
-By passing the `groupBy` property an array instead of a single key, the [LinePlot](http://d3plus.org/docs/#LinePlot) class will group lines based on the keys (and order) you pass it in the array.
+You can group the lines in a [LinePlot](http://d3plus.org/docs/#LinePlot) by passing the [`groupBy`](https://d3plus.org/docs/#Viz.groupBy) property a nested Array of keys instead of a single key. This enables automatic line groupings/nestings and click behavior to dive into groups. The default level shown is defined using the [`depth`](https://d3plus.org/docs/#Viz.depth) method.
 
  ```js
 var myData = [
@@ -25,7 +25,8 @@ var myData = [
  new d3plus.LinePlot()
   .config({
     data: myData,
-    groupBy: ["name", "parent"],
+    depth: 0,
+    groupBy: ["parent", "name"],
     x: "year",
     y: "value"
   })
