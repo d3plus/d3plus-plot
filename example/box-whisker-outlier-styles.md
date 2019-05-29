@@ -1,6 +1,6 @@
-# Box and Whisker Changing Outliers Shape and Color
+# Changing Box and Whisker Outlier Styles
 
-In a [BoxWhisker](http://d3plus.org/docs/#BoxWhisker) class, when you have custom outlier shape and you want to specify color for each shape, you need to set the `fill` property to the respective shape.
+In a [BoxWhisker](http://d3plus.org/docs/#BoxWhisker) visualization, when you are using a dataset containing outliers, you can change the outliers styles using the [`outlierConfig`](http://d3plus.org/docs/#Box.outlierConfig) nested inside of [`shapeConfig`](http://d3plus.org/docs/#Viz.shapeConfig).
 
 ```js
 var myData = [

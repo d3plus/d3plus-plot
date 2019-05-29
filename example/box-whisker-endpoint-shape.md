@@ -1,6 +1,6 @@
-# Box and Whisker Changing Endpoints Shape
+# Changing Box and Whisker Endpoint Shapes
 
-In a [BoxWhisker](http://d3plus.org/docs/#BoxWhisker) class, endpoint shape is set to `"Rect"` by default. You can change them to `Circle` by passing [`Whisker`](http://d3plus.org/docs/#Whisker) class's [`endpoint`](http://d3plus.org/docs/#Whisker.endpoint) property to `"Circle"` inside `whiskerConfig`(http://d3plus.org/docs/#Box.whiskerConfig). Accepted values are `"Rect"` and  `"Circle"`.
+In a [BoxWhisker](http://d3plus.org/docs/#BoxWhisker) visualization, the shape on the end of each whisker is set to a thin `"Rect"` by default. You can change them all to `"Circle"` by setting the[`Whisker`](http://d3plus.org/docs/#Whisker) shape config's [`endpoint`](http://d3plus.org/docs/#Whisker.endpoint) property to `"Circle"` (inside `whiskerConfig`(http://d3plus.org/docs/#Box.whiskerConfig)). Accepted values are `"Rect"` or  `"Circle"`.
 
 ```js
 var myData = [
