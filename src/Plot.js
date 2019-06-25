@@ -844,7 +844,7 @@ export default class Plot extends Viz {
        .confidence(["lci", "hci"])
    */
   confidence(_) {
-    if (arguments.length) {
+    if (arguments.length && arguments instanceof Array) {
       this._confidence = [];
       const lower = _[0];
       this._confidence[0] = typeof lower === "function" || !lower ? lower : accessor(lower);
