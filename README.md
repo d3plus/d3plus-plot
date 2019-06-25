@@ -44,6 +44,25 @@ This creates an x/y plot using the default shape ([Circle](http://d3plus.org/doc
 
 ### More Examples
 
+ * [Changing Box and Whisker Endpoint Shapes](http://d3plus.org/examples/d3plus-plot/box-whisker-endpoint-shape/)
+ * [Changing Box and Whisker Outlier Styles](http://d3plus.org/examples/d3plus-plot/box-whisker-outlier-styles/)
+ * [Changing Shapes in a Scatter Plot/Bubble Plot](http://d3plus.org/examples/d3plus-plot/scatter-plot-changing-shape/)
+ * [Changing the Size of Legend Shapes](http://d3plus.org/examples/d3plus-plot/changing-legend-size/)
+ * [Stacked Areas as Share Percentages](http://d3plus.org/examples/d3plus-plot/stacked-areas-as-share-percentages/)
+ * [Horizontal Box and Whisker Chart](http://d3plus.org/examples/d3plus-plot/horizontal-box-and-whisker-chart/)
+ * [Line Plot Custom Color](http://d3plus.org/examples/d3plus-plot/line-plot-custom-color/)
+ * [Changing Line Plot Splining](http://d3plus.org/examples/d3plus-plot/line-plot-smooth-curve/)
+ * [Radar Chart Custom Labels](http://d3plus.org/examples/d3plus-plot/radar-chart-custom-labels/)
+ * [Changing Radar Chart Colors](http://d3plus.org/examples/d3plus-plot/changing-radar-chart-colors/)
+ * [Custom Dash Line Plot](http://d3plus.org/examples/d3plus-plot/custom-dashed-line-plot/)
+ * [Dashed Line Plot](http://d3plus.org/examples/d3plus-plot/dashed-line-plot/)
+ * [Bar Chart Timeline](http://d3plus.org/examples/d3plus-plot/bar-chart-timeline/)
+ * [Bar Chart Tooltip Configuration](http://d3plus.org/examples/d3plus-plot/bar-chart-tooltip/)
+ * [Box and Whisker Chart with Outliers](http://d3plus.org/examples/d3plus-plot/box-whisker-with-outliers/)
+ * [Bar Chart Axis and Grid Styling](http://d3plus.org/examples/d3plus-plot/bar-chart-axis-grid-styling/)
+ * [Bar Chart Sorting](http://d3plus.org/examples/d3plus-plot/bar-chart-sorting/)
+ * [Bar Chart Tick Formatting](http://d3plus.org/examples/d3plus-plot/bar-chart-tick-formatting/)
+ * [Bar Chart Axes Labels](http://d3plus.org/examples/d3plus-plot/bar-chart-axes-labels/)
  * [Radar Chart](http://d3plus.org/examples/d3plus-plot/radar-chart/)
  * [Sorting Shapes on an X/Y Plot](http://d3plus.org/examples/d3plus-plot/shapeSort/)
  * [Box and Whisker Chart](http://d3plus.org/examples/d3plus-plot/box-whisker/)
@@ -617,4 +636,4 @@ new d3plus.AreaPlot()
 
 
 
-###### <sub>Documentation generated on Fri, 22 Mar 2019 16:05:57 GMT</sub>
+###### <sub>Documentation generated on Tue, 25 Jun 2019 16:56:59 GMT</sub>
