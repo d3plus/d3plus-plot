@@ -453,7 +453,8 @@ export default class Plot extends Viz {
     const showY = this._discrete === "y" && this._height > this._discreteCutoff || this._height > this._yCutoff;
 
     const yC = {
-      gridConfig: {stroke: !this._discrete || this._discrete === "x" ? this._yTest.gridConfig().stroke : "transparent"}
+      gridConfig: {stroke: !this._discrete || this._discrete === "x" ? this._yTest.gridConfig().stroke : "transparent"},
+      locale: this._locale
     };
     if (!showX) {
       yC.barConfig = {stroke: "transparent"};
@@ -517,7 +518,8 @@ export default class Plot extends Viz {
     let y2Width = y2Bounds.width ? y2Bounds.width + this._y2Test.padding() : undefined;
 
     const xC = {
-      gridConfig: {stroke: !this._discrete || this._discrete === "y" ? this._xTest.gridConfig().stroke : "transparent"}
+      gridConfig: {stroke: !this._discrete || this._discrete === "y" ? this._xTest.gridConfig().stroke : "transparent"},
+      locale: this._locale
     };
     if (!showY) {
       xC.barConfig = {stroke: "transparent"};
