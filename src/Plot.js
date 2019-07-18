@@ -70,6 +70,10 @@ export default class Plot extends Viz {
 
     super();
     this._annotations = [];
+    this._backgroundConfig = {
+      duration: 0,
+      fill: "transparent"
+    };
     this._barPadding = 0;
     this._buffer = {
       Bar: BarBuffer,
@@ -600,13 +604,14 @@ export default class Plot extends Viz {
 
     const horizontalMargin = this._margin.left + this._margin.right;
     const verticalMargin = this._margin.top + this._margin.bottom;
+    let yRange = [x2Height, height - (xHeight + topOffset + verticalMargin)];
 
     if (showY) {
       this._yTest
         .domain(yDomain)
         .height(height)
         .maxSize(width / 2)
-        .range([x2Height, height - (xHeight + topOffset + verticalMargin)])
+        .range(yRange)
         .scale(yScale.toLowerCase())
         .select(testGroup.node())
         .ticks(yTicks)
@@ -626,7 +631,7 @@ export default class Plot extends Viz {
         .domain(y2Domain)
         .gridSize(0)
         .height(height)
-        .range([x2Height, height - (xHeight + topOffset + verticalMargin)])
+        .range(yRange)
         .scale(y2Scale.toLowerCase())
         .select(testGroup.node())
         .width(width - max([0, xOffsetRight - y2Width]))
@@ -639,6 +644,9 @@ export default class Plot extends Viz {
     y2Bounds = this._y2Test.outerBounds();
     y2Width = y2Bounds.width ? y2Bounds.width + this._y2Test.padding() : undefined;
     xOffsetRight = max([0, y2Width, width - xTestRange[1], width - x2TestRange[1]]);
+    const xRange = [xOffsetLeft, width - (xOffsetRight + horizontalMargin)];
+
+    const rectGroup = elem("g.d3plus-plot-background", {parent, transition});
 
     const transform = `translate(${this._margin.left}, ${this._margin.top + x2Height + topOffset})`;
     const x2Transform = `translate(${this._margin.left}, ${this._margin.top + topOffset})`;
@@ -652,8 +660,6 @@ export default class Plot extends Viz {
 
     const y2Transform = `translate(-${this._margin.right}, ${this._margin.top + topOffset})`;
     const y2Group = y2Exists && elem("g.d3plus-plot-y2-axis", {parent, transition, enter: {transform: y2Transform}, update: {transform: y2Transform}});
-
-    const xRange = [xOffsetLeft, width - (xOffsetRight + horizontalMargin)];
 
     this._xAxis
       .domain(xDomain)
@@ -694,7 +700,7 @@ export default class Plot extends Viz {
       }
     };
 
-    const yRange = [this._xAxis.outerBounds().y + x2Height, height - (xHeight + topOffset + verticalMargin)];
+    yRange = [this._xAxis.outerBounds().y + x2Height, height - (xHeight + topOffset + verticalMargin)];
 
     this._yAxis
       .domain(yDomain)
@@ -735,6 +741,16 @@ export default class Plot extends Viz {
         return this._yAxis._getPosition.bind(this._yAxis)(d) - x2Height;
       }
     };
+
+    new shapes.Rect()
+      .data([{}])
+      .select(rectGroup.node())
+      .x(xRange[0] + (xRange[1] - xRange[0]) / 2)
+      .width(xRange[1] - xRange[0])
+      .y(topOffset + yRange[0] + (yRange[1] - yRange[0]) / 2)
+      .height(yRange[1] - yRange[0])
+      .config(this._backgroundConfig)
+      .render();
 
     const annotationGroup = elem("g.d3plus-plot-annotations", {parent, transition, enter: {transform}, update: {transform}}).node();
     this._annotations.forEach(annotation => {
@@ -865,6 +881,16 @@ export default class Plot extends Viz {
   */
   annotations(_) {
     return arguments.length ? (this._annotations = _ instanceof Array ? _ : [_], this) : this._annotations;
+  }
+
+  /**
+       @memberof Plot
+       @desc A d3plus-shape configuration Object used for styling the background rectangle of the inner x/y plot (behind all of the shapes and gridlines).
+       @param {Object} [*value*]
+       @chainable
+   */
+  backgroundConfig(_) {
+    return arguments.length ? (this._backgroundConfig = assign(this._backgroundConfig, _), this) : this._backgroundConfig;
   }
 
   /**
