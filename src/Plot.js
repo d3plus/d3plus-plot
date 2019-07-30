@@ -408,7 +408,12 @@ export default class Plot extends Viz {
     domains = {x: xDomain, x2: x2Domain || xDomain, y: yDomain, y2: y2Domain || yDomain};
 
     opps.forEach(opp => {
-      if (opp && this._baseline !== void 0) {
+      if (this[`_${opp}Config`].domain) {
+        const d = this[`_${opp}Config`].domain;
+        if (this._discrete === "x") d.reverse();
+        domains[opp] = d;
+      }
+      else if (opp && this._baseline !== void 0) {
         const b = this._baseline;
         if (domains[opp] && domains[opp][0] > b) domains[opp][0] = b;
         else if (domains[opp] && domains[opp][1] < b) domains[opp][1] = b;
