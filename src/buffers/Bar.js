@@ -1,8 +1,6 @@
 import {max, min, sum} from "d3-array";
 import {nest} from "d3-collection";
 
-import {default as ordinalBuffer} from "./ordinalBuffer";
-
 /**
     Adds a buffer to either side of the non-discrete axis.
     @param {Array} data
@@ -54,7 +52,7 @@ export default function({data, x, y, x2, y2, buffer = 10}) {
   oppScale.domain(oppDomain);
 
   const discreteScale = isDiscreteX ? x : y;
-  discreteScale.domain(ordinalBuffer(discreteScale.domain()));
+  discreteScale.padding(0.5);
 
   return [x, y];
 

@@ -1,5 +1,3 @@
-import {default as ordinalBuffer} from "./ordinalBuffer";
-
 /**
     Adds a buffer to either side of the non-discrete axis.
     @param {Array} data
@@ -13,14 +11,14 @@ export default function({data, x, y, x2, y2, config, buffer}) {
   const xKey = x2 ? "x2" : "x";
   const yKey = y2 ? "y2" : "y";
 
-  let xD = x.domain().slice(),
-      yD = y.domain().slice();
+  const xD = x.domain().slice(),
+        yD = y.domain().slice();
 
   const xR = x.range(),
         yR = y.range();
 
-  if (!x.invert) xD = ordinalBuffer(xD);
-  if (!y.invert) yD = ordinalBuffer(yD);
+  if (!x.invert && x.padding) x.padding(0.5);
+  if (!y.invert && y.padding) y.padding(0.5);
 
   data.forEach(d => {
 

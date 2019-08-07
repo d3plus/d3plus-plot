@@ -347,7 +347,7 @@ export default class Plot extends Viz {
     }
 
     let xDomain = this._xDomain ? this._xDomain.slice() : domains.x,
-        xScale = this._xSort ? "Ordinal" : "Linear";
+        xScale = this._xSort ? "Point" : "Linear";
 
     if (xDomain[0] === void 0) xDomain[0] = domains.x[0];
     if (xDomain[1] === void 0) xDomain[1] = domains.x[1];
@@ -358,11 +358,11 @@ export default class Plot extends Viz {
     }
     else if (this._discrete === "x") {
       xDomain = Array.from(new Set(data.filter(d => d.x).sort((a, b) => this._xSort ? this._xSort(a.data, b.data) : a.x - b.x).map(d => d.x)));
-      xScale = "Ordinal";
+      xScale = "Point";
     }
 
     let x2Domain = this._x2Domain ? this._x2Domain.slice() : domains.x2,
-        x2Scale = this._x2Sort ? "Ordinal" : "Linear";
+        x2Scale = this._x2Sort ? "Point" : "Linear";
 
     if (x2Domain && x2Domain[0] === void 0) x2Domain[0] = domains.x2[0];
     if (x2Domain && x2Domain[1] === void 0) x2Domain[1] = domains.x2[1];
@@ -373,17 +373,17 @@ export default class Plot extends Viz {
     }
     else if (this._discrete === "x") {
       x2Domain = Array.from(new Set(data.filter(d => d.x2).sort((a, b) => this._x2Sort ? this._x2Sort(a.data, b.data) : a.x2 - b.x2).map(d => d.x2)));
-      x2Scale = "Ordinal";
+      x2Scale = "Point";
     }
 
     let yDomain = this._yDomain ? this._yDomain.slice() : domains.y,
-        yScale = this._ySort ? "Ordinal" : "Linear";
+        yScale = this._ySort ? "Point" : "Linear";
 
     if (yDomain[0] === void 0) yDomain[0] = domains.y[0];
     if (yDomain[1] === void 0) yDomain[1] = domains.y[1];
 
     let y2Domain = this._y2Domain ? this._y2Domain.slice() : domains.y2,
-        y2Scale = this._y2Sort ? "Ordinal" : "Linear";
+        y2Scale = this._y2Sort ? "Point" : "Linear";
 
     if (y2Domain && y2Domain[0] === void 0) y2Domain[0] = domains.y2[0];
     if (y2Domain && y2Domain[1] === void 0) y2Domain[1] = domains.y2[1];
@@ -394,10 +394,10 @@ export default class Plot extends Viz {
     }
     else if (this._discrete === "y") {
       yDomain = Array.from(new Set(data.sort((a, b) => this._ySort ? this._ySort(a.data, b.data) : a.y - b.y).map(d => d.y)));
-      yScale = "Ordinal";
+      yScale = "Point";
 
       y2Domain = Array.from(new Set(data.sort((a, b) => this._y2Sort ? this._y2Sort(a.data, b.data) : a.y2 - b.y2).map(d => d.y2)));
-      y2Scale = "Ordinal";
+      y2Scale = "Point";
     }
 
     if (y2Time) {
@@ -431,7 +431,7 @@ export default class Plot extends Viz {
       .sort((a, b) => this._shapeSort(a.key, b.key));
 
     const oppScale = this._discrete === "x" ? yScale : xScale;
-    if (this._xConfig.scale !== "log" && this._yConfig.scale !== "log" && oppScale !== "Ordinal") {
+    if (this._xConfig.scale !== "log" && this._yConfig.scale !== "log" && oppScale !== "Point") {
       shapeData.forEach(d => {
         if (this._buffer[d.key]) {
           const res = this._buffer[d.key].bind(this)({data: d.values, x, y, config: this._shapeConfig[d.key]});
@@ -463,7 +463,8 @@ export default class Plot extends Viz {
 
     const yC = {
       gridConfig: {stroke: !this._discrete || this._discrete === "x" ? this._yTest.gridConfig().stroke : "transparent"},
-      locale: this._locale
+      locale: this._locale,
+      scalePadding: y.padding ? y.padding() : 0
     };
     if (!showX) {
       yC.barConfig = {stroke: "transparent"};
@@ -528,7 +529,8 @@ export default class Plot extends Viz {
 
     const xC = {
       gridConfig: {stroke: !this._discrete || this._discrete === "y" ? this._xTest.gridConfig().stroke : "transparent"},
-      locale: this._locale
+      locale: this._locale,
+      scalePadding: x.padding ? x.padding() : 0
     };
     if (!showY) {
       xC.barConfig = {stroke: "transparent"};
