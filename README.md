@@ -53,7 +53,7 @@ This creates an x/y plot using the default shape ([Circle](http://d3plus.org/doc
  * [Horizontal Box and Whisker Chart](http://d3plus.org/examples/d3plus-plot/horizontal-box-and-whisker-chart/)
  * [Line Plot Custom Color](http://d3plus.org/examples/d3plus-plot/line-plot-custom-color/)
  * [Changing Line Plot Splining](http://d3plus.org/examples/d3plus-plot/line-plot-smooth-curve/)
- * [Radar Chart Custom Labels](http://d3plus.org/examples/d3plus-plot/radar-chart-custom-labels/)
+ * [Radar Chart Custom Labels](http://d3plus.org/examples/d3plus-plot/radar-chart-custom-labels/)<sup> ***New***</sup>
  * [Changing Radar Chart Colors](http://d3plus.org/examples/d3plus-plot/changing-radar-chart-colors/)
  * [Custom Dash Line Plot](http://d3plus.org/examples/d3plus-plot/custom-dashed-line-plot/)
  * [Dashed Line Plot](http://d3plus.org/examples/d3plus-plot/dashed-line-plot/)
@@ -64,7 +64,7 @@ This creates an x/y plot using the default shape ([Circle](http://d3plus.org/doc
  * [Bar Chart Sorting](http://d3plus.org/examples/d3plus-plot/bar-chart-sorting/)
  * [Bar Chart Tick Formatting](http://d3plus.org/examples/d3plus-plot/bar-chart-tick-formatting/)
  * [Bar Chart Axes Labels](http://d3plus.org/examples/d3plus-plot/bar-chart-axes-labels/)
- * [Radar Chart](http://d3plus.org/examples/d3plus-plot/radar-chart/)
+ * [Radar Chart](http://d3plus.org/examples/d3plus-plot/radar-chart/)<sup> ***New***</sup>
  * [Sorting Shapes on an X/Y Plot](http://d3plus.org/examples/d3plus-plot/shapeSort/)
  * [Box and Whisker Chart](http://d3plus.org/examples/d3plus-plot/box-whisker/)
  * [Line Plot Sorting](http://d3plus.org/examples/d3plus-plot/line-plot-sort/)
@@ -609,7 +609,7 @@ Creates a radar visualization based on an array of data.
 
 
 
-<a name="Radar.axisConfig" href="#Radar.axisConfig">#</a> Radar.**axisConfig**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L235)
+<a name="Radar.axisConfig" href="#Radar.axisConfig">#</a> Radar.**axisConfig**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L241)
 
 Sets the config method used for the radial spokes, circles, and labels.
 
@@ -617,7 +617,7 @@ Sets the config method used for the radial spokes, circles, and labels.
 This is a static method of [<code>Radar</code>](#Radar), and is chainable with other methods of this Class.
 
 
-<a name="Radar.metric" href="#Radar.metric">#</a> Radar.**metric**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L245)
+<a name="Radar.metric" href="#Radar.metric">#</a> Radar.**metric**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L251)
 
 Defines the value used as axis. If *value* is specified, sets the accessor to the specified metric function. If *value* is not specified, returns the current metric accessor.
 
@@ -625,7 +625,7 @@ Defines the value used as axis. If *value* is specified, sets the accessor to th
 This is a static method of [<code>Radar</code>](#Radar), and is chainable with other methods of this Class.
 
 
-<a name="Radar.outerPadding" href="#Radar.outerPadding">#</a> Radar.**outerPadding**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L255)
+<a name="Radar.outerPadding" href="#Radar.outerPadding">#</a> Radar.**outerPadding**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L261)
 
 Determines how much pixel spaces to give the outer labels.
 
@@ -633,7 +633,7 @@ Determines how much pixel spaces to give the outer labels.
 This is a static method of [<code>Radar</code>](#Radar), and is chainable with other methods of this Class.
 
 
-<a name="Radar.value" href="#Radar.value">#</a> Radar.**value**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L268)
+<a name="Radar.value" href="#Radar.value">#</a> Radar.**value**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Radar.js#L274)
 
 If *value* is specified, sets the value accessor to the specified function or number and returns the current class instance. If *value* is not specified, returns the current value accessor.
 
@@ -673,4 +673,4 @@ new d3plus.AreaPlot()
 
 
 
-###### <sub>Documentation generated on Thu, 08 Aug 2019 17:26:47 GMT</sub>
+###### <sub>Documentation generated on Thu, 08 Aug 2019 17:45:19 GMT</sub>
