@@ -76,6 +76,9 @@ export default class Radar extends Viz {
       r: radius * ((d + 1) / this._levels)
     }));
 
+    const circleConfig = configPrep.bind(this)(this._axisConfig.shapeConfig, "shape", "Circle");
+    delete circleConfig.label;
+
     new Circle()
       .data(circularAxis)
       .select(
@@ -85,7 +88,7 @@ export default class Radar extends Viz {
           update: {transform}
         }).node()
       )
-      .config(configPrep.bind(this)(this._axisConfig.shapeConfig, "shape", "Circle"))
+      .config(circleConfig)
       .render();
 
     const totalAxis = nestedAxisData.length;
@@ -122,6 +125,9 @@ export default class Radar extends Viz {
         };
 
         return {
+          __d3plus__: true,
+          data: merge(d.values),
+          i,
           id: d.key,
           angle,
           textAnchor,

@@ -28,7 +28,7 @@ new d3plus.Radar()
           fontColor: "green"
         },
         label: function(d) {
-          return d.replace("Region", "").trim();
+          return d.Geography.replace("Region", "").trim();
         }
       }
     }
