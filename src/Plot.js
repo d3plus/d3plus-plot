@@ -215,7 +215,7 @@ export default class Plot extends Viz {
     const height = this._height - this._margin.top - this._margin.bottom,
           opp = this._discrete ? this._discrete === "x" ? "y" : "x" : undefined,
           opp2 = this._discrete ? this._discrete === "x" ? "y2" : "x2" : undefined,
-          opps = [opp, opp2],
+          opps = [opp, opp2].filter(d => d),
           parent = this._select,
           transition = this._transition,
           width = this._width - this._margin.left - this._margin.right;
