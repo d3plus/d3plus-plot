@@ -813,13 +813,17 @@ export default class Plot extends Viz {
 
         let space;
         const scale = this._discrete === "x" ? x : y;
-        const vals = (this._discrete === "x" ? xDomain : yDomain).filter(d => typeof d !== "string" || d.indexOf("d3plus-buffer-") < 0);
+        const scaleType = this._discrete === "x" ? xScale : yScale;
+        const vals = this._discrete === "x" ? xDomain : yDomain;
         const range = this._discrete === "x" ? xRange : yRange;
-        if (vals.length > 1) space = scale(vals[1]) - scale(vals[0]);
+        if (scaleType !== "Point" && vals.length === 2) {
+          space = (scale(d.values[this._discrete === "x" ? 0 : d.values.length - 1][this._discrete]) - scale(vals[0])) * 2;
+        }
+        else if (vals.length > 1) space = scale(vals[1]) - scale(vals[0]);
         else space = range[range.length - 1] - range[0];
-        space -= this._groupPadding;
+        if (this._groupPadding < space) space -= this._groupPadding;
 
-        let barSize = space;
+        let barSize = space || 1;
 
         const groups = nest()
           .key(d => d[this._discrete])

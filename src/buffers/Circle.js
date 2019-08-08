@@ -1,3 +1,5 @@
+import discreteBuffer from "./discreteBuffer";
+
 /**
     Adds a buffer to either side of the non-discrete axis.
     @param {Array} data
@@ -17,8 +19,8 @@ export default function({data, x, y, x2, y2, config, buffer}) {
   const xR = x.range(),
         yR = y.range();
 
-  if (!x.invert && x.padding) x.padding(0.5);
-  if (!y.invert && y.padding) y.padding(0.5);
+  if (!x.invert && x.padding) discreteBuffer(x, data, this._discrete);
+  if (!y.invert && y.padding) discreteBuffer(y, data, this._discrete);
 
   data.forEach(d => {
 
