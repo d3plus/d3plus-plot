@@ -47,7 +47,7 @@ This creates an x/y plot using the default shape ([Circle](http://d3plus.org/doc
  * [Styling the Background of a Chart](http://d3plus.org/examples/d3plus-plot/background/)
  * [Changing Box and Whisker Endpoint Shapes](http://d3plus.org/examples/d3plus-plot/box-whisker-endpoint-shape/)
  * [Changing Box and Whisker Outlier Styles](http://d3plus.org/examples/d3plus-plot/box-whisker-outlier-styles/)
- * [Changing Shapes in a Scatter Plot/Bubble Plot](http://d3plus.org/examples/d3plus-plot/scatter-plot-changing-shape/)
+ * [Changing Shapes in a Scatter Plot/Bubble Plot](http://d3plus.org/examples/d3plus-plot/scatter-plot-changing-shape/)<sup> ***New***</sup>
  * [Changing the Size of Legend Shapes](http://d3plus.org/examples/d3plus-plot/changing-legend-size/)
  * [Stacked Areas as Share Percentages](http://d3plus.org/examples/d3plus-plot/stacked-areas-as-share-percentages/)
  * [Horizontal Box and Whisker Chart](http://d3plus.org/examples/d3plus-plot/horizontal-box-and-whisker-chart/)
@@ -673,4 +673,4 @@ new d3plus.AreaPlot()
 
 
 
-###### <sub>Documentation generated on Thu, 08 Aug 2019 17:17:23 GMT</sub>
+###### <sub>Documentation generated on Thu, 08 Aug 2019 17:26:47 GMT</sub>
