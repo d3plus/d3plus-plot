@@ -854,18 +854,23 @@ export default class Plot extends Viz {
         s.height(barSize);
 
       }
-      else if (d.key === "Line" && this._confidence) {
+      else if (d.key === "Line") {
 
-        const areaConfig = Object.assign({}, shapeConfig);
-        const key = this._discrete === "x" ? "y" : "x";
-        const scaleFunction = this._discrete === "x" ? y : x;
-        areaConfig[`${key}0`] = d => scaleFunction(this._confidence[0] ? d.lci : d[key]);
-        areaConfig[`${key}1`] = d => scaleFunction(this._confidence[1] ? d.hci : d[key]);
+        s.duration(width * 1.5);
 
-        const area = new shapes.Area().config(areaConfig).data(d.values);
-        const confidenceConfig = Object.assign(this._shapeConfig, this._confidenceConfig);
-        area.config(configPrep.bind(this)(confidenceConfig, "shape", "Area")).render();
-        this._shapes.push(area);
+        if (this._confidence) {
+          const areaConfig = Object.assign({}, shapeConfig);
+          const key = this._discrete === "x" ? "y" : "x";
+          const scaleFunction = this._discrete === "x" ? y : x;
+          areaConfig[`${key}0`] = d => scaleFunction(this._confidence[0] ? d.lci : d[key]);
+          areaConfig[`${key}1`] = d => scaleFunction(this._confidence[1] ? d.hci : d[key]);
+
+          const area = new shapes.Area().config(areaConfig).data(d.values);
+          const confidenceConfig = Object.assign(this._shapeConfig, this._confidenceConfig);
+          area.config(configPrep.bind(this)(confidenceConfig, "shape", "Area")).render();
+          this._shapes.push(area);
+        }
+
       }
 
       const classEvents = events.filter(e => e.includes(`.${d.key}`)),
@@ -875,7 +880,10 @@ export default class Plot extends Viz {
       for (let e = 0; e < shapeEvents.length; e++) s.on(shapeEvents[e], d => this._on[shapeEvents[e]](d.data, d.i));
       for (let e = 0; e < classEvents.length; e++) s.on(classEvents[e], d => this._on[classEvents[e]](d.data, d.i));
 
-      s.config(configPrep.bind(this)(this._shapeConfig, "shape", d.key)).render();
+      const userConfig = configPrep.bind(this)(this._shapeConfig, "shape", d.key);
+      if (this._shapeConfig.duration === undefined) delete userConfig.duration;
+      s.config(userConfig).render();
+
       this._shapes.push(s);
 
     });
