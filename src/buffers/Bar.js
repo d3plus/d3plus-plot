@@ -26,7 +26,7 @@ export default function({data, x, y, x2, y2, buffer = 10}) {
   let negVals, posVals;
   if (this._stacked) {
     const groupedData = nest()
-      .key(d => d[this._discrete])
+      .key(d => `${d[this._discrete]}_${d.group}`)
       .entries(data)
       .map(d => d.values.map(x => x[isDiscreteX ? yKey : xKey]));
     posVals = groupedData.map(arr => sum(arr.filter(d => d > 0)));
