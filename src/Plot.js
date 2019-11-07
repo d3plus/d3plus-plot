@@ -315,28 +315,31 @@ export default class Plot extends Viz {
 
     }
     else {
-      const xData = this._discrete === "x" ? data.map(d => d.x) : data.map(d => d.x)
-        .concat(this._confidence && this._confidence[0] ? data.map(d => d.lci) : [])
-        .concat(this._confidence && this._confidence[1] ? data.map(d => d.hci) : []);
 
-      const x2Data = this._discrete === "x" ? data.map(d => d.x2) : data.map(d => d.x2)
-        .concat(this._confidence && this._confidence[0] ? data.map(d => d.lci) : [])
-        .concat(this._confidence && this._confidence[1] ? data.map(d => d.hci) : []);
-
-      const yData = this._discrete === "y" ? data.map(d => d.y) : data.map(d => d.y)
-        .concat(this._confidence && this._confidence[0] ? data.map(d => d.lci) : [])
-        .concat(this._confidence && this._confidence[1] ? data.map(d => d.hci) : []);
-
-      const y2Data = this._discrete === "y" ? data.map(d => d.y2) : data.map(d => d.y2)
-        .concat(this._confidence && this._confidence[0] ? data.map(d => d.lci) : [])
-        .concat(this._confidence && this._confidence[1] ? data.map(d => d.hci) : []);
+      const discrete = this._discrete || "x";
 
       if (this[`_${this._discrete}Sort`]) {
         data.sort((a, b) => this[`_${this._discrete}Sort`](a.data, b.data));
       }
       else {
-        data.sort((a, b) => a[this._discrete] - b[this._discrete]);
+        data.sort((a, b) => a[discrete] - b[discrete]);
       }
+
+      const xData = discrete === "x" ? data.map(d => d.x) : data.map(d => d.x)
+        .concat(this._confidence && this._confidence[0] ? data.map(d => d.lci) : [])
+        .concat(this._confidence && this._confidence[1] ? data.map(d => d.hci) : []);
+
+      const x2Data = discrete === "x" ? data.map(d => d.x2) : data.map(d => d.x2)
+        .concat(this._confidence && this._confidence[0] ? data.map(d => d.lci) : [])
+        .concat(this._confidence && this._confidence[1] ? data.map(d => d.hci) : []);
+
+      const yData = discrete === "y" ? data.map(d => d.y) : data.map(d => d.y)
+        .concat(this._confidence && this._confidence[0] ? data.map(d => d.lci) : [])
+        .concat(this._confidence && this._confidence[1] ? data.map(d => d.hci) : []);
+
+      const y2Data = discrete === "y" ? data.map(d => d.y2) : data.map(d => d.y2)
+        .concat(this._confidence && this._confidence[0] ? data.map(d => d.lci) : [])
+        .concat(this._confidence && this._confidence[1] ? data.map(d => d.hci) : []);
 
       domains = {
         x: this._xSort ? Array.from(new Set(data.filter(d => d.x).sort((a, b) => this._xSort(a.data, b.data)).map(d => d.x))) : extent(xData, d => d),
@@ -778,16 +781,18 @@ export default class Plot extends Viz {
     let yOffset = this._xAxis.barConfig()["stroke-width"];
     if (yOffset) yOffset /= 2;
 
+    const discrete = this._discrete || "x";
+
     const shapeConfig = {
       duration: this._duration,
       label: d => this._drawLabel(d.data, d.i),
       select: elem("g.d3plus-plot-shapes", {parent, transition, enter: {transform}, update: {transform}}).node(),
       x: d => d.x2 ? x(d.x2, "x2") : x(d.x),
-      x0: this._discrete === "x" ? d => d.x2 ? x(d.x2, "x2") : x(d.x) : x(typeof this._baseline === "number" ? this._baseline : domains.x[0]),
-      x1: this._discrete === "x" ? null : d => d.x2 ? x(d.x2, "x2") : x(d.x),
+      x0: discrete === "x" ? d => d.x2 ? x(d.x2, "x2") : x(d.x) : x(typeof this._baseline === "number" ? this._baseline : domains.x[0]),
+      x1: discrete === "x" ? null : d => d.x2 ? x(d.x2, "x2") : x(d.x),
       y: d => d.y2 ? y(d.y2, "y2") : y(d.y),
-      y0: this._discrete === "y" ? d => d.y2 ? y(d.y2, "y2") : y(d.y) : y(typeof this._baseline === "number" ? this._baseline : domains.y[1]) - yOffset,
-      y1: this._discrete === "y" ? null : d => d.y2 ? y(d.y2, "y2") : y(d.y) - yOffset
+      y0: discrete === "y" ? d => d.y2 ? y(d.y2, "y2") : y(d.y) : y(typeof this._baseline === "number" ? this._baseline : domains.y[1]) - yOffset,
+      y1: discrete === "y" ? null : d => d.y2 ? y(d.y2, "y2") : y(d.y) - yOffset
     };
 
     if (this._stacked) {
@@ -860,8 +865,9 @@ export default class Plot extends Viz {
 
         if (this._confidence) {
           const areaConfig = Object.assign({}, shapeConfig);
-          const key = this._discrete === "x" ? "y" : "x";
-          const scaleFunction = this._discrete === "x" ? y : x;
+          const discrete = this._discrete || "x";
+          const key = discrete === "x" ? "y" : "x";
+          const scaleFunction = discrete === "x" ? y : x;
           areaConfig[`${key}0`] = d => scaleFunction(this._confidence[0] ? d.lci : d[key]);
           areaConfig[`${key}1`] = d => scaleFunction(this._confidence[1] ? d.hci : d[key]);
 
