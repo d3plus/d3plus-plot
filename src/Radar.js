@@ -33,8 +33,7 @@ export default class Radar extends Viz {
         labelConfig: {
           fontColor: "#000",
           padding: 0,
-          textAnchor: d => d.textAnchor,
-          rotateAnchor: d => d.data.rotateAnchor,
+          textAnchor: (d, i, x) => x.textAnchor,
           verticalAlign: "middle"
         },
         stroke: "#ccc",
@@ -141,7 +140,7 @@ export default class Radar extends Viz {
 
     new Rect()
       .data(polarAxis)
-      .rotate(d => d.angle)
+      .rotate(d => d.angle || 0)
       .width(0)
       .height(0)
       .x(d => d.x)
