@@ -21,9 +21,7 @@ export default class LinePlot extends Plot {
   constructor() {
 
     super();
-    this._discrete = "x";
     this._shape = constant("Line");
-    this.x("x");
 
   }
 

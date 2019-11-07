@@ -23,7 +23,7 @@ var chart = new d3plus.Plot()
   .y("value")
 ```
 
-In addition to using the [shape](https://github.com/d3plus/d3plus-plot#Plot.shape) method to define which data points should be which shapes, we need to set the X-axis to be [discrete](https://github.com/d3plus/d3plus-plot#Plot.discrete) in order for the Lines to render correctly. This tells d3plus that it should treat all X values as separate data points, which allows for drawing charts like Line Plots and Bar Charts.
+Next, we need to use the [shape](https://github.com/d3plus/d3plus-plot#Plot.shape) method to define which data points should be Lines and which should be Circles:
 
 ```js
 chart
@@ -34,8 +34,7 @@ chart
     else {
       return "Circle";
     }
-  })
-  .discrete("x");
+  });
 ```
 
 Finally, we can use the [shapeSort](https://github.com/d3plus/d3plus-plot#Plot.shapeSort) to modify the default ordering of the shapes. Shapes are drawn in groups, so when moving a certain shape on top of another, all shapes of that type will move together. By default, [Circles](https://github.com/d3plus/d3plus-shape#Circle) are drawn on top of [Lines](https://github.com/d3plus/d3plus-shape#Line), but in our case here, let's reverse that:
