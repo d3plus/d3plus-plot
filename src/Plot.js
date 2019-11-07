@@ -357,7 +357,7 @@ export default class Plot extends Viz {
       xScale = "Time";
     }
     else if (this._discrete === "x") {
-      xDomain = Array.from(new Set(data.filter(d => d.x).sort((a, b) => this._xSort ? this._xSort(a.data, b.data) : a.x - b.x).map(d => d.x)));
+      xDomain = Array.from(new Set(data.filter(d => ["number", "string"].includes(typeof d.x)).sort((a, b) => this._xSort ? this._xSort(a.data, b.data) : a.x - b.x).map(d => d.x)));
       xScale = "Point";
     }
 
@@ -372,7 +372,7 @@ export default class Plot extends Viz {
       x2Scale = "Time";
     }
     else if (this._discrete === "x") {
-      x2Domain = Array.from(new Set(data.filter(d => d.x2).sort((a, b) => this._x2Sort ? this._x2Sort(a.data, b.data) : a.x2 - b.x2).map(d => d.x2)));
+      x2Domain = Array.from(new Set(data.filter(d => ["number", "string"].includes(typeof d.x2)).sort((a, b) => this._x2Sort ? this._x2Sort(a.data, b.data) : a.x2 - b.x2).map(d => d.x2)));
       x2Scale = "Point";
     }
 
@@ -393,10 +393,10 @@ export default class Plot extends Viz {
       yScale = "Time";
     }
     else if (this._discrete === "y") {
-      yDomain = Array.from(new Set(data.sort((a, b) => this._ySort ? this._ySort(a.data, b.data) : a.y - b.y).map(d => d.y)));
+      yDomain = Array.from(new Set(data.filter(d => ["number", "string"].includes(typeof d.y)).sort((a, b) => this._ySort ? this._ySort(a.data, b.data) : a.y - b.y).map(d => d.y)));
       yScale = "Point";
 
-      y2Domain = Array.from(new Set(data.sort((a, b) => this._y2Sort ? this._y2Sort(a.data, b.data) : a.y2 - b.y2).map(d => d.y2)));
+      y2Domain = Array.from(new Set(data.filter(d => ["number", "string"].includes(typeof d.y2)).sort((a, b) => this._y2Sort ? this._y2Sort(a.data, b.data) : a.y2 - b.y2).map(d => d.y2)));
       y2Scale = "Point";
     }
 
