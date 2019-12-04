@@ -434,7 +434,7 @@ export default class Plot extends Viz {
       .sort((a, b) => this._shapeSort(a.key, b.key));
 
     const oppScale = this._discrete === "x" ? yScale : xScale;
-    if (this._xConfig.scale !== "log" && this._yConfig.scale !== "log" && oppScale !== "Point") {
+    if (oppScale !== "Point") {
       shapeData.forEach(d => {
         if (this._buffer[d.key]) {
           const res = this._buffer[d.key].bind(this)({data: d.values, x, y, config: this._shapeConfig[d.key]});
