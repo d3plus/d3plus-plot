@@ -55,6 +55,30 @@ function stackSum(series) {
 }
 
 /**
+    @desc Logic for determining default sum of shapes using the stackSum function used in d3Shape.
+    @private
+*/
+function stackOffsetDiverging(series, order) {
+  let n;
+  if (!((n = series.length) > 0)) return;
+  let d, dy, i, yn, yp;
+  const m = series[order[0]].length;
+  for (let j = 0; j < m; ++j) {
+    for (yp = yn = 0, i = 0; i < n; ++i) {
+      if ((dy = (d = series[order[i]][j])[1] - d[0]) >= 0) {
+        d[0] = yp, d[1] = yp += dy;
+      }
+      else if (dy < 0) {
+        d[1] = yn, d[0] = yn += dy;
+      }
+      else {
+        d[0] = yp;
+      }
+    }
+  }
+}
+
+/**
     @class Plot
     @extends Viz
     @desc Creates an x/y plot based on an array of data.
@@ -132,7 +156,7 @@ export default class Plot extends Viz {
     this._sizeMax = 20;
     this._sizeMin = 5;
     this._sizeScale = "sqrt";
-    this._stackOffset = d3Shape.stackOffsetDiverging;
+    this._stackOffset = stackOffsetDiverging;
     this._stackOrder = stackOrderDescending;
     this._timelineConfig = assign(this._timelineConfig, {brushing: true});
 
