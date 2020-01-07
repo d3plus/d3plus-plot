@@ -44,47 +44,47 @@ This creates an x/y plot using the default shape ([Circle](http://d3plus.org/doc
 
 ### More Examples
 
- * [Styling the Background of a Chart](http://d3plus.org/examples/d3plus-plot/background/)
- * [Changing Box and Whisker Endpoint Shapes](http://d3plus.org/examples/d3plus-plot/box-whisker-endpoint-shape/)
- * [Changing Box and Whisker Outlier Styles](http://d3plus.org/examples/d3plus-plot/box-whisker-outlier-styles/)
- * [Changing Shapes in a Scatter Plot/Bubble Plot](http://d3plus.org/examples/d3plus-plot/scatter-plot-changing-shape/)
- * [Changing the Size of Legend Shapes](http://d3plus.org/examples/d3plus-plot/changing-legend-size/)
- * [Stacked Areas as Share Percentages](http://d3plus.org/examples/d3plus-plot/stacked-areas-as-share-percentages/)
- * [Horizontal Box and Whisker Chart](http://d3plus.org/examples/d3plus-plot/horizontal-box-and-whisker-chart/)
- * [Line Plot Custom Color](http://d3plus.org/examples/d3plus-plot/line-plot-custom-color/)
- * [Changing Line Plot Splining](http://d3plus.org/examples/d3plus-plot/line-plot-smooth-curve/)
- * [Radar Chart Custom Labels](http://d3plus.org/examples/d3plus-plot/radar-chart-custom-labels/)
- * [Changing Radar Chart Colors](http://d3plus.org/examples/d3plus-plot/changing-radar-chart-colors/)
- * [Custom Dash Line Plot](http://d3plus.org/examples/d3plus-plot/custom-dashed-line-plot/)
- * [Dashed Line Plot](http://d3plus.org/examples/d3plus-plot/dashed-line-plot/)
- * [Bar Chart Timeline](http://d3plus.org/examples/d3plus-plot/bar-chart-timeline/)
- * [Bar Chart Tooltip Configuration](http://d3plus.org/examples/d3plus-plot/bar-chart-tooltip/)
- * [Box and Whisker Chart with Outliers](http://d3plus.org/examples/d3plus-plot/box-whisker-with-outliers/)
- * [Bar Chart Axis and Grid Styling](http://d3plus.org/examples/d3plus-plot/bar-chart-axis-grid-styling/)
- * [Bar Chart Sorting](http://d3plus.org/examples/d3plus-plot/bar-chart-sorting/)
- * [Bar Chart Tick Formatting](http://d3plus.org/examples/d3plus-plot/bar-chart-tick-formatting/)
- * [Bar Chart Axes Labels](http://d3plus.org/examples/d3plus-plot/bar-chart-axes-labels/)
- * [Radar Chart](http://d3plus.org/examples/d3plus-plot/radar-chart/)
- * [Sorting Shapes on an X/Y Plot](http://d3plus.org/examples/d3plus-plot/shapeSort/)
- * [Box and Whisker Chart](http://d3plus.org/examples/d3plus-plot/box-whisker/)
- * [Line Plot Sorting](http://d3plus.org/examples/d3plus-plot/line-plot-sort/)
- * [Secondary Axis Only](http://d3plus.org/examples/d3plus-plot/secondary-axis-only/)
- * [Confidence Interval](http://d3plus.org/examples/d3plus-plot/confidence-interval/)
- * [Secondary Axes](http://d3plus.org/examples/d3plus-plot/secondary-axes/)
- * [Bump Chart](http://d3plus.org/examples/d3plus-plot/bump-chart/)
- * [Scatter Plot/Bubble Chart](http://d3plus.org/examples/d3plus-plot/bubble-plot/)
- * [Custom Chart Annotations](http://d3plus.org/examples/d3plus-plot/annotations/)
- * [Stacked Area Chart](http://d3plus.org/examples/d3plus-plot/stacked-area/)
- * [Horizontal Stacked Area Chart](http://d3plus.org/examples/d3plus-plot/stacked-area-flip/)
- * [Changing the Stroke Width of a Line Plot](http://d3plus.org/examples/d3plus-plot/line-plot-strokeWidth/)
- * [Line Plot](http://d3plus.org/examples/d3plus-plot/line-plot/)
- * [Changing Grid Styles](http://d3plus.org/examples/d3plus-plot/grid-config/)
- * [Stacked Bar Chart](http://d3plus.org/examples/d3plus-plot/bar-chart-stacked/)
- * [Bar Chart](http://d3plus.org/examples/d3plus-plot/bar-chart/)
- * [Horizontal Bar Chart](http://d3plus.org/examples/d3plus-plot/bar-chart-horizontal/)
- * [Custom Bar Chart Padding](http://d3plus.org/examples/d3plus-plot/bar-chart-padding/)
- * [Area Chart](http://d3plus.org/examples/d3plus-plot/area/)
- * [Advanced Axis Configuration](http://d3plus.org/examples/d3plus-plot/axis-config/)
+ * [Stacked Areas as Share Percentages](http://d3plus.org/examples/d3plus-plot/stacked-areas-as-share-percentages/)<sup> ***New***</sup>
+ * [Horizontal Stacked Area Chart](http://d3plus.org/examples/d3plus-plot/stacked-area-flip/)<sup> ***New***</sup>
+ * [Stacked Area Chart](http://d3plus.org/examples/d3plus-plot/stacked-area/)<sup> ***New***</sup>
+ * [Secondary Axis Only](http://d3plus.org/examples/d3plus-plot/secondary-axis-only/)<sup> ***New***</sup>
+ * [Sorting Shapes on an X/Y Plot](http://d3plus.org/examples/d3plus-plot/shapeSort/)<sup> ***New***</sup>
+ * [Secondary Axes](http://d3plus.org/examples/d3plus-plot/secondary-axes/)<sup> ***New***</sup>
+ * [Radar Chart](http://d3plus.org/examples/d3plus-plot/radar-chart/)<sup> ***New***</sup>
+ * [Changing Shapes in a Scatter Plot/Bubble Plot](http://d3plus.org/examples/d3plus-plot/scatter-plot-changing-shape/)<sup> ***New***</sup>
+ * [Radar Chart Custom Labels](http://d3plus.org/examples/d3plus-plot/radar-chart-custom-labels/)<sup> ***New***</sup>
+ * [Changing the Stroke Width of a Line Plot](http://d3plus.org/examples/d3plus-plot/line-plot-strokeWidth/)<sup> ***New***</sup>
+ * [Line Plot](http://d3plus.org/examples/d3plus-plot/line-plot/)<sup> ***New***</sup>
+ * [Line Plot Sorting](http://d3plus.org/examples/d3plus-plot/line-plot-sort/)<sup> ***New***</sup>
+ * [Horizontal Box and Whisker Chart](http://d3plus.org/examples/d3plus-plot/horizontal-box-and-whisker-chart/)<sup> ***New***</sup>
+ * [Line Plot Custom Color](http://d3plus.org/examples/d3plus-plot/line-plot-custom-color/)<sup> ***New***</sup>
+ * [Changing Line Plot Splining](http://d3plus.org/examples/d3plus-plot/line-plot-smooth-curve/)<sup> ***New***</sup>
+ * [Changing Grid Styles](http://d3plus.org/examples/d3plus-plot/grid-config/)<sup> ***New***</sup>
+ * [Custom Dash Line Plot](http://d3plus.org/examples/d3plus-plot/custom-dashed-line-plot/)<sup> ***New***</sup>
+ * [Dashed Line Plot](http://d3plus.org/examples/d3plus-plot/dashed-line-plot/)<sup> ***New***</sup>
+ * [Changing the Size of Legend Shapes](http://d3plus.org/examples/d3plus-plot/changing-legend-size/)<sup> ***New***</sup>
+ * [Changing Radar Chart Colors](http://d3plus.org/examples/d3plus-plot/changing-radar-chart-colors/)<sup> ***New***</sup>
+ * [Confidence Interval](http://d3plus.org/examples/d3plus-plot/confidence-interval/)<sup> ***New***</sup>
+ * [Scatter Plot/Bubble Chart](http://d3plus.org/examples/d3plus-plot/bubble-plot/)<sup> ***New***</sup>
+ * [Bump Chart](http://d3plus.org/examples/d3plus-plot/bump-chart/)<sup> ***New***</sup>
+ * [Changing Box and Whisker Outlier Styles](http://d3plus.org/examples/d3plus-plot/box-whisker-outlier-styles/)<sup> ***New***</sup>
+ * [Box and Whisker Chart with Outliers](http://d3plus.org/examples/d3plus-plot/box-whisker-with-outliers/)<sup> ***New***</sup>
+ * [Box and Whisker Chart](http://d3plus.org/examples/d3plus-plot/box-whisker/)<sup> ***New***</sup>
+ * [Bar Chart](http://d3plus.org/examples/d3plus-plot/bar-chart/)<sup> ***New***</sup>
+ * [Changing Box and Whisker Endpoint Shapes](http://d3plus.org/examples/d3plus-plot/box-whisker-endpoint-shape/)<sup> ***New***</sup>
+ * [Bar Chart Timeline](http://d3plus.org/examples/d3plus-plot/bar-chart-timeline/)<sup> ***New***</sup>
+ * [Bar Chart Tooltip Configuration](http://d3plus.org/examples/d3plus-plot/bar-chart-tooltip/)<sup> ***New***</sup>
+ * [Stacked Bar Chart](http://d3plus.org/examples/d3plus-plot/bar-chart-stacked/)<sup> ***New***</sup>
+ * [Bar Chart Tick Formatting](http://d3plus.org/examples/d3plus-plot/bar-chart-tick-formatting/)<sup> ***New***</sup>
+ * [Custom Bar Chart Padding](http://d3plus.org/examples/d3plus-plot/bar-chart-padding/)<sup> ***New***</sup>
+ * [Bar Chart Sorting](http://d3plus.org/examples/d3plus-plot/bar-chart-sorting/)<sup> ***New***</sup>
+ * [Bar Chart Axis and Grid Styling](http://d3plus.org/examples/d3plus-plot/bar-chart-axis-grid-styling/)<sup> ***New***</sup>
+ * [Horizontal Bar Chart](http://d3plus.org/examples/d3plus-plot/bar-chart-horizontal/)<sup> ***New***</sup>
+ * [Styling the Background of a Chart](http://d3plus.org/examples/d3plus-plot/background/)<sup> ***New***</sup>
+ * [Bar Chart Axes Labels](http://d3plus.org/examples/d3plus-plot/bar-chart-axes-labels/)<sup> ***New***</sup>
+ * [Area Chart](http://d3plus.org/examples/d3plus-plot/area/)<sup> ***New***</sup>
+ * [Advanced Axis Configuration](http://d3plus.org/examples/d3plus-plot/axis-config/)<sup> ***New***</sup>
+ * [Custom Chart Annotations](http://d3plus.org/examples/d3plus-plot/annotations/)<sup> ***New***</sup>
 
 ## API Reference
 
@@ -293,7 +293,7 @@ Creates an x/y plot based on an array of data.
 
 
 
-<a name="Plot.annotations" href="#Plot.annotations">#</a> Plot.**annotations**(*annotations*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L931)
+<a name="Plot.annotations" href="#Plot.annotations">#</a> Plot.**annotations**(*annotations*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L943)
 
 Allows drawing custom shapes to be used as annotations in the provided x/y plot. This method accepts custom config objects for the [Shape](http://d3plus.org/docs/#Shape) class, either a single config object or an array of config objects. Each config object requires an additional parameter, the "shape", which denotes which [Shape](http://d3plus.org/docs/#Shape) sub-class to use ([Rect](http://d3plus.org/docs/#Rect), [Line](http://d3plus.org/docs/#Line), etc). Annotations will be drawn underneath the data to be displayed.
 
@@ -301,7 +301,7 @@ Allows drawing custom shapes to be used as annotations in the provided x/y plot.
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.backgroundConfig" href="#Plot.backgroundConfig">#</a> Plot.**backgroundConfig**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L941)
+<a name="Plot.backgroundConfig" href="#Plot.backgroundConfig">#</a> Plot.**backgroundConfig**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L953)
 
 A d3plus-shape configuration Object used for styling the background rectangle of the inner x/y plot (behind all of the shapes and gridlines).
 
@@ -309,7 +309,7 @@ A d3plus-shape configuration Object used for styling the background rectangle of
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.barPadding" href="#Plot.barPadding">#</a> Plot.**barPadding**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L951)
+<a name="Plot.barPadding" href="#Plot.barPadding">#</a> Plot.**barPadding**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L963)
 
 Sets the pixel space between each bar in a group of bars.
 
@@ -317,7 +317,7 @@ Sets the pixel space between each bar in a group of bars.
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.baseline" href="#Plot.baseline">#</a> Plot.**baseline**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L961)
+<a name="Plot.baseline" href="#Plot.baseline">#</a> Plot.**baseline**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L973)
 
 Sets the baseline for the x/y plot. If *value* is not specified, returns the current baseline.
 
@@ -325,7 +325,7 @@ Sets the baseline for the x/y plot. If *value* is not specified, returns the cur
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.confidence" href="#Plot.confidence">#</a> Plot.**confidence**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L979)
+<a name="Plot.confidence" href="#Plot.confidence">#</a> Plot.**confidence**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L991)
 
 Sets the confidence to the specified array of lower and upper bounds.
 
@@ -344,7 +344,7 @@ Can be called with accessor functions or static keys:
 ```
 
 
-<a name="Plot.confidenceConfig" href="#Plot.confidenceConfig">#</a> Plot.**confidenceConfig**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L998)
+<a name="Plot.confidenceConfig" href="#Plot.confidenceConfig">#</a> Plot.**confidenceConfig**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1010)
 
 If *value* is specified, sets the config method for each shape rendered as a confidence interval and returns the current class instance.
 
@@ -352,7 +352,7 @@ If *value* is specified, sets the config method for each shape rendered as a con
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.discrete" href="#Plot.discrete">#</a> Plot.**discrete**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1008)
+<a name="Plot.discrete" href="#Plot.discrete">#</a> Plot.**discrete**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1020)
 
 Sets the discrete axis to the specified string. If *value* is not specified, returns the current discrete axis.
 
@@ -360,7 +360,7 @@ Sets the discrete axis to the specified string. If *value* is not specified, ret
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.discreteCutoff" href="#Plot.discreteCutoff">#</a> Plot.**discreteCutoff**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1018)
+<a name="Plot.discreteCutoff" href="#Plot.discreteCutoff">#</a> Plot.**discreteCutoff**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1030)
 
 When the width or height of the chart is less than or equal to this pixel value, the discrete axis will not be shown. This helps produce slick sparklines. Set this value to `0` to disable the behavior entirely.
 
@@ -368,7 +368,7 @@ When the width or height of the chart is less than or equal to this pixel value,
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.groupPadding" href="#Plot.groupPadding">#</a> Plot.**groupPadding**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1028)
+<a name="Plot.groupPadding" href="#Plot.groupPadding">#</a> Plot.**groupPadding**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1040)
 
 Sets the pixel space between groups of bars.
 
@@ -376,7 +376,7 @@ Sets the pixel space between groups of bars.
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.shapeSort" href="#Plot.shapeSort">#</a> Plot.**shapeSort**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1038)
+<a name="Plot.shapeSort" href="#Plot.shapeSort">#</a> Plot.**shapeSort**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1050)
 
 A JavaScript [sort comparator function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) that receives each shape Class (ie. "Circle", "Line", etc) as it's comparator arguments. Shapes are drawn in groups based on their type, so you are defining the layering order for all shapes of said type.
 
@@ -384,7 +384,7 @@ A JavaScript [sort comparator function](https://developer.mozilla.org/en-US/docs
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.size" href="#Plot.size">#</a> Plot.**size**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1048)
+<a name="Plot.size" href="#Plot.size">#</a> Plot.**size**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1060)
 
 Sets the size of bubbles to the given Number, data key, or function.
 
@@ -392,7 +392,7 @@ Sets the size of bubbles to the given Number, data key, or function.
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.sizeMax" href="#Plot.sizeMax">#</a> Plot.**sizeMax**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1058)
+<a name="Plot.sizeMax" href="#Plot.sizeMax">#</a> Plot.**sizeMax**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1070)
 
 Sets the size scale maximum to the specified number.
 
@@ -400,7 +400,7 @@ Sets the size scale maximum to the specified number.
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.sizeMin" href="#Plot.sizeMin">#</a> Plot.**sizeMin**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1068)
+<a name="Plot.sizeMin" href="#Plot.sizeMin">#</a> Plot.**sizeMin**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1080)
 
 Sets the size scale minimum to the specified number.
 
@@ -408,7 +408,7 @@ Sets the size scale minimum to the specified number.
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.sizeScale" href="#Plot.sizeScale">#</a> Plot.**sizeScale**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1078)
+<a name="Plot.sizeScale" href="#Plot.sizeScale">#</a> Plot.**sizeScale**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1090)
 
 Sets the size scale to the specified string.
 
@@ -416,7 +416,7 @@ Sets the size scale to the specified string.
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.stacked" href="#Plot.stacked">#</a> Plot.**stacked**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1088)
+<a name="Plot.stacked" href="#Plot.stacked">#</a> Plot.**stacked**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1100)
 
 If *value* is specified, toggles shape stacking. If *value* is not specified, returns the current stack value.
 
@@ -424,7 +424,7 @@ If *value* is specified, toggles shape stacking. If *value* is not specified, re
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.stackOffset" href="#Plot.stackOffset">#</a> Plot.**stackOffset**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1098)
+<a name="Plot.stackOffset" href="#Plot.stackOffset">#</a> Plot.**stackOffset**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1110)
 
 Sets the stack offset. If *value* is not specified, returns the current stack offset function.
 
@@ -432,7 +432,7 @@ Sets the stack offset. If *value* is not specified, returns the current stack of
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.stackOrder" href="#Plot.stackOrder">#</a> Plot.**stackOrder**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1108)
+<a name="Plot.stackOrder" href="#Plot.stackOrder">#</a> Plot.**stackOrder**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1120)
 
 Sets the stack order. If *value* is not specified, returns the current stack order function.
 
@@ -440,7 +440,7 @@ Sets the stack order. If *value* is not specified, returns the current stack ord
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.x" href="#Plot.x">#</a> Plot.**x**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1123)
+<a name="Plot.x" href="#Plot.x">#</a> Plot.**x**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1135)
 
 Sets the x accessor to the specified function or number. If *value* is not specified, returns the current x accessor.
 
@@ -448,7 +448,7 @@ Sets the x accessor to the specified function or number. If *value* is not speci
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.x2" href="#Plot.x2">#</a> Plot.**x2**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1146)
+<a name="Plot.x2" href="#Plot.x2">#</a> Plot.**x2**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1158)
 
 Sets the x2 accessor to the specified function or number. If *value* is not specified, returns the current x2 accessor.
 
@@ -456,7 +456,7 @@ Sets the x2 accessor to the specified function or number. If *value* is not spec
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.xConfig" href="#Plot.xConfig">#</a> Plot.**xConfig**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1169)
+<a name="Plot.xConfig" href="#Plot.xConfig">#</a> Plot.**xConfig**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1181)
 
 Sets the config method for the x-axis. If *value* is not specified, returns the current x-axis configuration.
 
@@ -464,7 +464,7 @@ Sets the config method for the x-axis. If *value* is not specified, returns the 
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.xCutoff" href="#Plot.xCutoff">#</a> Plot.**xCutoff**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1179)
+<a name="Plot.xCutoff" href="#Plot.xCutoff">#</a> Plot.**xCutoff**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1191)
 
 When the width of the chart is less than or equal to this pixel value, and the x-axis is not the discrete axis, it will not be shown. This helps produce slick sparklines. Set this value to `0` to disable the behavior entirely.
 
@@ -472,7 +472,7 @@ When the width of the chart is less than or equal to this pixel value, and the x
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.x2Config" href="#Plot.x2Config">#</a> Plot.**x2Config**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1189)
+<a name="Plot.x2Config" href="#Plot.x2Config">#</a> Plot.**x2Config**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1201)
 
 Sets the config method for the secondary x-axis. If *value* is not specified, returns the current secondary x-axis configuration.
 
@@ -480,7 +480,7 @@ Sets the config method for the secondary x-axis. If *value* is not specified, re
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.xDomain" href="#Plot.xDomain">#</a> Plot.**xDomain**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1199)
+<a name="Plot.xDomain" href="#Plot.xDomain">#</a> Plot.**xDomain**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1211)
 
 Sets the x domain to the specified array. If *value* is not specified, returns the current x domain. Additionally, if either value of the array is undefined, it will be calculated from the data.
 
@@ -488,7 +488,7 @@ Sets the x domain to the specified array. If *value* is not specified, returns t
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.x2Domain" href="#Plot.x2Domain">#</a> Plot.**x2Domain**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1209)
+<a name="Plot.x2Domain" href="#Plot.x2Domain">#</a> Plot.**x2Domain**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1221)
 
 Sets the x2 domain to the specified array. If *value* is not specified, returns the current x2 domain. Additionally, if either value of the array is undefined, it will be calculated from the data.
 
@@ -496,7 +496,7 @@ Sets the x2 domain to the specified array. If *value* is not specified, returns 
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.xSort" href="#Plot.xSort">#</a> Plot.**xSort**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1219)
+<a name="Plot.xSort" href="#Plot.xSort">#</a> Plot.**xSort**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1231)
 
 Defines a custom sorting comparitor function to be used for discrete x axes.
 
@@ -504,7 +504,7 @@ Defines a custom sorting comparitor function to be used for discrete x axes.
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.x2Sort" href="#Plot.x2Sort">#</a> Plot.**x2Sort**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1229)
+<a name="Plot.x2Sort" href="#Plot.x2Sort">#</a> Plot.**x2Sort**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1241)
 
 Defines a custom sorting comparitor function to be used for discrete x2 axes.
 
@@ -512,7 +512,7 @@ Defines a custom sorting comparitor function to be used for discrete x2 axes.
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.y" href="#Plot.y">#</a> Plot.**y**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1239)
+<a name="Plot.y" href="#Plot.y">#</a> Plot.**y**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1251)
 
 Sets the y accessor to the specified function or number. If *value* is not specified, returns the current y accessor.
 
@@ -520,7 +520,7 @@ Sets the y accessor to the specified function or number. If *value* is not speci
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.y2" href="#Plot.y2">#</a> Plot.**y2**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1262)
+<a name="Plot.y2" href="#Plot.y2">#</a> Plot.**y2**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1274)
 
 Sets the y2 accessor to the specified function or number. If *value* is not specified, returns the current y2 accessor.
 
@@ -528,7 +528,7 @@ Sets the y2 accessor to the specified function or number. If *value* is not spec
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.yConfig" href="#Plot.yConfig">#</a> Plot.**yConfig**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1287)
+<a name="Plot.yConfig" href="#Plot.yConfig">#</a> Plot.**yConfig**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1299)
 
 Sets the config method for the y-axis. If *value* is not specified, returns the current y-axis configuration.
 Note:* If a "domain" array is passed to the y-axis config, it will be reversed.
@@ -537,7 +537,7 @@ Note:* If a "domain" array is passed to the y-axis config, it will be reversed.
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.yCutoff" href="#Plot.yCutoff">#</a> Plot.**yCutoff**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1302)
+<a name="Plot.yCutoff" href="#Plot.yCutoff">#</a> Plot.**yCutoff**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1314)
 
 When the height of the chart is less than or equal to this pixel value, and the y-axis is not the discrete axis, it will not be shown. This helps produce slick sparklines. Set this value to `0` to disable the behavior entirely.
 
@@ -545,7 +545,7 @@ When the height of the chart is less than or equal to this pixel value, and the 
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.y2Config" href="#Plot.y2Config">#</a> Plot.**y2Config**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1312)
+<a name="Plot.y2Config" href="#Plot.y2Config">#</a> Plot.**y2Config**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1324)
 
 Sets the config method for the secondary y-axis. If *value* is not specified, returns the current secondary y-axis configuration.
 
@@ -553,7 +553,7 @@ Sets the config method for the secondary y-axis. If *value* is not specified, re
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.yDomain" href="#Plot.yDomain">#</a> Plot.**yDomain**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1322)
+<a name="Plot.yDomain" href="#Plot.yDomain">#</a> Plot.**yDomain**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1334)
 
 Sets the y domain to the specified array. If *value* is not specified, returns the current y domain. Additionally, if either value of the array is undefined, it will be calculated from the data.
 
@@ -561,7 +561,7 @@ Sets the y domain to the specified array. If *value* is not specified, returns t
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.y2Domain" href="#Plot.y2Domain">#</a> Plot.**y2Domain**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1332)
+<a name="Plot.y2Domain" href="#Plot.y2Domain">#</a> Plot.**y2Domain**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1344)
 
 Sets the y2 domain to the specified array. If *value* is not specified, returns the current y2 domain. Additionally, if either value of the array is undefined, it will be calculated from the data.
 
@@ -569,7 +569,7 @@ Sets the y2 domain to the specified array. If *value* is not specified, returns 
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.ySort" href="#Plot.ySort">#</a> Plot.**ySort**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1342)
+<a name="Plot.ySort" href="#Plot.ySort">#</a> Plot.**ySort**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1354)
 
 Defines a custom sorting comparitor function to be used for discrete y axes.
 
@@ -577,7 +577,7 @@ Defines a custom sorting comparitor function to be used for discrete y axes.
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.y2Sort" href="#Plot.y2Sort">#</a> Plot.**y2Sort**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1352)
+<a name="Plot.y2Sort" href="#Plot.y2Sort">#</a> Plot.**y2Sort**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1364)
 
 Defines a custom sorting comparitor function to be used for discrete y2 axes.
 
@@ -673,4 +673,4 @@ new d3plus.AreaPlot()
 
 
 
-###### <sub>Documentation generated on Fri, 06 Dec 2019 21:23:09 GMT</sub>
+###### <sub>Documentation generated on Tue, 07 Jan 2020 15:35:37 GMT</sub>
