@@ -918,6 +918,18 @@ export default class Plot extends Viz {
 
     });
 
+    const dataShapes = shapeData.map(d => d.key);
+    const exitShapes = Array.from(shapeConfig.select.childNodes)
+      .map(d => d.getAttribute("class").match(/\-([A-Z]{1}[a-z]{1,})\-/)[1])
+      .filter(d => !dataShapes.includes(d));
+
+    exitShapes.forEach(shape => {
+      new shapes[shape]()
+        .config(shapeConfig)
+        .data([])
+        .render();
+    });
+
     return this;
 
   }
