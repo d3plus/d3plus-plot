@@ -496,7 +496,7 @@ export default class Plot extends Viz {
     };
     if (!showX) {
       yC.barConfig = {stroke: "transparent"};
-      yC.tickSize = 0;this._previousShapes
+      yC.tickSize = 0;
       yC.shapeConfig = {
         labelBounds: (d, i) => {
           const {width, y} = d.labelBounds;
