@@ -111,6 +111,7 @@ export default class Plot extends Viz {
     };
     this._discreteCutoff = 100;
     this._groupPadding = 5;
+    this._previousShapes = [];
     this._shape = constant("Circle");
     this._shapeConfig = assign(this._shapeConfig, {
       Area: {
@@ -495,7 +496,7 @@ export default class Plot extends Viz {
     };
     if (!showX) {
       yC.barConfig = {stroke: "transparent"};
-      yC.tickSize = 0;
+      yC.tickSize = 0;this._previousShapes
       yC.shapeConfig = {
         labelBounds: (d, i) => {
           const {width, y} = d.labelBounds;
@@ -919,9 +920,8 @@ export default class Plot extends Viz {
     });
 
     const dataShapes = shapeData.map(d => d.key);
-    const exitShapes = Array.from(shapeConfig.select.childNodes)
-      .map(d => d.getAttribute("class").match(/\-([A-Z]{1}[a-z]{1,})\-/)[1])
-      .filter(d => !dataShapes.includes(d));
+    if (this._confidence && dataShapes.includes("Line")) dataShapes.push("Area");
+    const exitShapes = this._previousShapes.filter(d => !dataShapes.includes(d));
 
     exitShapes.forEach(shape => {
       new shapes[shape]()
@@ -929,6 +929,8 @@ export default class Plot extends Viz {
         .data([])
         .render();
     });
+
+    this._previousShapes = dataShapes;
 
     return this;
 
