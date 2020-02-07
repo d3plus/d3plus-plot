@@ -1,6 +1,6 @@
 /* eslint no-cond-assign: 0 */
 
-import {extent, max, merge, min, range, sum} from "d3-array";
+import {deviation, extent, max, mean, merge, min, range, sum} from "d3-array";
 import {nest} from "d3-collection";
 import * as scales from "d3-scale";
 import * as d3Shape from "d3-shape";
@@ -513,6 +513,21 @@ export default class Plot extends Viz {
       };
     }
 
+    const autoScale = axis => {
+      const userScale = this[`_${axis}Config`].scale;
+      if (userScale === "auto") {
+        const values = data.map(d => d[axis]);
+        return deviation(values) / mean(values) > 3 ? "log" : "linear";
+      }
+      return userScale;
+    };
+
+    const yConfigScale = this._yConfig.scale ? autoScale("y") : yScale.toLowerCase();
+    const y2ConfigScale = this._y2Config.scale ? autoScale("y2") : y2Scale.toLowerCase();
+    const xConfigScale = this._xConfig.scale ? autoScale("x") : xScale.toLowerCase();
+    const x2ConfigScale = this._x2Config.scale ? autoScale("x2") : x2Scale.toLowerCase();
+    console.log(autoScale("y"));
+
     const testGroup = elem("g.d3plus-plot-test", {enter: {opacity: 0}, parent: this._select}),
           x2Ticks = this._discrete === "x" && !x2Time ? domains.x2 : undefined,
           xTicks = !showY ? extent(domains.x) : this._discrete === "x" && !xTime ? domains.x : undefined,
@@ -525,12 +540,12 @@ export default class Plot extends Viz {
         .height(height)
         .maxSize(width / 2)
         .range([undefined, undefined])
-        .scale(yScale.toLowerCase())
         .select(testGroup.node())
         .ticks(yTicks)
         .width(width)
         .config(yC)
         .config(this._yConfig)
+        .scale(yConfigScale)
         .render();
     }
 
@@ -542,13 +557,13 @@ export default class Plot extends Viz {
         .domain(y2Domain)
         .height(height)
         .range([undefined, undefined])
-        .scale(y2Scale.toLowerCase())
         .select(testGroup.node())
         .ticks(y2Ticks)
         .width(width)
         .config(yC)
         .config(defaultY2Config)
         .config(this._y2Config)
+        .scale(y2ConfigScale)
         .render();
     }
 
@@ -585,12 +600,12 @@ export default class Plot extends Viz {
         .height(height)
         .maxSize(height / 2)
         .range([undefined, undefined])
-        .scale(xScale.toLowerCase())
         .select(testGroup.node())
         .ticks(xTicks)
         .width(width)
         .config(xC)
         .config(this._xConfig)
+        .scale(xConfigScale)
         .render();
     }
 
@@ -599,7 +614,6 @@ export default class Plot extends Viz {
         .domain(x2Domain)
         .height(height)
         .range([undefined, undefined])
-        .scale(x2Scale.toLowerCase())
         .select(testGroup.node())
         .ticks(x2Ticks)
         .width(width)
@@ -607,6 +621,7 @@ export default class Plot extends Viz {
         .tickSize(0)
         .config(defaultX2Config)
         .config(this._x2Config)
+        .scale(x2ConfigScale)
         .render();
     }
 
@@ -647,12 +662,12 @@ export default class Plot extends Viz {
         .height(height)
         .maxSize(width / 2)
         .range(yRange)
-        .scale(yScale.toLowerCase())
         .select(testGroup.node())
         .ticks(yTicks)
         .width(width)
         .config(yC)
         .config(this._yConfig)
+        .scale(yConfigScale)
         .render();
     }
 
@@ -667,12 +682,12 @@ export default class Plot extends Viz {
         .gridSize(0)
         .height(height)
         .range(yRange)
-        .scale(y2Scale.toLowerCase())
         .select(testGroup.node())
         .width(width - max([0, xOffsetRight - y2Width]))
         .title(false)
         .config(this._y2Config)
         .config(defaultY2Config)
+        .scale(y2ConfigScale)
         .render();
     }
 
@@ -701,12 +716,12 @@ export default class Plot extends Viz {
       .height(height - (x2Height + topOffset + verticalMargin))
       .maxSize(height / 2)
       .range(xRange)
-      .scale(xScale.toLowerCase())
       .select(showX ? xGroup.node() : undefined)
       .ticks(xTicks)
       .width(width)
       .config(xC)
       .config(this._xConfig)
+      .scale(xConfigScale)
       .render();
 
     if (x2Exists) {
@@ -714,13 +729,13 @@ export default class Plot extends Viz {
         .domain(x2Domain)
         .height(height - (xHeight + topOffset + verticalMargin))
         .range(xRange)
-        .scale(x2Scale.toLowerCase())
         .select(x2Group.node())
         .ticks(x2Ticks)
         .width(width)
         .config(xC)
         .config(defaultX2Config)
         .config(this._x2Config)
+        .scale(x2ConfigScale)
         .render();
     }
 
@@ -742,12 +757,12 @@ export default class Plot extends Viz {
       .height(height)
       .maxSize(width / 2)
       .range(yRange)
-      .scale(yScale.toLowerCase())
       .select(showY ? yGroup.node() : undefined)
       .ticks(yTicks)
       .width(xRange[xRange.length - 1])
       .config(yC)
       .config(this._yConfig)
+      .scale(yConfigScale)
       .render();
 
     if (y2Exists) {
@@ -757,12 +772,12 @@ export default class Plot extends Viz {
         .gridSize(0)
         .height(height)
         .range(yRange)
-        .scale(y2Exists ? y2Scale.toLowerCase() : yScale.toLowerCase())
         .select(y2Group.node())
         .width(width - max([0, xOffsetRight - y2Width]))
         .title(false)
         .config(this._y2Config)
         .config(defaultY2Config)
+        .scale(y2ConfigScale)
         .render();
     }
 
@@ -1176,7 +1191,7 @@ export default class Plot extends Viz {
 
   /**
       @memberof Plot
-      @desc Sets the config method for the x-axis. If *value* is not specified, returns the current x-axis configuration.
+      @desc A pass-through to the underlying [Axis](http://d3plus.org/docs/#Axis) config used for the x-axis. Includes additional functionality where passing "auto" as the value for the [scale](http://d3plus.org/docs/#Axis.scale) method will determine if the scale should be "linear" or "log" based on the provided data.
       @param {Object} *value*
       @chainable
   */
@@ -1196,7 +1211,7 @@ export default class Plot extends Viz {
 
   /**
       @memberof Plot
-      @desc Sets the config method for the secondary x-axis. If *value* is not specified, returns the current secondary x-axis configuration.
+      @desc A pass-through to the underlying [Axis](http://d3plus.org/docs/#Axis) config used for the secondary x-axis. Includes additional functionality where passing "auto" as the value for the [scale](http://d3plus.org/docs/#Axis.scale) method will determine if the scale should be "linear" or "log" based on the provided data.
       @param {Object} *value*
       @chainable
   */
@@ -1292,7 +1307,7 @@ export default class Plot extends Viz {
 
   /**
       @memberof Plot
-      @desc Sets the config method for the y-axis. If *value* is not specified, returns the current y-axis configuration.
+      @desc A pass-through to the underlying [Axis](http://d3plus.org/docs/#Axis) config used for the y-axis. Includes additional functionality where passing "auto" as the value for the [scale](http://d3plus.org/docs/#Axis.scale) method will determine if the scale should be "linear" or "log" based on the provided data.
 
 *Note:* If a "domain" array is passed to the y-axis config, it will be reversed.
       @param {Object} *value*
@@ -1319,7 +1334,7 @@ export default class Plot extends Viz {
 
   /**
       @memberof Plot
-      @desc Sets the config method for the secondary y-axis. If *value* is not specified, returns the current secondary y-axis configuration.
+      @desc A pass-through to the underlying [Axis](http://d3plus.org/docs/#Axis) config used for the secondary y-axis. Includes additional functionality where passing "auto" as the value for the [scale](http://d3plus.org/docs/#Axis.scale) method will determine if the scale should be "linear" or "log" based on the provided data.
       @param {Object} *value*
       @chainable
   */
