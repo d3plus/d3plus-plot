@@ -513,20 +513,20 @@ export default class Plot extends Viz {
       };
     }
 
-    const autoScale = axis => {
+    const autoScale = (axis, fallback) => {
       const userScale = this[`_${axis}Config`].scale;
       if (userScale === "auto") {
+        if (this._discrete === axis) return fallback;
         const values = data.map(d => d[axis]);
         return deviation(values) / mean(values) > 3 ? "log" : "linear";
       }
-      return userScale;
+      return userScale || fallback;
     };
 
-    const yConfigScale = this._yConfig.scale ? autoScale("y") : yScale.toLowerCase();
-    const y2ConfigScale = this._y2Config.scale ? autoScale("y2") : y2Scale.toLowerCase();
-    const xConfigScale = this._xConfig.scale ? autoScale("x") : xScale.toLowerCase();
-    const x2ConfigScale = this._x2Config.scale ? autoScale("x2") : x2Scale.toLowerCase();
-    console.log(autoScale("y"));
+    const yConfigScale = autoScale("y", yScale);
+    const y2ConfigScale = autoScale("y2", y2Scale);
+    const xConfigScale = autoScale("x", xScale);
+    const x2ConfigScale = autoScale("x2", x2Scale);
 
     const testGroup = elem("g.d3plus-plot-test", {enter: {opacity: 0}, parent: this._select}),
           x2Ticks = this._discrete === "x" && !x2Time ? domains.x2 : undefined,
