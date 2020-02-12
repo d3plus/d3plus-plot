@@ -34,7 +34,6 @@ export default function({data, x, y, x2, y2, config, buffer}) {
       const v = x.invert(x(d[xKey]) + s);
       if (v > xD[1]) xD[1] = v;
     }
-
     if (y.invert && y(d[yKey]) - yR[0] < s) {
       const v = y.invert(y(d[yKey]) - s);
       if (v > yD[0]) yD[0] = v;
@@ -46,8 +45,8 @@ export default function({data, x, y, x2, y2, config, buffer}) {
 
   });
 
-  x.domain(xD).range(xR);
-  y.domain(yD).range(yR);
+  x = x.copy().domain(xD).range(xR);
+  y = y.copy().domain(yD).range(yR);
 
   return [x, y];
 

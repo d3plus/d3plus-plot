@@ -458,16 +458,31 @@ export default class Plot extends Viz {
       .entries(data)
       .sort((a, b) => this._shapeSort(a.key, b.key));
 
+    const autoScale = (axis, fallback) => {
+      const userScale = this[`_${axis}Config`].scale;
+      if (userScale === "auto") {
+        if (this._discrete === axis) return fallback;
+        const values = data.map(d => d[axis]);
+        return deviation(values) / mean(values) > 3 ? "log" : "linear";
+      }
+      return userScale || fallback;
+    };
+
+    const yConfigScale = autoScale("y", yScale);
+    const y2ConfigScale = autoScale("y2", y2Scale);
+    const xConfigScale = autoScale("x", xScale);
+    const x2ConfigScale = autoScale("x2", x2Scale);
+
     const oppScale = this._discrete === "x" ? yScale : xScale;
     if (oppScale !== "Point") {
       shapeData.forEach(d => {
         if (this._buffer[d.key]) {
           const res = this._buffer[d.key].bind(this)({data: d.values, x, y, config: this._shapeConfig[d.key]});
-          if (this._xConfig.scale !== "log") x = res[0];
-          if (this._yConfig.scale !== "log") y = res[1];
+          if (xConfigScale !== "log") x = res[0];
+          if (yConfigScale !== "log") y = res[1];
           const res2 = this._buffer[d.key].bind(this)({data: d.values, x: x2, y: y2, x2: true, y2: true, config: this._shapeConfig[d.key]});
-          if (this._x2Config.scale !== "log") x2 = res2[0];
-          if (this._y2Config.scale !== "log") y2 = res2[1];
+          if (x2ConfigScale !== "log") x2 = res2[0];
+          if (y2ConfigScale !== "log") y2 = res2[1];
         }
       });
     }
@@ -512,21 +527,6 @@ export default class Plot extends Viz {
         labelRotation: false
       };
     }
-
-    const autoScale = (axis, fallback) => {
-      const userScale = this[`_${axis}Config`].scale;
-      if (userScale === "auto") {
-        if (this._discrete === axis) return fallback;
-        const values = data.map(d => d[axis]);
-        return deviation(values) / mean(values) > 3 ? "log" : "linear";
-      }
-      return userScale || fallback;
-    };
-
-    const yConfigScale = autoScale("y", yScale);
-    const y2ConfigScale = autoScale("y2", y2Scale);
-    const xConfigScale = autoScale("x", xScale);
-    const x2ConfigScale = autoScale("x2", x2Scale);
 
     const testGroup = elem("g.d3plus-plot-test", {enter: {opacity: 0}, parent: this._select}),
           x2Ticks = this._discrete === "x" && !x2Time ? domains.x2 : undefined,

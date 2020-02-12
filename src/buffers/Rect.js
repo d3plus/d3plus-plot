@@ -47,8 +47,8 @@ export default function({data, x, y, x2, y2, config}) {
 
   });
 
-  x.domain(xD);
-  y.domain(yD);
+  x = x.copy().domain(xD);
+  y = y.copy().domain(yD);
 
   return [x, y];
 
