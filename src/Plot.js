@@ -468,10 +468,10 @@ export default class Plot extends Viz {
       return userScale || fallback;
     };
 
-    const yConfigScale = autoScale("y", yScale);
-    const y2ConfigScale = autoScale("y2", y2Scale);
-    const xConfigScale = autoScale("x", xScale);
-    const x2ConfigScale = autoScale("x2", x2Scale);
+    const yConfigScale = autoScale("y", yScale).toLowerCase();
+    const y2ConfigScale = autoScale("y2", y2Scale).toLowerCase();
+    const xConfigScale = autoScale("x", xScale).toLowerCase();
+    const x2ConfigScale = autoScale("x2", x2Scale).toLowerCase();
 
     const oppScale = this._discrete === "x" ? yScale : xScale;
     if (oppScale !== "Point") {
