@@ -477,15 +477,16 @@ export default class Plot extends Viz {
     if (oppScale !== "Point") {
       shapeData.forEach(d => {
         if (this._buffer[d.key]) {
-          const res = this._buffer[d.key].bind(this)({data: d.values, x, y, config: this._shapeConfig[d.key]});
-          if (xConfigScale !== "log") x = res[0];
-          if (yConfigScale !== "log") y = res[1];
-          const res2 = this._buffer[d.key].bind(this)({data: d.values, x: x2, y: y2, x2: true, y2: true, config: this._shapeConfig[d.key]});
-          if (x2ConfigScale !== "log") x2 = res2[0];
-          if (y2ConfigScale !== "log") y2 = res2[1];
+          const res = this._buffer[d.key].bind(this)({data: d.values, x, y, yScale: yConfigScale, xScale: xConfigScale, config: this._shapeConfig[d.key]});
+          x = res[0];
+          y = res[1];
+          const res2 = this._buffer[d.key].bind(this)({data: d.values, x: x2, y: y2, yScale: y2ConfigScale, xScale: x2ConfigScale, x2: true, y2: true, config: this._shapeConfig[d.key]});
+          x2 = res2[0];
+          y2 = res2[1];
         }
       });
     }
+
     xDomain = x.domain();
     x2Domain = x2.domain();
     yDomain = y.domain();

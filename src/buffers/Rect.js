@@ -1,4 +1,5 @@
 import discreteBuffer from "./discreteBuffer";
+import numericBuffer from "./numericBuffer";
 
 /**
     Adds a buffer to either side of the non-discrete axis.
@@ -6,15 +7,19 @@ import discreteBuffer from "./discreteBuffer";
     @param {D3Scale} x
     @param {D3Scale} y
     @param {Object} [config]
-    @param {Number} [buffer] Defaults to the radius of the largest Circle.
+    @param {Number} [buffer] Defaults to the width/height of the largest Rect.
     @private
 */
-export default function({data, x, y, x2, y2, config}) {
+export default function({data, x, y, x2, y2, yScale, xScale, config}) {
+
+  x = x.copy();
+  y = y.copy();
+
   const xKey = x2 ? "x2" : "x";
   const yKey = y2 ? "y2" : "y";
 
-  const xD = x.domain().slice(),
-        yD = y.domain().slice();
+  let xD = x.domain().slice(),
+      yD = y.domain().slice();
 
   const xR = x.range(),
         yR = y.range();
@@ -22,34 +27,27 @@ export default function({data, x, y, x2, y2, config}) {
   if (!x.invert && x.padding) discreteBuffer(x, data, this._discrete);
   if (!y.invert && y.padding) discreteBuffer(y, data, this._discrete);
 
-  data.forEach(d => {
+  if (x.invert || y.invert) {
 
-    const h = config.height(d.data, d.i),
-          w = config.width(d.data, d.i);
+    data.forEach(d => {
 
-    if (x.invert && x(d[xKey]) - xR[0] < w) {
-      const v = x.invert(x(d[xKey]) - w);
-      if (v < xD[0]) xD[0] = v;
-    }
-    if (x.invert && xR[1] - x(d[xKey]) < w) {
-      const v = x.invert(x(d[xKey]) + w);
-      if (v > xD[1]) xD[1] = v;
-    }
+      if (x.invert) {
+        const w = config.width(d.data, d.i);
+        xD = numericBuffer(x, xScale, d[xKey], w, xR, xD, 0, false);
+        xD = numericBuffer(x, xScale, d[xKey], w, xR, xD, 1, false);
+      }
 
-    if (y.invert && y(d[yKey]) - yR[0] < h) {
-      const v = y.invert(y(d[yKey]) - h);
-      if (v > yD[0]) yD[0] = v;
-    }
-    if (y.invert && yR[1] - y(d[yKey]) < h) {
-      const v = y.invert(y(d[yKey]) + h);
-      if (v < yD[1]) yD[1] = v;
-    }
+      if (y.invert) {
+        const h = config.height(d.data, d.i);
+        yD = numericBuffer(y, yScale, d[yKey], h, yR, yD, 0, true);
+        yD = numericBuffer(y, yScale, d[yKey], h, yR, yD, 1, true);
+      }
 
-  });
+    });
 
-  x = x.copy().domain(xD);
-  y = y.copy().domain(yD);
+  }
 
   return [x, y];
 
 }
+

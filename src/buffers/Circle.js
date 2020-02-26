@@ -1,4 +1,5 @@
 import discreteBuffer from "./discreteBuffer";
+import numericBuffer from "./numericBuffer";
 
 /**
     Adds a buffer to either side of the non-discrete axis.
@@ -9,12 +10,16 @@ import discreteBuffer from "./discreteBuffer";
     @param {Number} [buffer] Defaults to the radius of the largest Circle.
     @private
 */
-export default function({data, x, y, x2, y2, config, buffer}) {
+export default function({data, x, y, x2, y2, yScale, xScale, config, buffer}) {
+
+  x = x.copy();
+  y = y.copy();
+
   const xKey = x2 ? "x2" : "x";
   const yKey = y2 ? "y2" : "y";
 
-  const xD = x.domain().slice(),
-        yD = y.domain().slice();
+  let xD = x.domain().slice(),
+      yD = y.domain().slice();
 
   const xR = x.range(),
         yR = y.range();
@@ -22,31 +27,25 @@ export default function({data, x, y, x2, y2, config, buffer}) {
   if (!x.invert && x.padding) discreteBuffer(x, data, this._discrete);
   if (!y.invert && y.padding) discreteBuffer(y, data, this._discrete);
 
-  data.forEach(d => {
+  if (x.invert || y.invert) {
 
-    const s = buffer ? buffer : config.r(d.data, d.i) * 2;
+    data.forEach(d => {
 
-    if (x.invert && x(d[xKey]) - xR[0] < s) {
-      const v = x.invert(x(d[xKey]) - s);
-      if (v < xD[0]) xD[0] = v;
-    }
-    if (x.invert && xR[1] - x(d[xKey]) < s) {
-      const v = x.invert(x(d[xKey]) + s);
-      if (v > xD[1]) xD[1] = v;
-    }
-    if (y.invert && y(d[yKey]) - yR[0] < s) {
-      const v = y.invert(y(d[yKey]) - s);
-      if (v > yD[0]) yD[0] = v;
-    }
-    if (y.invert && yR[1] - y(d[yKey]) < s) {
-      const v = y.invert(y(d[yKey]) + s);
-      if (v < yD[1]) yD[1] = v;
-    }
+      const s = buffer ? buffer : config.r(d.data, d.i) * 2;
 
-  });
+      if (x.invert) {
+        xD = numericBuffer(x, xScale, d[xKey], s, xR, xD, 0, false);
+        xD = numericBuffer(x, xScale, d[xKey], s, xR, xD, 1, false);
+      }
 
-  x = x.copy().domain(xD).range(xR);
-  y = y.copy().domain(yD).range(yR);
+      if (y.invert) {
+        yD = numericBuffer(y, yScale, d[yKey], s, yR, yD, 0, true);
+        yD = numericBuffer(y, yScale, d[yKey], s, yR, yD, 1, true);
+      }
+
+    });
+
+  }
 
   return [x, y];
 
