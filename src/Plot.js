@@ -1341,7 +1341,12 @@ export default class Plot extends Viz {
       @chainable
   */
   y2Config(_) {
-    return arguments.length ? (this._y2Config = assign(this._y2Config, _), this) : this._y2Config;
+    if (arguments.length) {
+      if (_.domain) _.domain = _.domain.slice().reverse();
+      this._y2Config = assign(this._y2Config, _);
+      return this;
+    }
+    return this._y2Config;
   }
 
   /**
