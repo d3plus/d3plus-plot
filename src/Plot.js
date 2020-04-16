@@ -180,8 +180,9 @@ export default class Plot extends Viz {
     this._yConfig = {
       gridConfig: {
         stroke: d => {
-          const domain = this._yAxis.domain();
-          return domain[domain.length - 1] === d.id ? "transparent" : "#ccc";
+          const range = this._yAxis.range();
+          // hides bottom-most y gridline so it doesn't overlap with the x axis
+          return range[range.length - 1] === this._yAxis._getPosition.bind(this._yAxis)(d.id) ? "transparent" : "#ccc";
         }
       }
     };
