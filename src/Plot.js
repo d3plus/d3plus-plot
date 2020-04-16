@@ -829,10 +829,10 @@ export default class Plot extends Viz {
       duration: this._duration,
       label: d => this._drawLabel(d.data, d.i),
       select: elem("g.d3plus-plot-shapes", {parent, transition, enter: {transform}, update: {transform}}).node(),
-      x: d => d.x2 ? x(d.x2, "x2") : x(d.x),
+      x: d => d.x2 !== undefined ? x(d.x2, "x2") : x(d.x),
       x0: discrete === "x" ? d => d.x2 ? x(d.x2, "x2") : x(d.x) : x(typeof this._baseline === "number" ? this._baseline : domains.x[0]),
       x1: discrete === "x" ? null : d => d.x2 ? x(d.x2, "x2") : x(d.x),
-      y: d => d.y2 ? y(d.y2, "y2") : y(d.y),
+      y: d => d.y2 !== undefined ? y(d.y2, "y2") : y(d.y),
       y0: discrete === "y" ? d => d.y2 ? y(d.y2, "y2") : y(d.y) : y(typeof this._baseline === "number" ? this._baseline : domains.y[1]) - yOffset,
       y1: discrete === "y" ? null : d => d.y2 ? y(d.y2, "y2") : y(d.y) - yOffset
     };
