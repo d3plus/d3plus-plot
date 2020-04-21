@@ -154,7 +154,7 @@ export default class Plot extends Viz {
           verticalAlign: "middle"
         },
         stroke: (d, i) => colorAssign(this._id(d, i)),
-        strokeWidth: constant(1)
+        strokeWidth: constant(2)
       },
       Rect: {
         height: d => defaultSize.bind(this)(d) * 2,
