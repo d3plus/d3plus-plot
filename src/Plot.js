@@ -6,9 +6,12 @@ import * as scales from "d3-scale";
 import * as d3Shape from "d3-shape";
 
 import {AxisBottom, AxisLeft, AxisRight, AxisTop, date} from "d3plus-axis";
-import {colorAssign} from "d3plus-color";
+import {colorAssign, colorLegible} from "d3plus-color";
 import {accessor, assign, configPrep, constant, elem} from "d3plus-common";
 import * as shapes from "d3plus-shape";
+import {textWidth, TextBox} from "d3plus-text";
+const testLineShape = new shapes.Line();
+const testTextBox = new TextBox();
 import {Viz} from "d3plus-viz";
 
 import {default as BarBuffer} from "./buffers/Bar.js";
@@ -143,7 +146,13 @@ export default class Plot extends Viz {
       },
       Line: {
         fill: constant("none"),
-        label: false,
+        labelConfig: {
+          fontColor: (d, i) => colorLegible(colorAssign(this._id(d, i))),
+          fontResize: false,
+          padding: 5,
+          textAnchor: "start",
+          verticalAlign: "middle"
+        },
         stroke: (d, i) => colorAssign(this._id(d, i)),
         strokeWidth: constant(1)
       },
@@ -596,12 +605,55 @@ export default class Plot extends Viz {
       };
     }
 
+    let xRangeMax = undefined;
+
+    if (this._lineLabels) {
+      const lineData = nest()
+        .key(d => d.id)
+        .entries(data.filter(d => d.shape === "Line"));
+
+      if (lineData.length && lineData.length < this._dataCutoff) {
+
+        const userConfig = configPrep.bind(this)(this._shapeConfig, "shape", "Line");
+        testLineShape.config(userConfig);
+        const lineLabelConfig = testLineShape.labelConfig();
+        const fontSizeAccessor = lineLabelConfig.fontSize !== undefined ? lineLabelConfig.fontSize : testTextBox.fontSize();
+        const fontWeightAccessor = lineLabelConfig.fontWeight !== undefined ? lineLabelConfig.fontWeight : testTextBox.fontWeight();
+        const fontFamilyAccessor = lineLabelConfig.fontFamily !== undefined ? lineLabelConfig.fontFamily : testTextBox.fontFamily();
+        const paddingAccessor = lineLabelConfig.padding !== undefined ? lineLabelConfig.padding : testTextBox.padding();
+
+        const labelWidths = lineData.map(d => {
+
+          const datum = d.values[0];
+          const label = this._drawLabel(datum);
+
+          const fontSize = typeof fontSizeAccessor === "function" ? fontSizeAccessor(datum) : fontSizeAccessor;
+          const fontWeight = typeof fontWeightAccessor === "function" ? fontWeightAccessor(datum) : fontWeightAccessor;
+          let fontFamily = typeof fontFamilyAccessor === "function" ? fontFamilyAccessor(datum) : fontFamilyAccessor;
+          if (fontFamily instanceof Array) fontFamily = fontFamily.map(f => `'${f}'`).join(", ");
+          const labelPadding = typeof paddingAccessor === "function" ? paddingAccessor(datum) : paddingAccessor;
+
+          const labelWidth = textWidth(label, {
+            "font-size": fontSize,
+            "font-family": fontFamily,
+            "font-weight": fontWeight
+          });
+
+          return labelWidth + labelPadding * 2;
+
+        });
+        const largestLabel = max(labelWidths);
+        const labelSpace = min([largestLabel, width / 4]);
+        xRangeMax = width - labelSpace - this._margin.right;
+      }
+    }
+
     if (showX) {
       this._xTest
         .domain(xDomain)
         .height(height)
         .maxSize(height / 2)
-        .range([undefined, undefined])
+        .range([undefined, xRangeMax])
         .select(testGroup.node())
         .ticks(xTicks)
         .width(width)
@@ -615,7 +667,7 @@ export default class Plot extends Viz {
       this._x2Test
         .domain(x2Domain)
         .height(height)
-        .range([undefined, undefined])
+        .range([undefined, xRangeMax])
         .select(testGroup.node())
         .ticks(x2Ticks)
         .width(width)
@@ -919,6 +971,21 @@ export default class Plot extends Viz {
           this._shapes.push(area);
         }
 
+        s.config({
+          label: this._lineLabels ? this._drawLabel : false,
+          labelBounds: this._lineLabels ? (d, i, s) => {
+            const [firstX, firstY] = s.points[0];
+            const [lastX, lastY] = s.points[s.points.length - 1];
+            const height = this._height / 4;
+            return {
+              x: lastX - firstX,
+              y: lastY - firstY - height / 2,
+              width: this._padding.right,
+              height
+            };
+          } : false
+        });
+
       }
 
       const classEvents = events.filter(e => e.includes(`.${d.key}`)),
@@ -1058,6 +1125,16 @@ export default class Plot extends Viz {
   */
   groupPadding(_) {
     return arguments.length ? (this._groupPadding = _, this) : this._groupPadding;
+  }
+
+  /**
+      @memberof Plot
+      @desc Draws labels on the right side of any Line shapes that are drawn on the plot.
+      @param {Boolean} [*value* = false]
+      @chainable
+  */
+  lineLabels(_) {
+    return arguments.length ? (this._lineLabels = _, this) : this._lineLabels;
   }
 
   /**
