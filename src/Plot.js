@@ -114,6 +114,11 @@ export default class Plot extends Viz {
     };
     this._discreteCutoff = 100;
     this._groupPadding = 5;
+    this._lineMarkerConfig = {
+      fill: (d, i) => colorAssign(this._id(d, i)),
+      r: constant(3)
+    };
+    this._lineMarkers = false;
     this._previousShapes = [];
     this._shape = constant("Circle");
     this._shapeConfig = assign(this._shapeConfig, {
@@ -1001,10 +1006,28 @@ export default class Plot extends Viz {
 
       this._shapes.push(s);
 
+      if (d.key === "Line" && this._lineMarkers) {
+        const markers = new shapes.Circle()
+          .data(d.values)
+          .config(shapeConfig)
+          .config(this._lineMarkerConfig)
+          .id(d => `${d.id}_${d.discrete}`);
+
+        for (let e = 0; e < globalEvents.length; e++) markers.on(globalEvents[e], d => this._on[globalEvents[e]](d.data, d.i));
+        for (let e = 0; e < shapeEvents.length; e++) markers.on(shapeEvents[e], d => this._on[shapeEvents[e]](d.data, d.i));
+        for (let e = 0; e < classEvents.length; e++) markers.on(classEvents[e], d => this._on[classEvents[e]](d.data, d.i));
+
+        markers.render();
+        this._shapes.push(markers);
+      }
+
     });
 
     const dataShapes = shapeData.map(d => d.key);
-    if (this._confidence && dataShapes.includes("Line")) dataShapes.push("Area");
+    if (dataShapes.includes("Line")) {
+      if (this._confidence) dataShapes.push("Area");
+      if (this._labelMarkers) dataShapes.push("Circle");
+    }
     const exitShapes = this._previousShapes.filter(d => !dataShapes.includes(d));
 
     exitShapes.forEach(shape => {
@@ -1135,6 +1158,26 @@ export default class Plot extends Viz {
   */
   lineLabels(_) {
     return arguments.length ? (this._lineLabels = _, this) : this._lineLabels;
+  }
+
+  /**
+      @memberof Plot
+      @desc Shape config for the Circle shapes drawn by the lineMarkers method.
+      @param {Object} *value*
+      @chainable
+  */
+  lineMarkerConfig(_) {
+    return arguments.length ? (this._lineMarkerConfig = assign(this._lineMarkerConfig, _), this) : this._lineMarkerConfig;
+  }
+
+  /**
+      @memberof Plot
+      @desc Draws circle markers on each vertex of a Line.
+      @param {Boolean} [*value* = false]
+      @chainable
+  */
+  lineMarkers(_) {
+    return arguments.length ? (this._lineMarkers = _, this) : this._lineMarkers;
   }
 
   /**
