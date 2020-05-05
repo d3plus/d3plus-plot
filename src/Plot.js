@@ -110,6 +110,12 @@ export default class Plot extends Viz {
       Rect: RectBuffer
     };
     this._confidenceConfig = {
+      fill: (d, i) => {
+        const c = typeof this._shapeConfig.Line.stroke === "function"
+          ? this._shapeConfig.Line.stroke(d, i)
+          : this._shapeConfig.Line.stroke;
+        return c;
+      },
       fillOpacity: constant(0.5)
     };
     this._discreteCutoff = 100;
@@ -152,7 +158,12 @@ export default class Plot extends Viz {
       Line: {
         fill: constant("none"),
         labelConfig: {
-          fontColor: (d, i) => colorLegible(colorAssign(this._id(d, i))),
+          fontColor: (d, i) => {
+            const c = typeof this._shapeConfig.Line.stroke === "function"
+              ? this._shapeConfig.Line.stroke(d, i)
+              : this._shapeConfig.Line.stroke;
+            return colorLegible(c);
+          },
           fontResize: false,
           padding: 5,
           textAnchor: "start",
@@ -388,10 +399,9 @@ export default class Plot extends Viz {
         y2: this._y2Sort ? Array.from(new Set(data.filter(d => d.y2).sort((a, b) => this._y2Sort(a.data, b.data)).map(d => d.y2))) : extent(y2Data, d => d)
       };
     }
-    console.log(domains.x);
+
     let xDomain = this._xDomain ? this._xDomain.slice() : domains.x,
         xScale = this._xSort ? "Point" : "Linear";
-    console.log(xDomain);
 
     if (xDomain[0] === void 0) xDomain[0] = domains.x[0];
     if (xDomain[1] === void 0) xDomain[1] = domains.x[1];
@@ -973,7 +983,11 @@ export default class Plot extends Viz {
 
           const area = new shapes.Area().config(areaConfig).data(d.values);
           const confidenceConfig = Object.assign(this._shapeConfig, this._confidenceConfig);
-          area.config(configPrep.bind(this)(confidenceConfig, "shape", "Area")).render();
+
+          area
+            .config(configPrep.bind(this)(confidenceConfig, "shape", "Area"))
+            .render();
+
           this._shapes.push(area);
         }
 
