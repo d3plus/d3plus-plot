@@ -57,20 +57,10 @@ export default function(axis, scale, value, size, range, domain, index, invert) 
 
   if (axis.invert && needsBuffer()) {
     if (scale === "log") {
-      let decrease = index === 0 && domain[0] > 0 || index === 1 && domain[1] < 0;
-      let log = Math[decrease ? "ceil" : "floor"](Math.log10(Math.abs(domain[index])));
-      // console.log("Log start:", log, decrease);
-      while (needsBuffer() && log < 20) {
-        log = decrease ? log - 1 : log + 1;
-        let mod = domain[index] < 0 ? -1 : 1;
-        if (log < 0) {
-          log = 1;
-          decrease = !decrease;
-          mod = !mod;
-        }
-        domain[index] = Math.pow(10, log) * mod;
+      while (needsBuffer()) {
+        const mod = index === 0 ? -1 : 1;
+        domain[index] += domain[index] * 0.1 * mod;
         axis.domain(invert ? domain.slice().reverse() : domain);
-        // console.log("change!", domain);
       }
     }
     else if (index === 0) {
