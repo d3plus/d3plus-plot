@@ -460,6 +460,13 @@ export default class Plot extends Viz {
     }
 
     domains = {x: xDomain, x2: x2Domain || xDomain, y: yDomain, y2: y2Domain || yDomain};
+    Object.keys(domains)
+      .forEach(axis => {
+        if (this[`_${axis}Config`].scale === "log" && domains[axis].includes(0)) {
+          if (domains[axis][0] < domains[axis][1]) domains[axis][0] = min(data.map(d => d[axis]).filter(Boolean));
+          else domains[axis][1] = max(data, d => d[axis]);
+        }
+      });
 
     opps.forEach(opp => {
       if (this[`_${opp}Config`].domain) {
@@ -811,11 +818,11 @@ export default class Plot extends Viz {
 
     x = (d, x) => {
       if (x === "x2") {
-        if (this._x2Config.scale === "log" && d === 0) d = x2Domain[0] < 0 ? -1 : 1;
+        if (this._x2Config.scale === "log" && d === 0) d = x2Domain[0] < 0 ? this._x2Axis._d3Scale.domain()[1] : this._x2Axis._d3Scale.domain()[0];
         return this._x2Axis._getPosition.bind(this._x2Axis)(d);
       }
       else {
-        if (this._xConfig.scale === "log" && d === 0) d = xDomain[0] < 0 ? -1 : 1;
+        if (this._xConfig.scale === "log" && d === 0) d = xDomain[0] < 0 ? this._xAxis._d3Scale.domain()[1] : this._xAxis._d3Scale.domain()[0];
         return this._xAxis._getPosition.bind(this._xAxis)(d);
       }
     };
@@ -853,11 +860,11 @@ export default class Plot extends Viz {
 
     y = (d, y) => {
       if (y === "y2") {
-        if (this._y2Config.scale === "log" && d === 0) d = y2Domain[0] < 0 ? -1 : 1;
+        if (this._y2Config.scale === "log" && d === 0) d = y2Domain[0] < 0 ? this._y2Axis._d3Scale.domain()[1] : this._y2Axis._d3Scale.domain()[0];
         return this._y2Axis._getPosition.bind(this._y2Axis)(d) - x2Height;
       }
       else {
-        if (this._yConfig.scale === "log" && d === 0) d = yDomain[0] < 0 ? -1 : 1;
+        if (this._yConfig.scale === "log" && d === 0) d = yDomain[0] < 0 ? this._yAxis._d3Scale.domain()[1] : this._yAxis._d3Scale.domain()[0];
         return this._yAxis._getPosition.bind(this._yAxis)(d) - x2Height;
       }
     };
