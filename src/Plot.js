@@ -901,6 +901,7 @@ export default class Plot extends Viz {
     const discrete = this._discrete || "x";
 
     const shapeConfig = {
+      discrete: this._discrete,
       duration: this._duration,
       label: d => this._drawLabel(d.data, d.i),
       select: elem("g.d3plus-plot-shapes", {parent, transition, enter: {transform}, update: {transform}}).node(),
@@ -999,6 +1000,7 @@ export default class Plot extends Viz {
         }
 
         s.config({
+          discrete: shapeConfig.discrete || "x",
           label: this._lineLabels ? this._drawLabel : false,
           labelBounds: this._lineLabels ? (d, i, s) => {
             const [firstX, firstY] = s.points[0];
