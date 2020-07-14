@@ -1306,8 +1306,8 @@ export default class Plot extends Viz {
       else {
         this._x = accessor(_);
         if (!this._aggs[_] && this._discrete === "x") {
-          this._aggs[_] = a => {
-            const v = Array.from(new Set(a));
+          this._aggs[_] = (a, c) => {
+            const v = Array.from(new Set(a.map(c)));
             return v.length === 1 ? v[0] : v;
           };
         }
@@ -1329,8 +1329,8 @@ export default class Plot extends Viz {
       else {
         this._x2 = accessor(_);
         if (!this._aggs[_] && this._discrete === "x") {
-          this._aggs[_] = a => {
-            const v = Array.from(new Set(a));
+          this._aggs[_] = (a, c) => {
+            const v = Array.from(new Set(a.map(c)));
             return v.length === 1 ? v[0] : v;
           };
         }
@@ -1422,8 +1422,8 @@ export default class Plot extends Viz {
       else {
         this._y = accessor(_);
         if (!this._aggs[_] && this._discrete === "y") {
-          this._aggs[_] = a => {
-            const v = Array.from(new Set(a));
+          this._aggs[_] = (a, c) => {
+            const v = Array.from(new Set(a.map(c)));
             return v.length === 1 ? v[0] : v;
           };
         }
@@ -1445,8 +1445,8 @@ export default class Plot extends Viz {
       else {
         this._y2 = accessor(_);
         if (!this._aggs[_] && this._discrete === "y2") {
-          this._aggs[_] = a => {
-            const v = Array.from(new Set(a));
+          this._aggs[_] = (a, c) => {
+            const v = Array.from(new Set(a.map(c)));
             return v.length === 1 ? v[0] : v;
           };
         }
