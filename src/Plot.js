@@ -459,12 +459,27 @@ export default class Plot extends Viz {
       y2Scale = "Time";
     }
 
+    const autoScale = (axis, fallback) => {
+      const userScale = this[`_${axis}Config`].scale;
+      if (userScale === "auto") {
+        if (this._discrete === axis) return fallback;
+        const values = data.map(d => d[axis]);
+        return deviation(values) / mean(values) > 3 ? "log" : "linear";
+      }
+      return userScale || fallback;
+    };
+
+    const yConfigScale = this._yConfigScale = autoScale("y", yScale).toLowerCase();
+    const y2ConfigScale = this._y2ConfigScale = autoScale("y2", y2Scale).toLowerCase();
+    const xConfigScale = this._xConfigScale = autoScale("x", xScale).toLowerCase();
+    const x2ConfigScale = this._x2ConfigScale = autoScale("x2", x2Scale).toLowerCase();
+
     domains = {x: xDomain, x2: x2Domain || xDomain, y: yDomain, y2: y2Domain || yDomain};
     Object.keys(domains)
       .forEach(axis => {
-        if (this[`_${axis}Config`].scale === "log" && domains[axis].includes(0)) {
-          if (domains[axis][0] < domains[axis][1]) domains[axis][0] = min(data.map(d => d[axis]).filter(Boolean));
-          else domains[axis][1] = max(data, d => d[axis]);
+        if (this[`_${axis}ConfigScale`] === "log" && domains[axis].includes(0)) {
+          if (min(domains[axis]) < 0) domains[axis][1] = max(data.map(d => d[axis]).filter(Boolean));
+          else domains[axis][0] = min(data.map(d => d[axis]).filter(Boolean));
         }
       });
 
@@ -490,21 +505,6 @@ export default class Plot extends Viz {
       .key(d => d.shape)
       .entries(data)
       .sort((a, b) => this._shapeSort(a.key, b.key));
-
-    const autoScale = (axis, fallback) => {
-      const userScale = this[`_${axis}Config`].scale;
-      if (userScale === "auto") {
-        if (this._discrete === axis) return fallback;
-        const values = data.map(d => d[axis]);
-        return deviation(values) / mean(values) > 3 ? "log" : "linear";
-      }
-      return userScale || fallback;
-    };
-
-    const yConfigScale = autoScale("y", yScale).toLowerCase();
-    const y2ConfigScale = autoScale("y2", y2Scale).toLowerCase();
-    const xConfigScale = autoScale("x", xScale).toLowerCase();
-    const x2ConfigScale = autoScale("x2", x2Scale).toLowerCase();
 
     const oppScale = this._discrete === "x" ? yScale : xScale;
     if (oppScale !== "Point") {
@@ -818,11 +818,11 @@ export default class Plot extends Viz {
 
     x = (d, x) => {
       if (x === "x2") {
-        if (this._x2Config.scale === "log" && d === 0) d = x2Domain[0] < 0 ? this._x2Axis._d3Scale.domain()[1] : this._x2Axis._d3Scale.domain()[0];
+        if (x2ConfigScale === "log" && d === 0) d = x2Domain[0] < 0 ? this._x2Axis._d3Scale.domain()[1] : this._x2Axis._d3Scale.domain()[0];
         return this._x2Axis._getPosition.bind(this._x2Axis)(d);
       }
       else {
-        if (this._xConfig.scale === "log" && d === 0) d = xDomain[0] < 0 ? this._xAxis._d3Scale.domain()[1] : this._xAxis._d3Scale.domain()[0];
+        if (xConfigScale === "log" && d === 0) d = xDomain[0] < 0 ? this._xAxis._d3Scale.domain()[1] : this._xAxis._d3Scale.domain()[0];
         return this._xAxis._getPosition.bind(this._xAxis)(d);
       }
     };
@@ -860,11 +860,11 @@ export default class Plot extends Viz {
 
     y = (d, y) => {
       if (y === "y2") {
-        if (this._y2Config.scale === "log" && d === 0) d = y2Domain[0] < 0 ? this._y2Axis._d3Scale.domain()[1] : this._y2Axis._d3Scale.domain()[0];
+        if (y2ConfigScale === "log" && d === 0) d = y2Domain[1] < 0 ? this._y2Axis._d3ScaleNegative.domain()[0] : this._y2Axis._d3Scale.domain()[1];
         return this._y2Axis._getPosition.bind(this._y2Axis)(d) - x2Height;
       }
       else {
-        if (this._yConfig.scale === "log" && d === 0) d = yDomain[0] < 0 ? this._yAxis._d3Scale.domain()[1] : this._yAxis._d3Scale.domain()[0];
+        if (yConfigScale === "log" && d === 0) d = yDomain[1] < 0 ? this._yAxis._d3ScaleNegative.domain()[0] : this._yAxis._d3Scale.domain()[1];
         return this._yAxis._getPosition.bind(this._yAxis)(d) - x2Height;
       }
     };
