@@ -644,17 +644,22 @@ export default class Plot extends Viz {
         const fontWeightAccessor = lineLabelConfig.fontWeight !== undefined ? lineLabelConfig.fontWeight : testTextBox.fontWeight();
         const fontFamilyAccessor = lineLabelConfig.fontFamily !== undefined ? lineLabelConfig.fontFamily : testTextBox.fontFamily();
         const paddingAccessor = lineLabelConfig.padding !== undefined ? lineLabelConfig.padding : testTextBox.padding();
+        const labelFunction = userConfig.label || this._drawLabel;
+        const labelWidths = lineData.map(group => {
 
-        const labelWidths = lineData.map(d => {
+          let d = group.values[group.values.length - 1];
+          let i;
+          while (d.__d3plus__ && d.data) {
+            d = d.data;
+            i = d.i;
+          }
+          const label = typeof labelFunction === "function" ? labelFunction(d, i) : labelFunction;
 
-          const datum = d.values[0];
-          const label = this._drawLabel(datum);
-
-          const fontSize = typeof fontSizeAccessor === "function" ? fontSizeAccessor(datum) : fontSizeAccessor;
-          const fontWeight = typeof fontWeightAccessor === "function" ? fontWeightAccessor(datum) : fontWeightAccessor;
-          let fontFamily = typeof fontFamilyAccessor === "function" ? fontFamilyAccessor(datum) : fontFamilyAccessor;
+          const fontSize = typeof fontSizeAccessor === "function" ? fontSizeAccessor(d, i) : fontSizeAccessor;
+          const fontWeight = typeof fontWeightAccessor === "function" ? fontWeightAccessor(d, i) : fontWeightAccessor;
+          let fontFamily = typeof fontFamilyAccessor === "function" ? fontFamilyAccessor(d, i) : fontFamilyAccessor;
           if (fontFamily instanceof Array) fontFamily = fontFamily.map(f => `'${f}'`).join(", ");
-          const labelPadding = typeof paddingAccessor === "function" ? paddingAccessor(datum) : paddingAccessor;
+          const labelPadding = typeof paddingAccessor === "function" ? paddingAccessor(d, i) : paddingAccessor;
 
           const labelWidth = textWidth(label, {
             "font-size": fontSize,
