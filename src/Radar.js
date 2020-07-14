@@ -125,7 +125,7 @@ export default class Radar extends Viz {
 
         return {
           __d3plus__: true,
-          data: merge(d.values),
+          data: merge(d.values, this._aggs),
           i,
           id: d.key,
           angle,
@@ -187,12 +187,12 @@ export default class Radar extends Viz {
         .join(" ")} L ${q[0].x} ${q[0].y}`;
 
       return {
-        arr: h.values.map(d => merge(d.values)),
+        arr: h.values.map(d => merge(d.values, this._aggs)),
         id: h.key,
         points: q,
         d,
         __d3plus__: true,
-        data: merge(h.values.map(d => merge(d.values)))
+        data: merge(h.values.map(d => merge(d.values, this._aggs)), this._aggs)
       };
 
     });
