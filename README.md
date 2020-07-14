@@ -9,7 +9,7 @@ A reusable javascript x/y plot built on D3.
 If you use NPM, run `npm install d3plus-plot --save`. Otherwise, download the [latest release](https://github.com/d3plus/d3plus-plot/releases/latest). The released bundle supports AMD, CommonJS, and vanilla environments. You can also load directly from [d3plus.org](https://d3plus.org):
 
 ```html
-<script src="https://d3plus.org/js/d3plus-plot.v0.8.full.min.js"></script>
+<script src="https://d3plus.org/js/d3plus-plot.v0.9.full.min.js"></script>
 ```
 
 
@@ -703,4 +703,4 @@ new d3plus.AreaPlot()
 
 
 
-###### <sub>Documentation generated on Tue, 14 Jul 2020 20:12:07 GMT</sub>
+###### <sub>Documentation generated on Tue, 14 Jul 2020 21:35:36 GMT</sub>
