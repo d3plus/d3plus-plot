@@ -44,6 +44,7 @@ This creates an x/y plot using the default shape ([Circle](http://d3plus.org/doc
 
 ### More Examples
 
+ * [Returning Config based on Loaded Data](http://d3plus.org/examples/d3plus-plot/data-format-config/)<sup> ***New***</sup>
  * [Setting a Max Size for Axes](http://d3plus.org/examples/d3plus-plot/axis-maxSize/)
  * [Adding Vertex Markers to Line Plots](http://d3plus.org/examples/d3plus-plot/line-plot-markers/)
  * [Adding Labels to Line Plots](http://d3plus.org/examples/d3plus-plot/line-plot-labels/)
@@ -703,4 +704,4 @@ new d3plus.AreaPlot()
 
 
 
-###### <sub>Documentation generated on Fri, 17 Jul 2020 15:36:41 GMT</sub>
+###### <sub>Documentation generated on Tue, 28 Jul 2020 23:48:54 GMT</sub>
