@@ -630,6 +630,22 @@ export default class Plot extends Viz {
 
     let xRangeMax = undefined;
 
+    if (showX) {
+      this._xTest
+        .domain(xDomain)
+        .height(height)
+        .maxSize(height / 2)
+        .range([undefined, xRangeMax])
+        .select(testGroup.node())
+        .ticks(xTicks)
+        .width(width)
+        .config(xC)
+        .config(this._xConfig)
+        .scale(xConfigScale)
+        .render();
+    }
+
+    let largestLabel;
     if (this._lineLabels) {
       const lineData = nest()
         .key(d => d.id)
@@ -645,6 +661,14 @@ export default class Plot extends Viz {
         const fontFamilyAccessor = lineLabelConfig.fontFamily !== undefined ? lineLabelConfig.fontFamily : testTextBox.fontFamily();
         const paddingAccessor = lineLabelConfig.padding !== undefined ? lineLabelConfig.padding : testTextBox.padding();
         const labelFunction = userConfig.label || this._drawLabel;
+
+        const xEstimate = d => {
+          if (xConfigScale === "log" && d === 0) d = xDomain[0] < 0 ? this._xTest._d3Scale.domain()[1] : this._xTest._d3Scale.domain()[0];
+          return this._xTest._getPosition.bind(this._xTest)(d);
+        };
+
+        const maxX = max(lineData.map(group => max(group.values.map(d => xEstimate(d.x)))));
+
         const labelWidths = lineData.map(group => {
 
           let d = group.values[group.values.length - 1];
@@ -667,16 +691,22 @@ export default class Plot extends Viz {
             "font-weight": fontWeight
           });
 
-          return labelWidth + labelPadding * 2;
+          const myMaxX = max(group.values.map(d => xEstimate(d.x)));
+
+          return {
+            labelWidth: labelWidth + labelPadding * 2,
+            spaceNeeded: myMaxX - maxX + labelWidth + labelPadding * 2
+          };
 
         });
-        const largestLabel = max(labelWidths);
-        const labelSpace = min([largestLabel, width / 4]);
+        largestLabel = max(labelWidths.map(d => d.labelWidth));
+        const spaceNeeded = max(labelWidths.map(d => d.spaceNeeded));
+        const labelSpace = min([spaceNeeded, width / 4]);
         xRangeMax = width - labelSpace - this._margin.right;
       }
     }
 
-    if (showX) {
+    if (showX && xRangeMax) {
       this._xTest
         .domain(xDomain)
         .height(height)
@@ -1014,7 +1044,7 @@ export default class Plot extends Viz {
             return {
               x: lastX - firstX,
               y: lastY - firstY - height / 2,
-              width: this._padding.right,
+              width: largestLabel,
               height
             };
           } : false
