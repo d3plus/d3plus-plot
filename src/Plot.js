@@ -221,6 +221,42 @@ export default class Plot extends Viz {
   }
 
   /**
+      Extends the preDraw behavior of the abstract Viz class.
+      @private
+  */
+  _preDraw() {
+
+    // logic repeated for each axis
+    ["x", "y", "x2", "y2"].forEach(k => {
+
+      // if user has supplied a String key as the main method value
+      if (this[`_${k}Key`]) {
+
+        const str = this[`_${k}Key`];
+
+        // if axis is discrete and numerical, do not sum values
+        if (!this._aggs[str] && this._discrete === k) {
+          this._aggs[str] = (a, c) => {
+            const v = Array.from(new Set(a.map(c)));
+            return v.length === 1 ? v[0] : v;
+          };
+        }
+
+        // set axis title if not discrete
+        if ((!this[`_${k}Config`].title || this[`_${k}Title`] === this[`_${k}Config`].title) && this._discrete !== k) {
+          this[`_${k}Title`] = str;
+          this[`_${k}Config`].title = str;
+        }
+
+      }
+
+    });
+
+    super._preDraw();
+
+  }
+
+  /**
       Extends the draw behavior of the abstract Viz class.
       @private
   */
@@ -1335,12 +1371,7 @@ export default class Plot extends Viz {
       if (typeof _ === "function") this._x = _;
       else {
         this._x = accessor(_);
-        if (!this._aggs[_] && this._discrete === "x") {
-          this._aggs[_] = (a, c) => {
-            const v = Array.from(new Set(a.map(c)));
-            return v.length === 1 ? v[0] : v;
-          };
-        }
+        this._xKey = _;
       }
       return this;
     }
@@ -1358,12 +1389,7 @@ export default class Plot extends Viz {
       if (typeof _ === "function") this._x2 = _;
       else {
         this._x2 = accessor(_);
-        if (!this._aggs[_] && this._discrete === "x") {
-          this._aggs[_] = (a, c) => {
-            const v = Array.from(new Set(a.map(c)));
-            return v.length === 1 ? v[0] : v;
-          };
-        }
+        this._x2Key = _;
       }
       return this;
     }
@@ -1451,12 +1477,7 @@ export default class Plot extends Viz {
       if (typeof _ === "function") this._y = _;
       else {
         this._y = accessor(_);
-        if (!this._aggs[_] && this._discrete === "y") {
-          this._aggs[_] = (a, c) => {
-            const v = Array.from(new Set(a.map(c)));
-            return v.length === 1 ? v[0] : v;
-          };
-        }
+        this._yKey = _;
       }
       return this;
     }
@@ -1474,12 +1495,7 @@ export default class Plot extends Viz {
       if (typeof _ === "function") this._y2 = _;
       else {
         this._y2 = accessor(_);
-        if (!this._aggs[_] && this._discrete === "y2") {
-          this._aggs[_] = (a, c) => {
-            const v = Array.from(new Set(a.map(c)));
-            return v.length === 1 ? v[0] : v;
-          };
-        }
+        this._y2Key = _;
       }
       return this;
     }
