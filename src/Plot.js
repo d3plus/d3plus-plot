@@ -1055,9 +1055,9 @@ export default class Plot extends Viz {
       const classEvents = events.filter(e => e.includes(`.${d.key}`)),
             globalEvents = events.filter(e => !e.includes(".")),
             shapeEvents = events.filter(e => e.includes(".shape"));
-      for (let e = 0; e < globalEvents.length; e++) s.on(globalEvents[e], d => this._on[globalEvents[e]](d.data, d.i));
-      for (let e = 0; e < shapeEvents.length; e++) s.on(shapeEvents[e], d => this._on[shapeEvents[e]](d.data, d.i));
-      for (let e = 0; e < classEvents.length; e++) s.on(classEvents[e], d => this._on[classEvents[e]](d.data, d.i));
+      for (let e = 0; e < globalEvents.length; e++) s.on(globalEvents[e], (d, i, x, event) => this._on[globalEvents[e]](d.data, d.i, x, event));
+      for (let e = 0; e < shapeEvents.length; e++) s.on(shapeEvents[e], (d, i, x, event) => this._on[shapeEvents[e]](d.data, d.i, x, event));
+      for (let e = 0; e < classEvents.length; e++) s.on(classEvents[e], (d, i, x, event) => this._on[classEvents[e]](d.data, d.i, x, event));
 
       const userConfig = configPrep.bind(this)(this._shapeConfig, "shape", d.key);
       if (this._shapeConfig.duration === undefined) delete userConfig.duration;
@@ -1072,9 +1072,9 @@ export default class Plot extends Viz {
           .config(this._lineMarkerConfig)
           .id(d => `${d.id}_${d.discrete}`);
 
-        for (let e = 0; e < globalEvents.length; e++) markers.on(globalEvents[e], d => this._on[globalEvents[e]](d.data, d.i));
-        for (let e = 0; e < shapeEvents.length; e++) markers.on(shapeEvents[e], d => this._on[shapeEvents[e]](d.data, d.i));
-        for (let e = 0; e < classEvents.length; e++) markers.on(classEvents[e], d => this._on[classEvents[e]](d.data, d.i));
+        for (let e = 0; e < globalEvents.length; e++) markers.on(globalEvents[e], (d, i, x, event) => this._on[globalEvents[e]](d.data, d.i, x, event));
+        for (let e = 0; e < shapeEvents.length; e++) markers.on(shapeEvents[e], (d, i, x, event) => this._on[shapeEvents[e]](d.data, d.i, x, event));
+        for (let e = 0; e < classEvents.length; e++) markers.on(classEvents[e], (d, i, x, event) => this._on[classEvents[e]](d.data, d.i, x, event));
 
         markers.render();
         this._shapes.push(markers);

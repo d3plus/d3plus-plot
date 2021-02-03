@@ -5,7 +5,7 @@
 
 import {min, max, sum} from "d3-array";
 import {nest} from "d3-collection";
-import {mouse} from "d3-selection";
+import {pointer} from "d3-selection";
 import {accessor, assign, configPrep, constant, elem, merge} from "d3plus-common";
 import {Circle, Path, Rect} from "d3plus-shape";
 import {Viz} from "d3plus-viz";
@@ -202,14 +202,14 @@ export default class Radar extends Viz {
     pathConfig.on = {};
     for (let e = 0; e < events.length; e++) {
       const event = events[e];
-      pathConfig.on[event] = (d, i) => {
+      pathConfig.on[event] = (d, i, s, e) => {
         const x = d.points.map(p => p.x + width / 2);
         const y = d.points.map(p => p.y + height / 2);
-        const cursor = mouse(this._select.node());
+        const cursor = pointer(e, this._select.node());
         const xDist = x.map(p => Math.abs(p - cursor[0]));
         const yDist = y.map(p => Math.abs(p - cursor[1]));
         const dists = xDist.map((d, i) => d + yDist[i]);
-        this._on[event].bind(this)(d.arr[dists.indexOf(min(dists))], i);
+        this._on[event].bind(this)(d.arr[dists.indexOf(min(dists))], i, s, e);
       };
     }
 
