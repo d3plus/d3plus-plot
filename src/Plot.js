@@ -191,7 +191,16 @@ export default class Plot extends Viz {
     this._x = accessor("x");
     this._xAxis = new AxisBottom().align("end");
     this._xTest = new AxisBottom().align("end").gridSize(0);
-    this._xConfig = {};
+    this._xConfig = {
+      gridConfig: {
+        stroke: d => {
+          if (this._discrete && this._discrete.charAt(0) === "x") return "transparent";
+          const range = this._xAxis.range();
+          // hides left-most x gridline so it doesn't overlap with the y axis
+          return range[0] === this._xAxis._getPosition.bind(this._xAxis)(d.id) ? "transparent" : "#eee";
+        }
+      }
+    };
     this._xCutoff = 150;
 
     this._x2 = accessor("x2");
@@ -207,9 +216,10 @@ export default class Plot extends Viz {
     this._yConfig = {
       gridConfig: {
         stroke: d => {
+          if (this._discrete && this._discrete.charAt(0) === "y") return "transparent";
           const range = this._yAxis.range();
           // hides bottom-most y gridline so it doesn't overlap with the x axis
-          return range[range.length - 1] === this._yAxis._getPosition.bind(this._yAxis)(d.id) ? "transparent" : "#ccc";
+          return range[range.length - 1] === this._yAxis._getPosition.bind(this._yAxis)(d.id) ? "transparent" : "#eee";
         }
       }
     };
@@ -577,7 +587,6 @@ export default class Plot extends Viz {
     const showY = this._discrete === "y" && this._height > this._discreteCutoff || this._height > this._yCutoff;
 
     const yC = {
-      gridConfig: {stroke: !this._discrete || this._discrete === "x" ? this._yTest.gridConfig().stroke : "transparent"},
       locale: this._locale,
       scalePadding: y.padding ? y.padding() : 0
     };
@@ -643,7 +652,6 @@ export default class Plot extends Viz {
     let y2Width = y2Bounds.width ? y2Bounds.width + this._y2Test.padding() : undefined;
 
     const xC = {
-      gridConfig: {stroke: !this._discrete || this._discrete === "y" ? this._xTest.gridConfig().stroke : "transparent"},
       locale: this._locale,
       scalePadding: x.padding ? x.padding() : 0
     };
