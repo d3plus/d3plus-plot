@@ -54,6 +54,7 @@ export default function(axis, scale, value, size, range, domain, index, invert) 
   };
 
   if (axis.invert && needsBuffer()) {
+    const mod = 10;
     if (scale === "log") {
       let i = 0;
       while (i < 10 && needsBuffer()) {
@@ -64,14 +65,16 @@ export default function(axis, scale, value, size, range, domain, index, invert) 
       }
     }
     else if (index === 0) {
-      const v = axis.invert(axis(value) + size * (invert ? 1 : -1));
+      const v = axis.invert(axis(value) + (size + mod) * (invert ? 1 : -1));
+      console.log(range);
+      console.log(domain, v);
       if (v < domain[index]) {
         domain[index] = v;
         axis.domain(invert ? domain.slice().reverse() : domain);
       }
     }
     else if (index === 1) {
-      const v = axis.invert(axis(value) + size * (invert ? -1 : 1));
+      const v = axis.invert(axis(value) + (size + mod) * (invert ? -1 : 1));
       if (v > domain[index]) {
         domain[index] = v;
         axis.domain(invert ? domain.slice().reverse() : domain);
