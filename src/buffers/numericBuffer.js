@@ -66,8 +66,6 @@ export default function(axis, scale, value, size, range, domain, index, invert) 
     }
     else if (index === 0) {
       const v = axis.invert(axis(value) + (size + mod) * (invert ? 1 : -1));
-      console.log(range);
-      console.log(domain, v);
       if (v < domain[index]) {
         domain[index] = v;
         axis.domain(invert ? domain.slice().reverse() : domain);
