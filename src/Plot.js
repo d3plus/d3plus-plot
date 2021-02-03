@@ -129,6 +129,7 @@ export default class Plot extends Viz {
     this._shape = constant("Circle");
     this._shapeConfig = assign(this._shapeConfig, {
       Area: {
+        curve: () => this._discrete ? `monotone${this._discrete.charAt(0).toUpperCase()}` : "linear",
         label: (d, i) => this._stacked ? this._drawLabel(d, i) : false,
         labelConfig: {
           fontResize: true
@@ -156,6 +157,7 @@ export default class Plot extends Viz {
         r: defaultSize.bind(this)
       },
       Line: {
+        curve: () => this._discrete ? `monotone${this._discrete.charAt(0).toUpperCase()}` : "linear",
         fill: constant("none"),
         labelConfig: {
           fontColor: (d, i) => {
