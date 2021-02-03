@@ -6,7 +6,7 @@ import * as scales from "d3-scale";
 import * as d3Shape from "d3-shape";
 
 import {AxisBottom, AxisLeft, AxisRight, AxisTop, date} from "d3plus-axis";
-import {colorAssign, colorLegible} from "d3plus-color";
+import {colorAssign, colorContrast, colorDefaults, colorLegible} from "d3plus-color";
 import {accessor, assign, configPrep, constant, elem} from "d3plus-common";
 import * as shapes from "d3plus-shape";
 import {textWidth, TextBox} from "d3plus-text";
@@ -82,6 +82,27 @@ function stackOffsetDiverging(series, order) {
 }
 
 /**
+ * Determines if a Bar label should be placed outside of the Bar.
+ * @param {@} d
+ * @param {*} i
+ * @private
+ */
+function outside(d, i) {
+  const other = this._discrete.charAt(0) === "x" ? "y" : "x";
+  const nonDiscrete = this._discrete.replace(this._discrete.charAt(0), other);
+  const range = this[`_${nonDiscrete}Axis`]._d3Scale.range();
+  const value = this[`_${nonDiscrete}`](d, i);
+  const negative = value < 0;
+  const zero = this[`_${nonDiscrete}Axis`]._getPosition(0);
+  const space = nonDiscrete === "y"
+    ? negative ? range[1] - zero : zero - range[0]
+    : negative ? zero - range[0] : range[1] - zero;
+  const pos = this[`_${nonDiscrete}Axis`]._getPosition(value);
+  const size = Math.abs(pos - zero);
+  return size < space / 2;
+}
+
+/**
     @class Plot
     @extends Viz
     @desc Creates an x/y plot based on an array of data.
@@ -148,9 +169,72 @@ export default class Plot extends Viz {
         return `${ariaLabelStr}.`;
       },
       Bar: {
+        labelBounds(d, i, s) {
+
+          const padding = 1;
+
+          const width = this._discrete === "y" ? "width" : "height";
+          const height = this._discrete === "y" ? "height" : "width";
+
+          const other = this._discrete.charAt(0) === "x" ? "y" : "x";
+          const invert = other === "y";
+          const nonDiscrete = this._discrete.replace(this._discrete.charAt(0), other);
+          const range = this[`_${nonDiscrete}Axis`]._d3Scale.range();
+          const space = Math.abs(range[1] - range[0]);
+          const negative = this[`_${nonDiscrete}`](d, i) < 0;
+
+          if (outside.bind(this)(d, i)) {
+            return {
+              [width]: space - s[width],
+              [height]: s[height],
+              x: invert ? -s.width / 2 : negative ? -space : s.width + padding,
+              y: invert ? negative ? s.height + padding : -space : -s.height / 2 + 1
+            };
+          }
+          return {
+            [width]: s[width],
+            [height]: s[height],
+            x: invert ? -s.width / 2 : negative ? -s.width + padding : -padding,
+            y: invert ? negative ? padding : -s.height + padding : -s.height / 2 + 1
+          };
+
+        },
         labelConfig: {
-          textAnchor: () => this._discrete === "x" ? "middle" : "end",
-          verticalAlign: () => this._discrete === "x" ? "top" : "middle"
+          fontMax: 16,
+          fontMin: 6,
+          fontResize: true,
+          fontColor(d, i) {
+            return outside.bind(this)(d, i) ? colorDefaults.dark : colorContrast(this._shapeConfig.fill(d, i));
+          },
+          fontStroke(d, i) {
+            return outside.bind(this)(d, i) ? colorDefaults.light : "transparent";
+          },
+          fontStrokeWidth(d, i) {
+            return outside.bind(this)(d, i) ? 0.1 : 0;
+          },
+          padding: 3,
+          textAnchor(d, i) {
+            const other = this._discrete.charAt(0) === "x" ? "y" : "x";
+            const invert = other === "y";
+            const nonDiscrete = this._discrete.replace(this._discrete.charAt(0), other);
+            const negative = this[`_${nonDiscrete}`](d, i) < 0;
+            return invert
+              ? "middle"
+              : outside.bind(this)(d, i)
+                ? negative ? "end" : "start"
+                : negative ? "start" : "end";
+          },
+          verticalAlign(d, i) {
+            const other = this._discrete.charAt(0) === "x" ? "y" : "x";
+            const invert = other === "y";
+            const nonDiscrete = this._discrete.replace(this._discrete.charAt(0), other);
+            const negative = this[`_${nonDiscrete}`](d, i) < 0;
+            return invert
+              ? outside.bind(this)(d, i)
+                ? negative ? "top" : "bottom"
+                : negative ? "bottom" : "top"
+              : "middle";
+          }
         }
       },
       Circle: {
