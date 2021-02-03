@@ -693,11 +693,19 @@ export default class Plot extends Viz {
       };
     }
 
-    const testGroup = elem("g.d3plus-plot-test", {enter: {opacity: 0}, parent: this._select}),
-          x2Ticks = this._discrete === "x" && !x2Time ? domains.x2 : undefined,
-          xTicks = !showY ? extent(domains.x) : this._discrete === "x" && !xTime ? domains.x : undefined,
-          y2Ticks = this._discrete === "y" && !y2Time ? domains.y2 : undefined,
-          yTicks = !showX ? extent(domains.y) : this._discrete === "y" && !yTime ? domains.y : undefined;
+    const testGroup = elem("g.d3plus-plot-test", {enter: {opacity: 0}, parent: this._select});
+
+    let x2Ticks = this._discrete === "x" && !x2Time ? domains.x2 : undefined,
+        xTicks = !showY ? extent(domains.x) : this._discrete === "x" && !xTime ? domains.x : undefined,
+        y2Ticks = this._discrete === "y" && !y2Time ? domains.y2 : undefined,
+        yTicks = !showX ? extent(domains.y) : this._discrete === "y" && !yTime ? domains.y : undefined;
+
+    // hides repetitive axis ticks in BarCharts
+    const uniques = Array.from(new Set(this._filteredData.map(this._id))).length;
+    if (x2Scale === "Point" && x2Ticks.length === uniques) x2Ticks = [];
+    if (xScale === "Point" && xTicks.length === uniques) xTicks = [];
+    if (y2Scale === "Point" && y2Ticks.length === uniques) y2Ticks = [];
+    if (yScale === "Point" && yTicks.length === uniques) yTicks = [];
 
     if (showY) {
       this._yTest
