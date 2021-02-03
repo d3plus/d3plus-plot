@@ -24,6 +24,11 @@ export default class BarChart extends Plot {
     super();
     this._baseline = 0;
     this._discrete = "x";
+    const defaultLegend = this._legend;
+    this._legend = (config, arr) => {
+      if (arr.length === this._filteredData.length) return false;
+      return defaultLegend.bind(this)(config, arr);
+    };
     this._shape = constant("Bar");
     this.x("x");
 
