@@ -31,12 +31,12 @@ export default class Radar extends Viz {
       shapeConfig: {
         fill: constant("none"),
         labelConfig: {
-          fontColor: "#000",
+          fontColor: "#999",
           padding: 0,
           textAnchor: (d, i, x) => x.textAnchor,
           verticalAlign: "middle"
         },
-        stroke: "#ccc",
+        stroke: "#eee",
         strokeWidth: constant(1)
       }
     };
