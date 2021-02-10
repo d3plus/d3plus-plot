@@ -1182,7 +1182,7 @@ export default class Plot extends Viz {
           const confidenceConfig = Object.assign(this._shapeConfig, this._confidenceConfig);
 
           area
-            .config(configPrep.bind(this)(confidenceConfig, "shape", "Area"))
+            .config(assign(configPrep.bind(this)(confidenceConfig, "shape", "Line"), configPrep.bind(this)(confidenceConfig, "shape", "Area")))
             .render();
 
           this._shapes.push(area);
