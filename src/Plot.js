@@ -151,10 +151,25 @@ export default class Plot extends Viz {
     this._shape = constant("Circle");
     this._shapeConfig = assign(this._shapeConfig, {
       Area: {
-        curve: () => this._discrete ? `monotone${this._discrete.charAt(0).toUpperCase()}` : "linear",
         label: (d, i) => this._stacked ? this._drawLabel(d, i) : false,
+        labelBounds: (d, i, aes) => {
+          let r = shapes.largestRect(aes.points, {angle: range(-20, 20, 5)});
+          if (!r || r.height < 20 || r.width < 50) r = shapes.largestRect(aes.points, {angle: range(-80, 80, 5)});
+          if (!r) return null;
+          const x = min(aes.points, d => d[0]);
+          const y = max(aes.points.filter(d => d[0] === x), d => d[1]);
+          return {
+            angle: r.angle,
+            width: r.width,
+            height: r.height,
+            x: r.cx - r.width / 2 - x,
+            y: r.cy - r.height / 2 - y
+          };
+        },
         labelConfig: {
-          fontResize: true
+          fontMin: 6,
+          fontResize: true,
+          padding: 10
         }
       },
       ariaLabel: (d, i) => {
@@ -990,7 +1005,7 @@ export default class Plot extends Viz {
         .render();
     }
 
-    x = (d, x) => {
+    this._xFunc = x = (d, x) => {
       if (x === "x2") {
         if (x2ConfigScale === "log" && d === 0) d = x2Domain[0] < 0 ? this._x2Axis._d3Scale.domain()[1] : this._x2Axis._d3Scale.domain()[0];
         return this._x2Axis._getPosition.bind(this._x2Axis)(d);
@@ -1032,7 +1047,7 @@ export default class Plot extends Viz {
         .render();
     }
 
-    y = (d, y) => {
+    this._yFunc = y = (d, y) => {
       if (y === "y2") {
         if (y2ConfigScale === "log" && d === 0) d = y2Domain[1] < 0 ? this._y2Axis._d3ScaleNegative.domain()[0] : this._y2Axis._d3Scale.domain()[1];
         return this._y2Axis._getPosition.bind(this._y2Axis)(d) - x2Height;
