@@ -88,6 +88,7 @@ function stackOffsetDiverging(series, order) {
  * @private
  */
 function outside(d, i) {
+  if (this._stacked) return false;
   const other = this._discrete.charAt(0) === "x" ? "y" : "x";
   const nonDiscrete = this._discrete.replace(this._discrete.charAt(0), other);
   const range = this[`_${nonDiscrete}Axis`]._d3Scale.range();
@@ -194,8 +195,8 @@ export default class Plot extends Viz {
           return {
             [width]: s[width],
             [height]: s[height],
-            x: invert ? -s.width / 2 : negative ? -s.width + padding : -padding,
-            y: invert ? negative ? padding : -s.height + padding : -s.height / 2 + 1
+            x: invert ? -s.width / 2 : negative ? this._stacked ? padding : padding - s.width : -padding,
+            y: invert ? negative ? this._stacked ? padding - s.height : padding : -s.height + padding : -s.height / 2 + padding
           };
 
         },
