@@ -355,7 +355,7 @@ export default class Plot extends Viz {
         }
 
         // set axis title if not discrete
-        if (str !== k && (!this[`_${k}Config`].title || this[`_${k}Title`] === this[`_${k}Config`].title) && this._discrete !== k) {
+        if (str !== k && this[`_${k}Title`] === this[`_${k}Config`].title && this._discrete !== k) {
           this[`_${k}Title`] = str;
           this[`_${k}Config`].title = str;
         }
