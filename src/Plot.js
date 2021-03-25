@@ -716,12 +716,21 @@ export default class Plot extends Viz {
         y2Ticks = this._discrete === "y" && !y2Time ? domains.y2 : undefined,
         yTicks = !showX ? extent(domains.y) : this._discrete === "y" && !yTime ? domains.y : undefined;
 
-    // hides repetitive axis ticks in BarCharts
-    const uniques = Array.from(new Set(this._filteredData.map(this._id))).length;
-    if (x2Scale === "Point" && x2Ticks.length === uniques) x2Ticks = [];
-    if (xScale === "Point" && xTicks.length === uniques) xTicks = [];
-    if (y2Scale === "Point" && y2Ticks.length === uniques) y2Ticks = [];
-    if (yScale === "Point" && yTicks.length === uniques) yTicks = [];
+    /**
+     * Hides an axis' ticks and labels if they all exist as labels for the data to be displayed,
+     * primarily occuring in simple BarChart visualizations where the both the x-axis ticks and
+     * the Bar rectangles would be displaying the same text.
+     */
+
+    // generates an Array of String labels using the _drawLabel function from Viz
+    const dataLabels = this._filteredData.map((d, i) => this._drawLabel(d, i)).map(String);
+
+    // sets an axis' ticks to [] if the axis scale is "Point" (discrete) and every tick String
+    // is also in the dataLabels Array
+    if (x2Scale === "Point" && x2Ticks.every(t => dataLabels.includes(`${t}`))) x2Ticks = [];
+    if (xScale === "Point" && xTicks.every(t => dataLabels.includes(`${t}`))) xTicks = [];
+    if (y2Scale === "Point" && y2Ticks.every(t => dataLabels.includes(`${t}`))) y2Ticks = [];
+    if (yScale === "Point" && yTicks.every(t => dataLabels.includes(`${t}`))) yTicks = [];
 
     if (showY) {
       this._yTest
