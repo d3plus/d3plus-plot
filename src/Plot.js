@@ -220,10 +220,18 @@ export default class Plot extends Viz {
           fontMin: 6,
           fontResize: true,
           fontColor(d, i) {
-            return outside.bind(this)(d, i) ? colorDefaults.dark : colorContrast(this._shapeConfig.fill(d, i));
+            return outside.bind(this)(d, i)
+              ? this._backgroundConfig.fill === "transparent"
+                ? colorDefaults.dark
+                : colorContrast(this._backgroundConfig.fill)
+              : colorContrast(this._shapeConfig.fill(d, i));
           },
           fontStroke(d, i) {
-            return outside.bind(this)(d, i) ? colorDefaults.light : "transparent";
+            return outside.bind(this)(d, i)
+              ? this._backgroundConfig.fill === "transparent"
+                ? colorDefaults.dark
+                : colorContrast(this._backgroundConfig.fill)
+              : "transparent";
           },
           fontStrokeWidth(d, i) {
             return outside.bind(this)(d, i) ? 0.1 : 0;
