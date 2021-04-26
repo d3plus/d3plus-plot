@@ -1,14 +1,34 @@
 import {scaleLog} from "d3-scale";
 
+const floor10 = v => Math.pow(10, Math.floor(Math.log10(Math.abs(v)))) * Math.pow(-1, v < 0);
+const ceil10 = v => Math.pow(10, Math.ceil(Math.log10(Math.abs(v)))) * Math.pow(-1, v < 0);
+
 /** */
 export default function(axis, scale, value, size, range, domain, index, invert) {
+
+  if (isNaN(domain[0]) || isNaN(domain[1])) return domain;
 
   if (invert) {
     domain = domain.slice().reverse();
     range = range.slice().reverse();
   }
 
-  const logMod = Math.abs(Math.log(domain[1] - domain[0]) / 10);
+  if (domain[0] === domain[1]) {
+    domain = domain.slice();
+    if (scale === "log") {
+      domain = [floor10(domain[0]), ceil10(domain[0])];
+      if (domain[1] < domain[0]) domain.reverse();
+    }
+    else {
+      const mod = Math.abs(parseFloat(domain[0].toPrecision(1).replace(/[0-9]{1}$/, "1")));
+      domain[0] -= mod;
+      domain[1] += mod;
+    }
+    axis.domain(invert ? domain.slice().reverse() : domain);
+    return invert ? domain.reverse() : domain;
+  }
+
+  const logMod = domain[0] === domain[1] ? 10 : Math.abs(Math.log(domain[1] - domain[0]) / 10);
 
   const needsBuffer = () => {
     let tempAxis = axis.copy();
