@@ -731,15 +731,19 @@ export default class Plot extends Viz {
      * the Bar rectangles would be displaying the same text.
      */
 
-    // generates an Array of String labels using the _drawLabel function from Viz
-    const dataLabels = this._filteredData.map((d, i) => this._drawLabel(d, i)).map(String);
+    // generates an Array of String labels using the current label function for Bar shapes
+    const barConfig = configPrep.bind(this)(this._shapeConfig, "shape", "Bar");
+    const barLabelFunction = barConfig.label !== undefined
+      ? typeof barConfig.label === "function" ? barConfig.label : constant(barConfig.label)
+      : this._drawLabel;
+    const barLabels = this._filteredData.map((d, i) => barLabelFunction(d, i)).filter(d => typeof d === "number" || d).map(String);
 
     // sets an axis' ticks to [] if the axis scale is "Point" (discrete) and every tick String
-    // is also in the dataLabels Array
-    if (x2Scale === "Point" && x2Ticks.every(t => dataLabels.includes(`${t}`))) x2Ticks = [];
-    if (xScale === "Point" && xTicks.every(t => dataLabels.includes(`${t}`))) xTicks = [];
-    if (y2Scale === "Point" && y2Ticks.every(t => dataLabels.includes(`${t}`))) y2Ticks = [];
-    if (yScale === "Point" && yTicks.every(t => dataLabels.includes(`${t}`))) yTicks = [];
+    // is also in the barLabels Array
+    if (x2Scale === "Point" && x2Ticks.every(t => barLabels.includes(`${t}`))) x2Ticks = [];
+    if (xScale === "Point" && xTicks.every(t => barLabels.includes(`${t}`))) xTicks = [];
+    if (y2Scale === "Point" && y2Ticks.every(t => barLabels.includes(`${t}`))) y2Ticks = [];
+    if (yScale === "Point" && yTicks.every(t => barLabels.includes(`${t}`))) yTicks = [];
 
     if (showY) {
       this._yTest
