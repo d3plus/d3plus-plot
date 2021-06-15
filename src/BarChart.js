@@ -26,7 +26,9 @@ export default class BarChart extends Plot {
     this._discrete = "x";
     const defaultLegend = this._legend;
     this._legend = (config, arr) => {
-      if (arr.length === this._filteredData.length) return false;
+      const legendIds = arr.map(this._groupBy[this._legendDepth].bind(this)).sort().join();
+      const barIds = this._filteredData.map(this._groupBy[this._legendDepth].bind(this)).sort().join();
+      if (legendIds === barIds) return false;
       return defaultLegend.bind(this)(config, arr);
     };
     this._shape = constant("Bar");
