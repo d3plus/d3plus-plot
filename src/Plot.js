@@ -224,7 +224,7 @@ export default class Plot extends Viz {
               ? this._backgroundConfig.fill === "transparent"
                 ? colorDefaults.dark
                 : colorContrast(this._backgroundConfig.fill)
-              : colorContrast(this._shapeConfig.fill(d, i));
+              : colorContrast(typeof this._shapeConfig.fill === "function" ? this._shapeConfig.fill(d, i) : this._shapeConfig.fill);
           },
           fontStroke(d, i) {
             return outside.bind(this)(d, i)
