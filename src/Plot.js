@@ -453,7 +453,7 @@ export default class Plot extends Viz {
         .filter(d => d[axis])
         .sort((a, b) => this[`_${axis}Sort`] ? this[`_${axis}Sort`](a.data, b.data) : a[axis] - b[axis])
         .map(d => d[axis]);
-      if (discrete !== axis.charAt(0) && this._confidence) {
+      if (this._discrete !== axis.charAt(0) && this._confidence) {
         if (this._confidence[0]) axisData = axisData.concat(data.map(d => d.lci));
         if (this._confidence[1]) axisData = axisData.concat(data.map(d => d.hci));
       }
