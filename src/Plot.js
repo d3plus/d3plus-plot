@@ -7,7 +7,8 @@ import * as d3Shape from "d3-shape";
 
 import {AxisBottom, AxisLeft, AxisRight, AxisTop, date} from "d3plus-axis";
 import {colorAssign, colorContrast, colorDefaults, colorLegible} from "d3plus-color";
-import {accessor, assign, configPrep, constant, elem} from "d3plus-common";
+import {accessor, assign, configPrep, constant, elem, RESET, unique} from "d3plus-common";
+import {formatDate} from "d3plus-format";
 import * as shapes from "d3plus-shape";
 import {textWidth, TextBox} from "d3plus-text";
 const testLineShape = new shapes.Line();
@@ -427,10 +428,10 @@ export default class Plot extends Viz {
           transition = this._transition,
           width = this._width - this._margin.left - this._margin.right;
 
-    const x2Time = this._time && data[0].x2 === this._time(data[0].data, data[0].i),
-          xTime = this._time && data[0].x === this._time(data[0].data, data[0].i),
-          y2Time = this._time && data[0].y2 === this._time(data[0].data, data[0].i),
-          yTime = this._time && data[0].y === this._time(data[0].data, data[0].i);
+    const x2Time = this._x2Time = this._time && data[0].x2 === this._time(data[0].data, data[0].i),
+          xTime = this._xTime = this._time && data[0].x === this._time(data[0].data, data[0].i),
+          y2Time = this._y2Time = this._time && data[0].y2 === this._time(data[0].data, data[0].i),
+          yTime = this._yTime = this._time && data[0].y === this._time(data[0].data, data[0].i);
 
     for (let i = 0; i < data.length; i++) {
       const d = data[i];
@@ -440,6 +441,31 @@ export default class Plot extends Viz {
       if (y2Time) d.y2 = date(d.y2);
       d.discrete = d.shape === "Bar" ? `${d[this._discrete]}_${d.group}` : `${d[this._discrete]}`;
     }
+
+    /**
+     * @desc Returns all unique values for a given axis.
+     * @param {String} axis
+     * @returns {Array}
+     * @private
+     */
+    function getValues(axis) {
+      let axisData = data
+        .filter(d => d[axis])
+        .sort((a, b) => this[`_${axis}Sort`] ? this[`_${axis}Sort`](a.data, b.data) : a[axis] - b[axis])
+        .map(d => d[axis]);
+      if (discrete !== axis.charAt(0) && this._confidence) {
+        if (this._confidence[0]) axisData = axisData.concat(data.map(d => d.lci));
+        if (this._confidence[1]) axisData = axisData.concat(data.map(d => d.hci));
+      }
+      return unique(axisData, d => `${d}`);
+    }
+
+    const xData = getValues.bind(this)("x");
+    const x2Data = getValues.bind(this)("x2");
+    const yData = getValues.bind(this)("y");
+    const y2Data = getValues.bind(this)("y2");
+
+    const hasBars = data.some(d => d.shape === "Bar");
 
     let discreteKeys, domains, stackData, stackKeys;
     if (this._stacked) {
@@ -515,8 +541,10 @@ export default class Plot extends Viz {
           return d.length ? d[0][opp] : 0;
         })(stackData);
 
+      const discreteData = this._discrete === "x" ? xData : yData;
+
       domains = {
-        [this._discrete]: extent(data, d => d[this._discrete]),
+        [this._discrete]: !hasBars && this[`_${this._discrete}Time`] ? extent(discreteData) : discreteData,
         [opp]: [min(stackData.map(g => min(g.map(p => p[0])))), max(stackData.map(g => max(g.map(p => p[1]))))]
       };
 
@@ -532,88 +560,38 @@ export default class Plot extends Viz {
         data.sort((a, b) => a[discrete] - b[discrete]);
       }
 
-      const xData = discrete === "x" ? data.map(d => d.x) : data.map(d => d.x)
-        .concat(this._confidence && this._confidence[0] ? data.map(d => d.lci) : [])
-        .concat(this._confidence && this._confidence[1] ? data.map(d => d.hci) : []);
-
-      const x2Data = discrete === "x" ? data.map(d => d.x2) : data.map(d => d.x2)
-        .concat(this._confidence && this._confidence[0] ? data.map(d => d.lci) : [])
-        .concat(this._confidence && this._confidence[1] ? data.map(d => d.hci) : []);
-
-      const yData = discrete === "y" ? data.map(d => d.y) : data.map(d => d.y)
-        .concat(this._confidence && this._confidence[0] ? data.map(d => d.lci) : [])
-        .concat(this._confidence && this._confidence[1] ? data.map(d => d.hci) : []);
-
-      const y2Data = discrete === "y" ? data.map(d => d.y2) : data.map(d => d.y2)
-        .concat(this._confidence && this._confidence[0] ? data.map(d => d.lci) : [])
-        .concat(this._confidence && this._confidence[1] ? data.map(d => d.hci) : []);
-
       domains = {
-        x: this._xSort ? Array.from(new Set(data.filter(d => d.x).sort((a, b) => this._xSort(a.data, b.data)).map(d => d.x))) : extent(xData, d => d),
-        x2: this._x2Sort ? Array.from(new Set(data.filter(d => d.x2).sort((a, b) => this._x2Sort(a.data, b.data)).map(d => d.x2))) : extent(x2Data, d => d),
-        y: this._ySort ? Array.from(new Set(data.filter(d => d.y).sort((a, b) => this._ySort(a.data, b.data)).map(d => d.y))) : extent(yData, d => d),
-        y2: this._y2Sort ? Array.from(new Set(data.filter(d => d.y2).sort((a, b) => this._y2Sort(a.data, b.data)).map(d => d.y2))) : extent(y2Data, d => d)
+        x: (hasBars || !xTime) && this._discrete === "x" || this._xSort ? xData : extent(xData),
+        x2: (hasBars || !x2Time) && this._discrete === "x" || this._x2Sort ? x2Data : extent(x2Data),
+        y: (hasBars || !yTime) && this._discrete === "y" || this._ySort ? yData : extent(yData),
+        y2: (hasBars || !y2Time) && this._discrete === "y" || this._y2Sort ? y2Data : extent(y2Data)
       };
     }
 
-    let xDomain = this._xDomain ? this._xDomain.slice() : domains.x,
-        xScale = this._xSort ? "Point" : "Linear";
+    /**
+     * Determins default scale type and domain for a given axis.
+     * @param {String} axis
+     * @private
+     */
+    function domainScaleSetup(axis) {
 
-    if (xDomain[0] === void 0) xDomain[0] = domains.x[0];
-    if (xDomain[1] === void 0) xDomain[1] = domains.x[1];
+      const domain = this[`_${axis}Domain`] ? this[`_${axis}Domain`].slice() : domains[axis],
+            domain2 = this[`_${axis}2Domain`] ? this[`_${axis}2Domain`].slice() : domains[`${axis}2`];
 
-    if (xTime) {
-      xDomain = xDomain.map(date);
-      xScale = "Time";
-    }
-    else if (this._discrete === "x") {
-      if (!this._xDomain) xDomain = Array.from(new Set(data.filter(d => ["number", "string"].includes(typeof d.x)).sort((a, b) => this._xSort ? this._xSort(a.data, b.data) : a.x - b.x).map(d => d.x)));
-      xScale = "Point";
-    }
+      if (domain && domain[0] === void 0) domain[0] = domains[axis][0];
+      if (domain && domain[1] === void 0) domain[1] = domains[axis][1];
 
-    let x2Domain = this._x2Domain ? this._x2Domain.slice() : domains.x2,
-        x2Scale = this._x2Sort ? "Point" : "Linear";
+      if (domain2 && domain2[0] === void 0) domain2[0] = domains[`${axis}2`][0];
+      if (domain2 && domain2[1] === void 0) domain2[1] = domains[`${axis}2`][1];
 
-    if (x2Domain && x2Domain[0] === void 0) x2Domain[0] = domains.x2[0];
-    if (x2Domain && x2Domain[1] === void 0) x2Domain[1] = domains.x2[1];
+      const scale = !hasBars && this[`_${axis}Time`] ? "Time" : this._discrete === axis || this[`_${axis}Sort`] ? "Point" : "Linear";
 
-    if (x2Time) {
-      x2Domain = x2Domain.map(date);
-      x2Scale = "Time";
-    }
-    else if (this._discrete === "x") {
-      if (!this._x2Domain) x2Domain = Array.from(new Set(data.filter(d => ["number", "string"].includes(typeof d.x2)).sort((a, b) => this._x2Sort ? this._x2Sort(a.data, b.data) : a.x2 - b.x2).map(d => d.x2)));
-      x2Scale = "Point";
+      return [domain, scale, domain2, scale];
+
     }
 
-    let yDomain = this._yDomain ? this._yDomain.slice() : domains.y,
-        yScale = this._ySort ? "Point" : "Linear";
-
-    if (yDomain[0] === void 0) yDomain[0] = domains.y[0];
-    if (yDomain[1] === void 0) yDomain[1] = domains.y[1];
-
-    let y2Domain = this._y2Domain ? this._y2Domain.slice() : domains.y2,
-        y2Scale = this._y2Sort ? "Point" : "Linear";
-
-    if (y2Domain && y2Domain[0] === void 0) y2Domain[0] = domains.y2[0];
-    if (y2Domain && y2Domain[1] === void 0) y2Domain[1] = domains.y2[1];
-
-    if (yTime) {
-      yDomain = yDomain.map(date);
-      yScale = "Time";
-    }
-    else if (this._discrete === "y") {
-      if (!this._yDomain) yDomain = Array.from(new Set(data.filter(d => ["number", "string"].includes(typeof d.y)).sort((a, b) => this._ySort ? this._ySort(a.data, b.data) : a.y - b.y).map(d => d.y)));
-      yScale = "Point";
-
-      if (!this._y2Domain) y2Domain = Array.from(new Set(data.filter(d => ["number", "string"].includes(typeof d.y2)).sort((a, b) => this._y2Sort ? this._y2Sort(a.data, b.data) : a.y2 - b.y2).map(d => d.y2)));
-      y2Scale = "Point";
-    }
-
-    if (y2Time) {
-      y2Domain = y2Domain.map(date);
-      y2Scale = "Time";
-    }
+    const [xAutoDomain, xScale, x2AutoDomain, x2Scale] = domainScaleSetup.bind(this)("x");
+    const [yAutoDomain, yScale, y2AutoDomain, y2Scale] = domainScaleSetup.bind(this)("y");
 
     const autoScale = (axis, fallback) => {
       const userScale = this[`_${axis}Config`].scale;
@@ -630,7 +608,7 @@ export default class Plot extends Viz {
     const xConfigScale = this._xConfigScale = autoScale("x", xScale).toLowerCase();
     const x2ConfigScale = this._x2ConfigScale = autoScale("x2", x2Scale).toLowerCase();
 
-    domains = {x: xDomain, x2: x2Domain || xDomain, y: yDomain, y2: y2Domain || yDomain};
+    domains = {x: xAutoDomain, x2: x2AutoDomain || xAutoDomain, y: yAutoDomain, y2: y2AutoDomain || yAutoDomain};
     Object.keys(domains)
       .forEach(axis => {
         if (this[`_${axis}ConfigScale`] === "log" && domains[axis].includes(0)) {
@@ -676,10 +654,10 @@ export default class Plot extends Viz {
       });
     }
 
-    xDomain = x.domain();
-    x2Domain = x2.domain();
-    yDomain = y.domain();
-    y2Domain = y2.domain();
+    const xDomain = x.domain();
+    const x2Domain = x2.domain();
+    const yDomain = y.domain();
+    const y2Domain = y2.domain();
 
     const defaultConfig = {
       barConfig: {"stroke-width": 0},
@@ -689,15 +667,16 @@ export default class Plot extends Viz {
       tickSize: 0
     };
 
-    const defaultX2Config = x2Exists ? {data: data.map(d => d.x2)} : defaultConfig;
-    const defaultY2Config = y2Exists ? {data: data.map(d => d.y2)} : defaultConfig;
+    const defaultX2Config = x2Exists ? {data: x2Data} : defaultConfig;
+    const defaultY2Config = y2Exists ? {data: y2Data} : defaultConfig;
     const showX = this._discrete === "x" && this._width > this._discreteCutoff || this._width > this._xCutoff;
     const showY = this._discrete === "y" && this._height > this._discreteCutoff || this._height > this._yCutoff;
 
     const yC = {
-      data: data.map(d => d.y),
+      data: yData,
       locale: this._locale,
-      scalePadding: y.padding ? y.padding() : 0
+      scalePadding: y.padding ? y.padding() : 0,
+      tickFormat: yTime ? d => formatDate(+d, yData.map(Number)) : RESET
     };
     if (!showX) {
       yC.barConfig = {stroke: "transparent"};
@@ -720,10 +699,10 @@ export default class Plot extends Viz {
 
     const testGroup = elem("g.d3plus-plot-test", {enter: {opacity: 0}, parent: this._select});
 
-    let x2Ticks = this._discrete === "x" && !x2Time ? domains.x2 : undefined,
-        xTicks = !showY ? extent(domains.x) : this._discrete === "x" && !xTime ? domains.x : undefined,
-        y2Ticks = this._discrete === "y" && !y2Time ? domains.y2 : undefined,
-        yTicks = !showX ? extent(domains.y) : this._discrete === "y" && !yTime ? domains.y : undefined;
+    let x2Ticks = this._discrete === "x" ? domains.x2 : undefined,
+        xTicks = !showY ? extent(domains.x) : this._discrete === "x" ? domains.x : undefined,
+        y2Ticks = this._discrete === "y" ? domains.y2 : undefined,
+        yTicks = !showX ? extent(domains.y) : this._discrete === "y" ? domains.y : undefined;
 
     /**
      * Hides an axis' ticks and labels if they all exist as labels for the data to be displayed,
@@ -780,11 +759,11 @@ export default class Plot extends Viz {
 
     let y2Bounds = this._y2Test.outerBounds();
     let y2Width = y2Bounds.width ? y2Bounds.width + this._y2Test.padding() : undefined;
-
     const xC = {
-      data: data.map(d => d.x),
+      data: xData,
       locale: this._locale,
-      scalePadding: x.padding ? x.padding() : 0
+      scalePadding: x.padding ? x.padding() : 0,
+      tickFormat: xTime ? d => formatDate(+d, xData.map(Number)) : RESET
     };
     if (!showY) {
       xC.barConfig = {stroke: "transparent"};
