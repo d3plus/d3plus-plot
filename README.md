@@ -707,4 +707,4 @@ new d3plus.AreaPlot()
 
 
 
-###### <sub>Documentation generated on Wed, 06 Oct 2021 21:53:34 GMT</sub>
+###### <sub>Documentation generated on Fri, 08 Oct 2021 12:59:22 GMT</sub>
