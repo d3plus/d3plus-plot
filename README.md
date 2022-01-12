@@ -15,84 +15,6 @@ If you use NPM, `npm install d3plus-plot`. Otherwise, download the [latest relea
 </script>
 ```
 
-
-## Simple X/Y Plot
-
-[d3plus-plot](https://github.com/d3plus/d3plus-plot) combines the abstract [Viz](http://d3plus.org/docs/#Viz) class found in [d3plus-viz](https://github.com/d3plus/d3plus-viz) with the axes in [d3plus-axis](https://github.com/d3plus/d3plus-axis) to create a standard x/y plot. In addition to a lot of automatic formatting and positioning, the [Viz](http://d3plus.org/docs/#Viz) class also provides mouse events and tooltips.
-
-```js
-var data = [
-  {id: "alpha", x: 4, y:  7},
-  {id: "beta",  x: 5, y:  2},
-  {id: "gamma", x: 6, y: 13}
-];
-```
-
-Given some data points, we can create a plot very easily:
-
-```js
-new d3plus.Plot()
-  .data(data)
-  .groupBy("id")
-  .render();
-```
-
-This creates an x/y plot using the default shape ([Circle](http://d3plus.org/docs/#Circle)). The shape type can be overwritten using the [.shape( )](http://d3plus.org/docs/#Viz.shape) accessor method, as well as using the many shorthand Classes for specific types of charts, like [BarChart](http://d3plus.org/examples/d3plus-plot/bar-chart/) and [AreaPlot](http://d3plus.org/examples/d3plus-plot/area/).
-
-
-[<kbd><img src="/example/getting-started.png" width="990px" /></kbd>](https://d3plus.org/examples/d3plus-plot/getting-started/)
-
-[Click here](https://d3plus.org/examples/d3plus-plot/getting-started/) to view this example live on the web.
-
-
-### More Examples
-
- * [Horizontal Stacked Area Chart](http://d3plus.org/examples/d3plus-plot/stacked-area-flip/)
- * [Stacked Area Chart](http://d3plus.org/examples/d3plus-plot/stacked-area/)
- * [Stacked Areas as Share Percentages](http://d3plus.org/examples/d3plus-plot/stacked-areas-as-share-percentages/)
- * [Radar Chart](http://d3plus.org/examples/d3plus-plot/radar-chart/)
- * [Changing Shapes in a Scatter Plot/Bubble Plot](http://d3plus.org/examples/d3plus-plot/scatter-plot-changing-shape/)
- * [Secondary Axes](http://d3plus.org/examples/d3plus-plot/secondary-axes/)
- * [Secondary Axis Only](http://d3plus.org/examples/d3plus-plot/secondary-axis-only/)
- * [Sorting Shapes on an X/Y Plot](http://d3plus.org/examples/d3plus-plot/shapeSort/)
- * [Line Plot Sorting](http://d3plus.org/examples/d3plus-plot/line-plot-sort/)
- * [Changing the Stroke Width of a Line Plot](http://d3plus.org/examples/d3plus-plot/line-plot-strokeWidth/)
- * [Line Plot](http://d3plus.org/examples/d3plus-plot/line-plot/)
- * [Radar Chart Custom Labels](http://d3plus.org/examples/d3plus-plot/radar-chart-custom-labels/)
- * [Horizontal Box and Whisker Chart](http://d3plus.org/examples/d3plus-plot/horizontal-box-and-whisker-chart/)
- * [Line Plot Custom Color](http://d3plus.org/examples/d3plus-plot/line-plot-custom-color/)
- * [Adding Labels to Line Plots](http://d3plus.org/examples/d3plus-plot/line-plot-labels/)
- * [Adding Vertex Markers to Line Plots](http://d3plus.org/examples/d3plus-plot/line-plot-markers/)
- * [Changing Line Plot Splining](http://d3plus.org/examples/d3plus-plot/line-plot-smooth-curve/)
- * [Dashed Line Plot](http://d3plus.org/examples/d3plus-plot/dashed-line-plot/)
- * [Returning Config based on Loaded Data](http://d3plus.org/examples/d3plus-plot/data-format-config/)
- * [Changing Grid Styles](http://d3plus.org/examples/d3plus-plot/grid-config/)
- * [Changing the Size of Legend Shapes](http://d3plus.org/examples/d3plus-plot/changing-legend-size/)
- * [Changing Radar Chart Colors](http://d3plus.org/examples/d3plus-plot/changing-radar-chart-colors/)
- * [Confidence Interval](http://d3plus.org/examples/d3plus-plot/confidence-interval/)
- * [Custom Dash Line Plot](http://d3plus.org/examples/d3plus-plot/custom-dashed-line-plot/)
- * [Changing Box and Whisker Outlier Styles](http://d3plus.org/examples/d3plus-plot/box-whisker-outlier-styles/)
- * [Box and Whisker Chart with Outliers](http://d3plus.org/examples/d3plus-plot/box-whisker-with-outliers/)
- * [Box and Whisker Chart](http://d3plus.org/examples/d3plus-plot/box-whisker/)
- * [Scatter Plot/Bubble Chart](http://d3plus.org/examples/d3plus-plot/bubble-plot/)
- * [Bump Chart](http://d3plus.org/examples/d3plus-plot/bump-chart/)
- * [Bar Chart Timeline](http://d3plus.org/examples/d3plus-plot/bar-chart-timeline/)
- * [Bar Chart Tooltip Configuration](http://d3plus.org/examples/d3plus-plot/bar-chart-tooltip/)
- * [Bar Chart](http://d3plus.org/examples/d3plus-plot/bar-chart/)
- * [Changing Box and Whisker Endpoint Shapes](http://d3plus.org/examples/d3plus-plot/box-whisker-endpoint-shape/)
- * [Horizontal Bar Chart](http://d3plus.org/examples/d3plus-plot/bar-chart-horizontal/)
- * [Custom Bar Chart Padding](http://d3plus.org/examples/d3plus-plot/bar-chart-padding/)
- * [Bar Chart Sorting](http://d3plus.org/examples/d3plus-plot/bar-chart-sorting/)
- * [Stacked Bar Chart](http://d3plus.org/examples/d3plus-plot/bar-chart-stacked/)
- * [Bar Chart Tick Formatting](http://d3plus.org/examples/d3plus-plot/bar-chart-tick-formatting/)
- * [Advanced Axis Configuration](http://d3plus.org/examples/d3plus-plot/axis-config/)
- * [Setting a Max Size for Axes](http://d3plus.org/examples/d3plus-plot/axis-maxSize/)
- * [Styling the Background of a Chart](http://d3plus.org/examples/d3plus-plot/background/)
- * [Bar Chart Axes Labels](http://d3plus.org/examples/d3plus-plot/bar-chart-axes-labels/)
- * [Bar Chart Axis and Grid Styling](http://d3plus.org/examples/d3plus-plot/bar-chart-axis-grid-styling/)
- * [Custom Chart Annotations](http://d3plus.org/examples/d3plus-plot/annotations/)
- * [Area Chart](http://d3plus.org/examples/d3plus-plot/area/)
-
 ## API Reference
 
 ##### 
@@ -707,4 +629,4 @@ new d3plus.AreaPlot()
 
 
 
-###### <sub>Documentation generated on Fri, 08 Oct 2021 12:59:22 GMT</sub>
+###### <sub>Documentation generated on Wed, 12 Jan 2022 19:35:09 GMT</sub>
