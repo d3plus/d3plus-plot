@@ -676,7 +676,7 @@ export default class Plot extends Viz {
       data: yData,
       locale: this._locale,
       scalePadding: y.padding ? y.padding() : 0,
-      tickFormat: yTime ? d => formatDate(+d, yData.map(Number)) : RESET
+      tickFormat: yTime ? d => formatDate(+d, yData) : RESET
     };
     if (!showX) {
       yC.barConfig = {stroke: "transparent"};
@@ -763,7 +763,7 @@ export default class Plot extends Viz {
       data: xData,
       locale: this._locale,
       scalePadding: x.padding ? x.padding() : 0,
-      tickFormat: xTime ? d => formatDate(+d, xData.map(Number)) : RESET
+      tickFormat: xTime ? d => formatDate(+d, xData) : RESET
     };
     if (!showY) {
       xC.barConfig = {stroke: "transparent"};

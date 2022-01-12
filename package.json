@@ -28,10 +28,10 @@
     "d3-scale": "^3.3.0",
     "d3-selection": "^2.0.0",
     "d3-shape": "^2.1.0",
-    "d3plus-axis": "^1.0.6",
+    "d3plus-axis": "^1.1.1",
     "d3plus-color": "^1.0.0",
     "d3plus-common": "^1.0.5",
-    "d3plus-format": "^1.0.1",
+    "d3plus-format": "^1.1.1",
     "d3plus-shape": "^1.0.3",
     "d3plus-viz": "^1.0.8"
   },
