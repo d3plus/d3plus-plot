@@ -807,7 +807,7 @@ export default class Plot extends Viz {
         .key(d => d.id)
         .entries(data.filter(d => d.shape === "Line"));
 
-      if (lineData.length && lineData.length < this._dataCutoff) {
+      if (lineData.length) {
 
         const userConfig = configPrep.bind(this)(this._shapeConfig, "shape", "Line");
         testLineShape.config(userConfig);
