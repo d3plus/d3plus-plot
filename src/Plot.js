@@ -7,8 +7,7 @@ import * as d3Shape from "d3-shape";
 
 import {AxisBottom, AxisLeft, AxisRight, AxisTop, date} from "d3plus-axis";
 import {colorAssign, colorContrast, colorDefaults, colorLegible} from "d3plus-color";
-import {accessor, assign, configPrep, constant, elem, RESET, unique} from "d3plus-common";
-import {formatDate} from "d3plus-format";
+import {accessor, assign, configPrep, constant, elem, unique} from "d3plus-common";
 import * as shapes from "d3plus-shape";
 import {textWidth, TextBox} from "d3plus-text";
 const testLineShape = new shapes.Line();
@@ -575,16 +574,18 @@ export default class Plot extends Viz {
      */
     function domainScaleSetup(axis) {
 
+      const scale = !hasBars && this[`_${axis}Time`] ? "Time" : this._discrete === axis || this[`_${axis}Sort`] ? "Point" : "Linear";
+
       const domain = this[`_${axis}Domain`] ? this[`_${axis}Domain`].slice() : domains[axis],
             domain2 = this[`_${axis}2Domain`] ? this[`_${axis}2Domain`].slice() : domains[`${axis}2`];
 
-      if (domain && domain[0] === void 0) domain[0] = domains[axis][0];
-      if (domain && domain[1] === void 0) domain[1] = domains[axis][1];
+      if (scale !== "Point") {
+        if (domain && domain[0] === void 0) domain[0] = domains[axis][0];
+        if (domain && domain[1] === void 0) domain[1] = domains[axis][1];
 
-      if (domain2 && domain2[0] === void 0) domain2[0] = domains[`${axis}2`][0];
-      if (domain2 && domain2[1] === void 0) domain2[1] = domains[`${axis}2`][1];
-
-      const scale = !hasBars && this[`_${axis}Time`] ? "Time" : this._discrete === axis || this[`_${axis}Sort`] ? "Point" : "Linear";
+        if (domain2 && domain2[0] === void 0) domain2[0] = domains[`${axis}2`][0];
+        if (domain2 && domain2[1] === void 0) domain2[1] = domains[`${axis}2`][1];
+      }
 
       return [domain, scale, domain2, scale];
 
