@@ -279,7 +279,6 @@ export default class Plot extends Viz {
           textAnchor: "start",
           verticalAlign: "middle"
         },
-        stroke: (d, i) => colorAssign(this._id(d, i)),
         strokeWidth: constant(2)
       },
       Rect: {
