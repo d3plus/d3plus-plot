@@ -293,7 +293,10 @@ export default class Plot extends Viz {
     this._sizeScale = "sqrt";
     this._stackOffset = stackOffsetDiverging;
     this._stackOrder = stackOrderDescending;
-    this._timelineConfig = assign(this._timelineConfig, {brushing: true});
+    this._timelineConfig = assign(this._timelineConfig, {
+      brushing: true,
+      brushMin: () => this._xTime || this._yTime || this._x2Time|| this._y2Time ? 2 : 1
+    });
 
     this._x = accessor("x");
     this._xAxis = new AxisBottom().align("end");
