@@ -1222,20 +1222,18 @@ export default class Plot extends Viz {
 
       this._shapes.push(s);
 
-      if (d.key === "Line" && this._lineMarkers) {
-        const markers = new shapes.Circle()
-          .data(d.values)
-          .config(shapeConfig)
-          .config(this._lineMarkerConfig)
-          .id(d => `${d.id}_${d.discrete}`);
+      const markers = new shapes.Circle()
+        .data(d.key === "Line" && this._lineMarkers ? d.values : [])
+        .config(shapeConfig)
+        .config(this._lineMarkerConfig)
+        .id(d => `${d.id}_${d.discrete}`);
 
-        for (let e = 0; e < globalEvents.length; e++) markers.on(globalEvents[e], (d, i, x, event) => this._on[globalEvents[e]](d.data, d.i, x, event));
-        for (let e = 0; e < shapeEvents.length; e++) markers.on(shapeEvents[e], (d, i, x, event) => this._on[shapeEvents[e]](d.data, d.i, x, event));
-        for (let e = 0; e < classEvents.length; e++) markers.on(classEvents[e], (d, i, x, event) => this._on[classEvents[e]](d.data, d.i, x, event));
+      for (let e = 0; e < globalEvents.length; e++) markers.on(globalEvents[e], (d, i, x, event) => this._on[globalEvents[e]](d.data, d.i, x, event));
+      for (let e = 0; e < shapeEvents.length; e++) markers.on(shapeEvents[e], (d, i, x, event) => this._on[shapeEvents[e]](d.data, d.i, x, event));
+      for (let e = 0; e < classEvents.length; e++) markers.on(classEvents[e], (d, i, x, event) => this._on[classEvents[e]](d.data, d.i, x, event));
 
-        markers.render();
-        this._shapes.push(markers);
-      }
+      markers.render();
+      this._shapes.push(markers);
 
     });
 
