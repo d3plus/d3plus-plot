@@ -33,7 +33,7 @@
     "d3plus-common": "^1.1.2",
     "d3plus-format": "^1.1.1",
     "d3plus-shape": "^1.0.7",
-    "d3plus-viz": "^1.2.4"
+    "d3plus-viz": "^1.2.5"
   },
   "scripts": {
     "build": "d3plus-build",
