@@ -147,6 +147,7 @@ export default class Plot extends Viz {
       r: constant(3)
     };
     this._lineMarkers = false;
+    this._previousAnnotations = [];
     this._previousShapes = [];
     this._shape = constant("Circle");
     this._shapeConfig = assign(this._shapeConfig, {
@@ -1072,6 +1073,7 @@ export default class Plot extends Viz {
       .render();
 
     const annotationGroup = elem("g.d3plus-plot-annotations", {parent, transition, enter: {transform}, update: {transform}}).node();
+    const annotationShapes = this._annotations.map(d => d.shape);
     this._annotations.forEach(annotation => {
       new shapes[annotation.shape]()
         .config(annotation)
@@ -1086,6 +1088,17 @@ export default class Plot extends Viz {
         .select(annotationGroup)
         .render();
     });
+
+    const exitAnnotations = this._previousAnnotations.filter(d => !annotationShapes.includes(d));
+
+    exitAnnotations.forEach(shape => {
+      new shapes[shape]()
+        .data([])
+        .select(annotationGroup)
+        .render();
+    });
+
+    this._previousAnnotations = annotationShapes;
 
     let yOffset = this._xAxis.barConfig()["stroke-width"];
     if (yOffset) yOffset /= 2;
