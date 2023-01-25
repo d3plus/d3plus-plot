@@ -1,5 +1,5 @@
-import discreteBuffer from "./discreteBuffer";
-import numericBuffer from "./numericBuffer";
+import discreteBuffer from "./discreteBuffer.js";
+import numericBuffer from "./numericBuffer.js";
 
 /**
     Adds a buffer to either side of the non-discrete axis.

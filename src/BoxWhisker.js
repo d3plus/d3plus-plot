@@ -1,6 +1,6 @@
 import {assign, constant} from "d3plus-common";
 
-import {default as Plot} from "./Plot";
+import {default as Plot} from "./Plot.js";
 
 /**
     @class BoxWhisker

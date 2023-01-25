@@ -1,6 +1,6 @@
 import {max, min, sum} from "d3-array";
 import {nest} from "d3-collection";
-import discreteBuffer from "./discreteBuffer";
+import discreteBuffer from "./discreteBuffer.js";
 
 /**
     Adds a buffer to either side of the non-discrete axis.
