@@ -1,4 +1,4 @@
-import {default as AreaPlot} from "./AreaPlot";
+import {default as AreaPlot} from "./AreaPlot.js";
 
 /**
     @class StackedArea
