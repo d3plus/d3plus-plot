@@ -1,6 +1,6 @@
 {
   "name": "d3plus-plot",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "A reusable javascript x/y plot built on D3.",
   "main": "es/index.js",
   "jsnext:main": "es/index",
