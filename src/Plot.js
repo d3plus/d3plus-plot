@@ -701,12 +701,7 @@ export default class Plot extends Viz {
     }
 
     const testGroup = elem("g.d3plus-plot-test", {enter: {opacity: 0}, parent: this._select});
-
-    let x2Ticks = this._discrete === "x" ? domains.x2 : undefined,
-        xTicks = !showY ? extent(domains.x) : this._discrete === "x" ? domains.x : undefined,
-        y2Ticks = this._discrete === "y" ? domains.y2 : undefined,
-        yTicks = !showX ? extent(domains.y) : this._discrete === "y" ? domains.y : undefined;
-
+        
     /**
      * Hides an axis' ticks and labels if they all exist as labels for the data to be displayed,
      * primarily occuring in simple BarChart visualizations where the both the x-axis ticks and
@@ -722,10 +717,10 @@ export default class Plot extends Viz {
 
     // sets an axis' ticks to [] if the axis scale is "Point" (discrete) and every tick String
     // is also in the barLabels Array
-    if (x2Scale === "Point" && x2Ticks instanceof Array && x2Ticks.every(t => barLabels.includes(`${t}`))) x2Ticks = [];
-    if (xScale === "Point" && xTicks instanceof Array && xTicks.every(t => barLabels.includes(`${t}`))) xTicks = [];
-    if (y2Scale === "Point" && y2Ticks instanceof Array && y2Ticks.every(t => barLabels.includes(`${t}`))) y2Ticks = [];
-    if (yScale === "Point" && yTicks instanceof Array && yTicks.every(t => barLabels.includes(`${t}`))) yTicks = [];
+    const x2Ticks = x2Scale === "Point" && x2Ticks instanceof Array && x2Ticks.every(t => barLabels.includes(`${t}`)) ? [] : undefined;
+    const xTicks = xScale === "Point" && xTicks instanceof Array && xTicks.every(t => barLabels.includes(`${t}`)) ? [] : undefined;
+    const y2Ticks = y2Scale === "Point" && y2Ticks instanceof Array && y2Ticks.every(t => barLabels.includes(`${t}`)) ? [] : undefined;
+    const yTicks = yScale === "Point" && yTicks instanceof Array && yTicks.every(t => barLabels.includes(`${t}`)) ? [] : undefined;
 
     if (showY) {
       this._yTest
