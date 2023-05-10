@@ -6,7 +6,7 @@ const ceil10 = v => Math.pow(10, Math.ceil(Math.log10(Math.abs(v)))) * Math.pow(
 /** */
 export default function(axis, scale, value, size, range, domain, index, invert) {
 
-  if (isNaN(domain[0]) || isNaN(domain[1])) return domain;
+  if (value === undefined || isNaN(domain[0]) || isNaN(domain[1])) return domain;
 
   if (invert) {
     domain = domain.slice().reverse();
@@ -28,7 +28,7 @@ export default function(axis, scale, value, size, range, domain, index, invert) 
     return invert ? domain.reverse() : domain;
   }
 
-  const logMod = domain[0] === domain[1] ? 10 : Math.abs(Math.log(domain[1] - domain[0]) / 10);
+  const logMod = domain[0] === domain[1] ? 10 : Math.abs(Math.log(domain[1] - domain[0]) / 100);
 
   const needsBuffer = () => {
     let tempAxis = axis.copy();
@@ -60,7 +60,7 @@ export default function(axis, scale, value, size, range, domain, index, invert) 
       pixelValue = diverging ? tempAxis(Math.abs(value)) : tempAxis(value);
     }
     else pixelValue = tempAxis(value);
-
+    
     if (invert) {
       if (index === 0) outside = pixelValue + size > tempRange[index];
       else if (index === 1) outside = pixelValue - size < tempRange[index];
