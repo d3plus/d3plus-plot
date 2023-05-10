@@ -467,8 +467,6 @@ export default class Plot extends Viz {
     const yData = getValues.bind(this)("y");
     const y2Data = getValues.bind(this)("y2");
 
-    const hasBars = data.some(d => d.shape === "Bar");
-
     let discreteKeys, domains, stackData, stackKeys;
     if (this._stacked) {
 
@@ -546,7 +544,7 @@ export default class Plot extends Viz {
       const discreteData = this._discrete === "x" ? xData : yData;
 
       domains = {
-        [this._discrete]: !hasBars && this[`_${this._discrete}Time`] ? extent(discreteData) : discreteData,
+        [this._discrete]: this[`_${this._discrete}Time`] ? extent(discreteData) : discreteData,
         [opp]: [min(stackData.map(g => min(g.map(p => p[0])))), max(stackData.map(g => max(g.map(p => p[1]))))]
       };
 
@@ -563,10 +561,10 @@ export default class Plot extends Viz {
       }
 
       domains = {
-        x: (hasBars || !xTime) && this._discrete === "x" || this._xSort ? xData : extent(xData),
-        x2: (hasBars || !x2Time) && this._discrete === "x" || this._x2Sort ? x2Data : extent(x2Data),
-        y: (hasBars || !yTime) && this._discrete === "y" || this._ySort ? yData : extent(yData),
-        y2: (hasBars || !y2Time) && this._discrete === "y" || this._y2Sort ? y2Data : extent(y2Data)
+        x: !xTime && this._discrete === "x" || this._xSort ? xData : extent(xData),
+        x2: !x2Time && this._discrete === "x" || this._x2Sort ? x2Data : extent(x2Data),
+        y: !yTime && this._discrete === "y" || this._ySort ? yData : extent(yData),
+        y2: !y2Time && this._discrete === "y" || this._y2Sort ? y2Data : extent(y2Data)
       };
     }
 
@@ -577,7 +575,7 @@ export default class Plot extends Viz {
      */
     function domainScaleSetup(axis) {
 
-      const scale = !hasBars && this[`_${axis}Time`] ? "Time" : this._discrete === axis || this[`_${axis}Sort`] ? "Point" : "Linear";
+      const scale = this[`_${axis}Time`] ? "Time" : this._discrete === axis || this[`_${axis}Sort`] ? "Point" : "Linear";
 
       const domain = this[`_${axis}Domain`] ? this[`_${axis}Domain`].slice() : domains[axis],
             domain2 = this[`_${axis}2Domain`] ? this[`_${axis}2Domain`].slice() : domains[`${axis}2`];
@@ -975,7 +973,7 @@ export default class Plot extends Viz {
 
     const y2Transform = `translate(-${this._margin.right}, ${this._margin.top + topOffset})`;
     const y2Group = y2Exists && elem("g.d3plus-plot-y2-axis", {parent, transition, enter: {transform: y2Transform}, update: {transform: y2Transform}});
-
+    
     this._xAxis
       .domain(xDomain)
       .height(height - (x2Height + topOffset + verticalMargin))
