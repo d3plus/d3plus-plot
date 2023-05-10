@@ -33,8 +33,9 @@ export default function({data, x, y, x2, y2, buffer = 10}) {
     negVals = groupedData.map(arr => sum(arr.filter(d => d < 0)));
   }
   else {
-    posVals = data.map(d => d[isDiscreteX ? yKey : xKey]);
-    negVals = posVals;
+    const allValues = data.map(d => d[isDiscreteX ? yKey : xKey]);
+    posVals = allValues.filter(d => d > 0);
+    negVals = allValues.filter(d => d < 0);
   }
 
   let bMax = oppScale(max(posVals));
@@ -49,7 +50,7 @@ export default function({data, x, y, x2, y2, buffer = 10}) {
   if (bMin < oppDomain[0]) oppDomain[0] = bMin;
 
   if (isDiscreteX) oppDomain.reverse();
-
+  
   oppScale.domain(oppDomain);
 
   discreteBuffer(isDiscreteX ? x : y, data, this._discrete);

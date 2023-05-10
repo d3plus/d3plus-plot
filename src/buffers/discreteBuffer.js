@@ -6,7 +6,8 @@ export default (scale, data, discrete) => {
 
   if (scale.padding) scale.padding(0.5);
   else {
-    const closest = data.map(d => d[discrete]).reduce((acc, curr, i, arr) => {
+    let uniqueValues = Array.from(new Set(data.map(d => +d[discrete])));
+    const closest = uniqueValues.reduce((acc, curr, i, arr) => {
       if (!i) return acc;
       const prev = arr[i - 1];
       if (!acc || curr - prev < acc) return curr - prev;
