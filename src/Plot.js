@@ -470,9 +470,11 @@ export default class Plot extends Viz {
     let discreteKeys, domains, stackData, stackKeys;
     if (this._stacked) {
 
+      const stackedData = data.filter(d => ["Area", "Bar"].includes(d.shape));
+
       const groupValues = nest()
         .key(d => d.group)
-        .entries(data)
+        .entries(stackedData)
         .reduce((obj, d) => {
           if (!obj[d.key]) obj[d.key] = 0;
           obj[d.key] += sum(d.values, dd => dd[opp]);
@@ -973,7 +975,7 @@ export default class Plot extends Viz {
 
     const y2Transform = `translate(-${this._margin.right}, ${this._margin.top + topOffset})`;
     const y2Group = y2Exists && elem("g.d3plus-plot-y2-axis", {parent, transition, enter: {transform: y2Transform}, update: {transform: y2Transform}});
-    
+
     this._xAxis
       .domain(xDomain)
       .height(height - (x2Height + topOffset + verticalMargin))
@@ -1111,24 +1113,26 @@ export default class Plot extends Viz {
       y1: discrete === "y" ? null : d => d.y2 ? y(d.y2, "y2") : y(d.y) - yOffset
     };
 
-    if (this._stacked) {
-      const scale = opp === "x" ? x : y;
-      shapeConfig[`${opp}`] = shapeConfig[`${opp}0`] = d => {
-        const dataIndex = stackKeys.indexOf(d.id),
-              discreteIndex = discreteKeys.indexOf(d.discrete);
-        return dataIndex >= 0 ? scale(stackData[dataIndex][discreteIndex][0]) : scale(domains[opp][opp === "x" ? 0 : 1]);
-      };
-      shapeConfig[`${opp}1`] = d => {
-        const dataIndex = stackKeys.indexOf(d.id),
-              discreteIndex = discreteKeys.indexOf(d.discrete);
-        return dataIndex >= 0 ? scale(stackData[dataIndex][discreteIndex][1]) : scale(domains[opp][opp === "x" ? 0 : 1]);
-      };
-    }
-
     const events = Object.keys(this._on);
     shapeData.forEach(d => {
 
-      const s = new shapes[d.key]().config(shapeConfig).data(d.values);
+      const shapeConfigInner = Object.assign({}, shapeConfig);
+
+      if (this._stacked && ["Area", "Bar"].includes(d.key)) {
+        const scale = opp === "x" ? x : y;
+        shapeConfigInner[`${opp}`] = shapeConfigInner[`${opp}0`] = d => {
+          const dataIndex = stackKeys.indexOf(d.id),
+                discreteIndex = discreteKeys.indexOf(d.discrete);
+          return dataIndex >= 0 ? scale(stackData[dataIndex][discreteIndex][0]) : scale(domains[opp][opp === "x" ? 0 : 1]);
+        };
+        shapeConfigInner[`${opp}1`] = d => {
+          const dataIndex = stackKeys.indexOf(d.id),
+                discreteIndex = discreteKeys.indexOf(d.discrete);
+          return dataIndex >= 0 ? scale(stackData[dataIndex][discreteIndex][1]) : scale(domains[opp][opp === "x" ? 0 : 1]);
+        };
+      }
+
+      const s = new shapes[d.key]().config(shapeConfigInner).data(d.values);
 
       if (d.key === "Bar") {
 
@@ -1138,14 +1142,21 @@ export default class Plot extends Viz {
         const vals = this._discrete === "x" ? xDomain : yDomain;
         const range = this._discrete === "x" ? xRange : yRange;
         if (scaleType !== "Point" && vals.length === 2) {
-          space = (scale(d.values[this._discrete === "x" ? 0 : d.values.length - 1][this._discrete]) - scale(vals[0])) * 2;
+          const allPositions = Array.from(new Set(d.values.map(d => scale(d[this._discrete]))));
+          space = allPositions.reduce((n, d, i, arr) => {
+            if (i) {
+              const dist = Math.abs(d - arr[i - 1]);
+              if (dist < n) n = dist;
+            }
+            return n;
+          }, Infinity);
         }
         else if (vals.length > 1) space = scale(vals[1]) - scale(vals[0]);
         else space = range[range.length - 1] - range[0];
         if (this._groupPadding < space) space -= this._groupPadding;
 
         let barSize = space || 1;
-
+        
         const groups = nest()
           .key(d => d[this._discrete])
           .key(d => d.group)
