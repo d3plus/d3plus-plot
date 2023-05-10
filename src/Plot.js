@@ -671,13 +671,13 @@ export default class Plot extends Viz {
       tickSize: 0
     };
 
-    const defaultX2Config = x2Exists ? {data: x2Data} : defaultConfig;
-    const defaultY2Config = y2Exists ? {data: y2Data} : defaultConfig;
+    const defaultX2Config = x2Exists ? {data: x2Time ? x2Data : []} : defaultConfig;
+    const defaultY2Config = y2Exists ? {data: y2Time ? y2Data : []} : defaultConfig;
     const showX = this._discrete === "x" && this._width > this._discreteCutoff || this._width > this._xCutoff;
     const showY = this._discrete === "y" && this._height > this._discreteCutoff || this._height > this._yCutoff;
 
     const yC = {
-      data: yData,
+      data: yTime ? yData : [],
       locale: this._locale,
       scalePadding: y.padding ? y.padding() : 0
     };
@@ -758,7 +758,7 @@ export default class Plot extends Viz {
     let y2Bounds = this._y2Test.outerBounds();
     let y2Width = y2Bounds.width ? y2Bounds.width + this._y2Test.padding() : undefined;
     const xC = {
-      data: xData,
+      data: xTime ? xData : [],
       locale: this._locale,
       scalePadding: x.padding ? x.padding() : 0
     };
