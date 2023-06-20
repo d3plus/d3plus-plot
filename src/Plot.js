@@ -88,7 +88,16 @@ function stackOffsetDiverging(series, order) {
  * @private
  */
 function outside(d, i) {
+
+  // Force all Stacked Bars to use "inside" labels.
   if (this._stacked) return false;
+
+  // Detect user "outside" or "inside" override.
+  const labelPosition = this._labelPosition(d, i);
+  if (labelPosition === "outside") return true;
+  else if (labelPosition === "inside") return false;
+
+  // Run "auto" logic based on available space.
   const other = this._discrete.charAt(0) === "x" ? "y" : "x";
   const nonDiscrete = this._discrete.replace(this._discrete.charAt(0), other);
   const range = this[`_${nonDiscrete}Axis`]._d3Scale.range();
@@ -101,6 +110,7 @@ function outside(d, i) {
   const pos = this[`_${nonDiscrete}Axis`]._getPosition(value);
   const size = Math.abs(pos - zero);
   return size < space / 2;
+
 }
 
 /**
@@ -142,6 +152,7 @@ export default class Plot extends Viz {
     };
     this._discreteCutoff = 100;
     this._groupPadding = 5;
+    this._labelPosition = constant("auto");
     this._lineMarkerConfig = {
       fill: (d, i) => colorAssign(this._id(d, i)),
       r: constant(3)
@@ -1381,6 +1392,16 @@ export default class Plot extends Viz {
   */
   groupPadding(_) {
     return arguments.length ? (this._groupPadding = _, this) : this._groupPadding;
+  }
+
+  /**
+      @memberof Viz
+      @desc The behavior to be used when calculating the position and size of each shape's label(s). The value passed can either be the _String_ name of the behavior to be used for all shapes, or an accessor _Function_ that will be provided each data point and will be expected to return the behavior to be used for that data point. The availability and options for this method depend on the default logic for each Shape. As an example, the values "outside" or "inside" can be set for Bar shapes, whose "auto" default will calculate the best position dynamically based on the available space.
+      @param {Function|String} [*value* = "auto"]
+      @chainable
+  */
+  labelPosition(_) {
+    return arguments.length ? (this._labelPosition = typeof _ === "function" ? _ : constant(_), this) : this._labelPosition;
   }
 
   /**

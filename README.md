@@ -25,7 +25,7 @@ Live examples can be found on [d3plus.org](https://d3plus.org/), which includes 
 
 ## API Reference
 
-##### 
+#####
 * [AreaPlot](#AreaPlot)
 * [BarChart](#BarChart)
 * [BoxWhisker](#BoxWhisker)
