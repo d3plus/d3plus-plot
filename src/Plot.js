@@ -108,7 +108,7 @@ function outside(d, i) {
     ? negative ? range[1] - zero : zero - range[0]
     : negative ? zero - range[0] : range[1] - zero;
   const pos = this[`_${nonDiscrete}Axis`]._getPosition(value);
-  const size = Math.abs(pos - zero);
+  const size = Math.abs(negative ? zero - pos : pos - zero);
   return size < space / 2;
 
 }
@@ -128,6 +128,7 @@ export default class Plot extends Viz {
   constructor() {
 
     super();
+    this._axisPersist = false;
     this._annotations = [];
     this._backgroundConfig = {
       duration: 0,
@@ -222,8 +223,8 @@ export default class Plot extends Viz {
           return {
             [width]: s[width],
             [height]: s[height],
-            x: invert ? -s.width / 2 : negative ? this._stacked ? padding : padding - s.width : -padding,
-            y: invert ? negative ? this._stacked ? padding - s.height : padding : -s.height + padding : -s.height / 2 + padding
+            x: invert ? -s.width / 2 : negative ? this._stacked ? padding - s.width : padding - s.width : -padding,
+            y: invert ? negative ? this._stacked ? padding : padding : -s.height + padding : -s.height / 2 + padding
           };
 
         },
@@ -398,30 +399,42 @@ export default class Plot extends Viz {
 
     if (!this._filteredData.length) return this;
 
+    /* Determines whether or not any of the x or y axes are a "time" axis. */
+    const firstElemTime = this._time ? this._time(this._filteredData[0], 0) : false;
+    const x2Time = this._x2Time = this._time && this._x2(this._filteredData[0], 0) === firstElemTime,
+          xTime = this._xTime = this._time && this._x(this._filteredData[0], 0) === firstElemTime,
+          y2Time = this._y2Time = this._time && this._y2(this._filteredData[0], 0) === firstElemTime,
+          yTime = this._yTime = this._time && this._y(this._filteredData[0], 0) === firstElemTime;
+
     const stackGroup = (d, i) => this._stacked
       ? `${this._groupBy.length > 1 ? this._ids(d, i).slice(0, -1).join("_") : "group"}`
       : `${this._ids(d, i).join("_")}`;
 
-    let data = this._filteredData.map((d, i) => ({
-      __d3plus__: true,
-      data: d,
-      group: stackGroup(d, i),
-      i,
-      hci: this._confidence && this._confidence[1] && this._confidence[1](d, i),
-      id: this._ids(d, i).slice(0, this._drawDepth + 1).join("_"),
-      lci: this._confidence && this._confidence[0] && this._confidence[0](d, i),
-      shape: this._shape(d, i),
-      x: this._x(d, i),
-      x2: this._x2(d, i),
-      y: this._y(d, i),
-      y2: this._y2(d, i)
-    }));
+    const prepData = (d, i) => {
+      const x = {
+        __d3plus__: true,
+        data: d,
+        group: stackGroup(d, i),
+        i,
+        hci: this._confidence && this._confidence[1] && this._confidence[1](d, i),
+        id: this._ids(d, i).slice(0, this._drawDepth + 1).join("_"),
+        lci: this._confidence && this._confidence[0] && this._confidence[0](d, i),
+        shape: this._shape(d, i),
+        x: xTime ? date(this._x(d, i)) : this._x(d, i),
+        x2: x2Time ? date(this._x2(d, i)) : this._x2(d, i),
+        y: yTime ? date(this._y(d, i)) : this._y(d, i),
+        y2: y2Time ? date(this._y2(d, i)) : this._y2(d, i)
+      };
+      x.discrete = x.shape === "Bar" ? `${x[this._discrete]}_${x.group}` : `${x[this._discrete]}`;
+      x.id = x.shape === "Bar" ? `${x.id}_${x.discrete}` : x.id;
+      return x;
+    };
 
-    this._formattedData = data;
+    const data = this._formattedData = this._filteredData.map(prepData);
+    const axisData = this._axisPersist ? this._data.map(prepData) : data;
 
     if (this._size) {
-      const rExtent = extent(data, d => this._size(d.data));
-      this._sizeScaleD3 = () => this._sizeMin;
+      const rExtent = extent(axisData, d => this._size(d.data));
       this._sizeScaleD3 = scales[`scale${this._sizeScale.charAt(0).toUpperCase()}${this._sizeScale.slice(1)}`]()
         .domain(rExtent)
         .range([rExtent[0] === rExtent[1] ? this._sizeMax : min([this._sizeMax / 2, this._sizeMin]), this._sizeMax]);
@@ -430,8 +443,8 @@ export default class Plot extends Viz {
       this._sizeScaleD3 = () => this._sizeMin;
     }
 
-    const x2Exists = data.some(d => d.x2 !== undefined),
-          y2Exists = data.some(d => d.y2 !== undefined);
+    const x2Exists = axisData.some(d => d.x2 !== undefined),
+          y2Exists = axisData.some(d => d.y2 !== undefined);
 
     const height = this._height - this._margin.top - this._margin.bottom,
           opp = this._discrete ? this._discrete === "x" ? "y" : "x" : undefined,
@@ -441,47 +454,34 @@ export default class Plot extends Viz {
           transition = this._transition,
           width = this._width - this._margin.left - this._margin.right;
 
-    const x2Time = this._x2Time = this._time && data[0].x2 === this._time(data[0].data, data[0].i),
-          xTime = this._xTime = this._time && data[0].x === this._time(data[0].data, data[0].i),
-          y2Time = this._y2Time = this._time && data[0].y2 === this._time(data[0].data, data[0].i),
-          yTime = this._yTime = this._time && data[0].y === this._time(data[0].data, data[0].i);
-
-    for (let i = 0; i < data.length; i++) {
-      const d = data[i];
-      if (xTime) d.x = date(d.x);
-      if (x2Time) d.x2 = date(d.x2);
-      if (yTime) d.y = date(d.y);
-      if (y2Time) d.y2 = date(d.y2);
-      d.discrete = d.shape === "Bar" ? `${d[this._discrete]}_${d.group}` : `${d[this._discrete]}`;
-    }
-
     /**
      * @desc Returns all unique values for a given axis.
      * @param {String} axis
      * @returns {Array}
      * @private
      */
-    function getValues(axis) {
-      let axisData = data
+    function getAxisValues(axis) {
+      const localData = this[`_${axis}Time`] ? data : axisData;
+      let myData = localData
         .filter(d => d[axis])
         .sort((a, b) => this[`_${axis}Sort`] ? this[`_${axis}Sort`](a.data, b.data) : a[axis] - b[axis])
         .map(d => d[axis]);
       if (this._discrete !== axis.charAt(0) && this._confidence) {
-        if (this._confidence[0]) axisData = axisData.concat(data.map(d => d.lci));
-        if (this._confidence[1]) axisData = axisData.concat(data.map(d => d.hci));
+        if (this._confidence[0]) myData = myData.concat(localData.map(d => d.lci));
+        if (this._confidence[1]) myData = myData.concat(localData.map(d => d.hci));
       }
-      return unique(axisData, d => `${d}`);
+      return unique(myData, d => `${d}`);
     }
 
-    const xData = getValues.bind(this)("x");
-    const x2Data = getValues.bind(this)("x2");
-    const yData = getValues.bind(this)("y");
-    const y2Data = getValues.bind(this)("y2");
+    const xData = getAxisValues.bind(this)("x");
+    const x2Data = getAxisValues.bind(this)("x2");
+    const yData = getAxisValues.bind(this)("y");
+    const y2Data = getAxisValues.bind(this)("y2");
 
     let discreteKeys, domains, stackData, stackKeys;
     if (this._stacked) {
 
-      const stackedData = data.filter(d => ["Area", "Bar"].includes(d.shape));
+      const stackedData = axisData.filter(d => ["Area", "Bar"].includes(d.shape));
 
       const groupValues = nest()
         .key(d => d.group)
@@ -492,7 +492,7 @@ export default class Plot extends Viz {
           return obj;
         }, {});
 
-      data = data.sort((a, b) => {
+      axisData.sort((a, b) => {
         if (this[`_${this._discrete}Sort`]) return this[`_${this._discrete}Sort`](a.data, b.data);
         const a1 = a[this._discrete], b1 = b[this._discrete];
         if (a1 - b1 !== 0) return a1 - b1;
@@ -500,12 +500,12 @@ export default class Plot extends Viz {
         return b[opp] - a[opp];
       });
 
-      discreteKeys = Array.from(new Set(data.map(d => d.discrete)));
-      stackKeys = Array.from(new Set(data.map(d => d.id)));
+      discreteKeys = Array.from(new Set(axisData.map(d => d.discrete)));
+      stackKeys = Array.from(new Set(axisData.map(d => d.id)));
 
       stackData = nest()
         .key(d => d.discrete)
-        .entries(data)
+        .entries(axisData)
         .map(d => d.values);
 
       stackData.forEach(g => {
@@ -513,7 +513,7 @@ export default class Plot extends Viz {
         if (ids.length < stackKeys.length) {
           stackKeys.forEach(k => {
             if (!ids.includes(k)) {
-              const d = data.filter(d => d.id === k)[0];
+              const d = axisData.filter(d => d.id === k)[0];
               if (d.shape === "Area") {
                 const group = stackGroup(d.data, d.i);
                 const fillerPoint = {
@@ -521,7 +521,8 @@ export default class Plot extends Viz {
                   data: d.data,
                   discrete: d.shape === "Bar" ? `${g[0][this._discrete]}_${group}` : `${g[0][this._discrete]}`,
                   group,
-                  id: k,
+                  id: d.id,
+                  ids: k,
                   shape: d.shape,
                   [this._discrete]: g[0][this._discrete],
                   [opp]: 0
@@ -567,10 +568,10 @@ export default class Plot extends Viz {
       const discrete = this._discrete || "x";
 
       if (this[`_${this._discrete}Sort`]) {
-        data.sort((a, b) => this[`_${this._discrete}Sort`](a.data, b.data));
+        axisData.sort((a, b) => this[`_${this._discrete}Sort`](a.data, b.data));
       }
       else {
-        data.sort((a, b) => a[discrete] - b[discrete]);
+        axisData.sort((a, b) => a[discrete] - b[discrete]);
       }
 
       domains = {
@@ -612,7 +613,7 @@ export default class Plot extends Viz {
       const userScale = this[`_${axis}Config`].scale;
       if (userScale === "auto") {
         if (this._discrete === axis) return fallback;
-        const values = data.map(d => d[axis]);
+        const values = axisData.map(d => d[axis]);
         return deviation(values) / mean(values) > 3 ? "log" : "linear";
       }
       return userScale || fallback;
@@ -628,7 +629,7 @@ export default class Plot extends Viz {
       .forEach(axis => {
         if (this[`_${axis}ConfigScale`] === "log" && domains[axis].includes(0)) {
           if (min(domains[axis]) < 0) domains[axis][1] = max(data.map(d => d[axis]).filter(Boolean));
-          else domains[axis][0] = min(data.map(d => d[axis]).filter(Boolean));
+          else domains[axis][0] = min(axisData.map(d => d[axis]).filter(Boolean));
         }
       });
 
@@ -657,7 +658,12 @@ export default class Plot extends Viz {
 
     const oppScale = this._discrete === "x" ? yScale : xScale;
     if (oppScale !== "Point") {
-      shapeData.forEach(d => {
+
+      const allShapeData = nest()
+        .key(d => d.shape)
+        .entries(axisData);
+
+      allShapeData.forEach(d => {
         if (this._buffer[d.key]) {
           const res = this._buffer[d.key].bind(this)({data: d.values, x, y, yScale: yConfigScale, xScale: xConfigScale, config: this._shapeConfig[d.key]});
           x = res[0];
@@ -667,6 +673,7 @@ export default class Plot extends Viz {
           y2 = res2[1];
         }
       });
+
     }
 
     const xDomain = x.domain();
@@ -724,7 +731,7 @@ export default class Plot extends Viz {
     const barLabelFunction = barConfig.label !== undefined
       ? typeof barConfig.label === "function" ? barConfig.label : constant(barConfig.label)
       : this._drawLabel;
-    const barLabels = this._filteredData.map((d, i) => barLabelFunction(d, i)).filter(d => typeof d === "number" || d).map(String);
+    const barLabels = axisData.map(d => barLabelFunction(d.data, d.i)).filter(d => typeof d === "number" || d).map(String);
 
     // sets an axis' ticks to [] if the axis scale is "Point" (discrete) and every tick String
     // is also in the barLabels Array
@@ -1110,7 +1117,7 @@ export default class Plot extends Viz {
     if (yOffset) yOffset /= 2;
 
     const discrete = this._discrete || "x";
-
+    
     const shapeConfig = {
       discrete: this._discrete,
       duration: this._duration,
@@ -1128,18 +1135,18 @@ export default class Plot extends Viz {
     shapeData.forEach(d => {
 
       const shapeConfigInner = Object.assign({}, shapeConfig);
-
       if (this._stacked && ["Area", "Bar"].includes(d.key)) {
         const scale = opp === "x" ? x : y;
         shapeConfigInner[`${opp}`] = shapeConfigInner[`${opp}0`] = d => {
           const dataIndex = stackKeys.indexOf(d.id),
                 discreteIndex = discreteKeys.indexOf(d.discrete);
-          return dataIndex >= 0 ? scale(stackData[dataIndex][discreteIndex][0]) : scale(domains[opp][opp === "x" ? 0 : 1]);
-        };
-        shapeConfigInner[`${opp}1`] = d => {
+          const scaleIndex = d[opp] < 0 ? 1 : 0;
+          return dataIndex >= 0 ? scale(stackData[dataIndex][discreteIndex][scaleIndex]) : scale(domains[opp][opp === "x" ? 0 : 1]);
+        };        shapeConfigInner[`${opp}1`] = d => {
           const dataIndex = stackKeys.indexOf(d.id),
                 discreteIndex = discreteKeys.indexOf(d.discrete);
-          return dataIndex >= 0 ? scale(stackData[dataIndex][discreteIndex][1]) : scale(domains[opp][opp === "x" ? 0 : 1]);
+                const scaleIndex = d[opp] < 0 ? 0 : 1;
+          return dataIndex >= 0 ? scale(stackData[dataIndex][discreteIndex][scaleIndex]) : scale(domains[opp][opp === "x" ? 0 : 1]);
         };
       }
 
@@ -1295,6 +1302,16 @@ export default class Plot extends Viz {
   */
   annotations(_) {
     return arguments.length ? (this._annotations = _ instanceof Array ? _ : [_], this) : this._annotations;
+  }
+
+  /**
+      @memberof Plot
+      @desc Determines whether the x and y axes should have their scales persist while users filter the data, the timeline being the prime example (set this to `true` to make the axes stay consistent when the timeline changes).
+      @param {Boolean} [*value* = false]
+      @chainable
+  */
+  axisPersist(_) {
+    return arguments.length ? (this._axisPersist = _, this) : this._axisPersist;
   }
 
   /**
