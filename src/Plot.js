@@ -401,17 +401,19 @@ export default class Plot extends Viz {
 
     /* Determines whether or not any of the x or y axes are a "time" axis. */
     const firstElemTime = this._time ? this._time(this._filteredData[0], 0) : false;
-    const x2Time = this._x2Time = this._time && this._x2(this._filteredData[0], 0) === firstElemTime,
-          xTime = this._xTime = this._time && this._x(this._filteredData[0], 0) === firstElemTime,
-          y2Time = this._y2Time = this._time && this._y2(this._filteredData[0], 0) === firstElemTime,
-          yTime = this._yTime = this._time && this._y(this._filteredData[0], 0) === firstElemTime;
+    const x2Time = this._x2Time = firstElemTime && this._x2(this._filteredData[0], 0) === firstElemTime,
+          xTime = this._xTime = firstElemTime && this._x(this._filteredData[0], 0) === firstElemTime,
+          y2Time = this._y2Time = firstElemTime && this._y2(this._filteredData[0], 0) === firstElemTime,
+          yTime = this._yTime = firstElemTime && this._y(this._filteredData[0], 0) === firstElemTime;
 
-    const stackGroup = (d, i) => this._stacked
+    const timeAxis = (xTime || x2Time || yTime || y2Time);
+
+    const stackGroup = (d, i) => `${!timeAxis && this._time ? this._time(d, i) : "time"}_${this._stacked
       ? `${this._groupBy.length > 1 ? this._ids(d, i).slice(0, -1).join("_") : "group"}`
-      : `${this._ids(d, i).join("_")}`;
+      : `${this._ids(d, i).join("_")}`}`;
 
     const prepData = (d, i) => {
-      const x = {
+      const newD = {
         __d3plus__: true,
         data: d,
         group: stackGroup(d, i),
@@ -425,9 +427,9 @@ export default class Plot extends Viz {
         y: yTime ? date(this._y(d, i)) : this._y(d, i),
         y2: y2Time ? date(this._y2(d, i)) : this._y2(d, i)
       };
-      x.discrete = x.shape === "Bar" ? `${x[this._discrete]}_${x.group}` : `${x[this._discrete]}`;
-      x.id = x.shape === "Bar" ? `${x.id}_${x.discrete}` : x.id;
-      return x;
+      newD.discrete = newD.shape === "Bar" ? `${newD[this._discrete]}_${newD.group}` : `${newD[this._discrete]}`;
+      newD.id = newD.shape === "Bar" ? `${newD.id}_${newD[this._discrete]}` : newD.id;
+      return newD;
     };
 
     const data = this._formattedData = this._filteredData.map(prepData);
