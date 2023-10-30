@@ -14,11 +14,19 @@ const testLineShape = new shapes.Line();
 const testTextBox = new TextBox();
 import {Viz} from "d3plus-viz";
 
+import {default as discreteBuffer} from "./buffers/discreteBuffer.js";
 import {default as BarBuffer} from "./buffers/Bar.js";
 import {default as BoxBuffer} from "./buffers/Box.js";
 import {default as CircleBuffer} from "./buffers/Circle.js";
 import {default as LineBuffer} from "./buffers/Line.js";
 import {default as RectBuffer} from "./buffers/Rect.js";
+const defaultBuffers = {
+  Bar: BarBuffer,
+  Box: BoxBuffer,
+  Circle: CircleBuffer,
+  Line: LineBuffer,
+  Rect: RectBuffer
+};
 
 /**
     @desc Logic for determining default sizes of shapes using the sizeScaleD3 internal function.
@@ -135,13 +143,7 @@ export default class Plot extends Viz {
       fill: "transparent"
     };
     this._barPadding = 0;
-    this._buffer = {
-      Bar: BarBuffer,
-      Box: BoxBuffer,
-      Circle: CircleBuffer,
-      Line: LineBuffer,
-      Rect: RectBuffer
-    };
+    this._buffer = assign({}, defaultBuffers, {Bar: false, Line: false});
     this._confidenceConfig = {
       fill: (d, i) => {
         const c = typeof this._shapeConfig.Line.stroke === "function"
@@ -667,6 +669,9 @@ export default class Plot extends Viz {
         .entries(axisData);
 
       allShapeData.forEach(d => {
+        if (["Bar", "Box"].includes(d.key)) {
+          discreteBuffer(this._discrete === "x" ? x : y, data, this._discrete);
+        }
         if (this._buffer[d.key]) {
           const res = this._buffer[d.key].bind(this)({data: d.values, x, y, yScale: yConfigScale, xScale: xConfigScale, config: this._shapeConfig[d.key]});
           x = res[0];
@@ -734,7 +739,6 @@ export default class Plot extends Viz {
       ? typeof barConfig.label === "function" ? barConfig.label : constant(barConfig.label)
       : this._drawLabel;
     const barLabels = axisData.map(d => barLabelFunction(d.data, d.i)).filter(d => typeof d === "number" || d).map(String);
-    console.log(axisData.map(d => this._y(d.data)), barLabels, yScale);
 
     // sets an axis' ticks to [] if the axis scale is "Point" (discrete) and every tick String
     // is also in the barLabels Array
@@ -1349,6 +1353,27 @@ export default class Plot extends Viz {
   */
   baseline(_) {
     return arguments.length ? (this._baseline = _, this) : this._baseline;
+  }
+
+  /**
+       @memberof Plot
+       @desc Determines whether or not to add additional padding at the ends of x or y scales. The most commone use for this is in Scatter Plots, so that the shapes do not appear directly on the axis itself. The value provided can either be `true` or `false` to toggle the behavior for all shape types, or a keyed Object for each shape type (ie. `{Bar: false, Circle: true, Line: false}`).
+       @param {Object|Boolean} [*value*]
+       @chainable
+   */
+  buffer(_) {
+    if (arguments.length) {
+      if (!_) this._buffer = {};
+      else if (_ === true) this._buffer = defaultBuffers;
+      else {
+        this._buffer = assign({}, this._buffer, _);
+        for (let key in this._buffer) {
+          if (this._buffer[key] === true) this._buffer[key] = defaultBuffers[key];
+        }
+      }
+      return this;
+    }
+    return this._buffer;
   }
 
   /**
