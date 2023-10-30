@@ -714,8 +714,7 @@ export default class Plot extends Viz {
         },
         labelConfig: {
           padding: 0,
-          rotate: 0,
-          verticalAlign: d => d.id === yTicks[0] ? "top" : "bottom"
+          rotate: 0
         },
         labelRotation: false
       };
@@ -735,13 +734,18 @@ export default class Plot extends Viz {
       ? typeof barConfig.label === "function" ? barConfig.label : constant(barConfig.label)
       : this._drawLabel;
     const barLabels = axisData.map(d => barLabelFunction(d.data, d.i)).filter(d => typeof d === "number" || d).map(String);
+    console.log(axisData.map(d => this._y(d.data)), barLabels, yScale);
 
     // sets an axis' ticks to [] if the axis scale is "Point" (discrete) and every tick String
     // is also in the barLabels Array
-    const x2Ticks = x2Scale === "Point" && x2Ticks instanceof Array && x2Ticks.every(t => barLabels.includes(`${t}`)) ? [] : undefined;
-    const xTicks = xScale === "Point" && xTicks instanceof Array && xTicks.every(t => barLabels.includes(`${t}`)) ? [] : undefined;
-    const y2Ticks = y2Scale === "Point" && y2Ticks instanceof Array && y2Ticks.every(t => barLabels.includes(`${t}`)) ? [] : undefined;
-    const yTicks = yScale === "Point" && yTicks instanceof Array && yTicks.every(t => barLabels.includes(`${t}`)) ? [] : undefined;
+    let x2Ticks = axisData.map(d => this._x2(d.data));
+    if (x2Scale === "Point" && x2Ticks.every(t => barLabels.includes(`${t}`))) x2Ticks = [];
+    let xTicks = axisData.map(d => this._x(d.data));
+    if (xScale === "Point" && xTicks.every(t => barLabels.includes(`${t}`))) xTicks = [];
+    let y2Ticks = axisData.map(d => this._y2(d.data));
+    if (y2Scale === "Point" && y2Ticks.every(t => barLabels.includes(`${t}`))) y2Ticks = [];
+    let yTicks = axisData.map(d => this._y(d.data));
+    if (yScale === "Point" && yTicks.every(t => barLabels.includes(`${t}`))) yTicks = [];
 
     if (showY) {
       this._yTest
