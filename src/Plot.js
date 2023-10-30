@@ -9,7 +9,7 @@ import {AxisBottom, AxisLeft, AxisRight, AxisTop, date} from "d3plus-axis";
 import {colorAssign, colorContrast, colorDefaults, colorLegible} from "d3plus-color";
 import {accessor, assign, configPrep, constant, elem, unique} from "d3plus-common";
 import * as shapes from "d3plus-shape";
-import {textWidth, TextBox} from "d3plus-text";
+import {rtl, textWidth, TextBox} from "d3plus-text";
 const testLineShape = new shapes.Line();
 const testTextBox = new TextBox();
 import {Viz} from "d3plus-viz";
@@ -255,11 +255,12 @@ export default class Plot extends Viz {
             const invert = other === "y";
             const nonDiscrete = this._discrete.replace(this._discrete.charAt(0), other);
             const negative = this[`_${nonDiscrete}`](d, i) < 0;
-            return invert
+            const anchor = invert
               ? "middle"
               : outside.bind(this)(d, i)
                 ? negative ? "end" : "start"
                 : negative ? "start" : "end";
+            return rtl() ? anchor === "start" ? "end" : anchor === "end" ? "start" : anchor : anchor; 
           },
           verticalAlign(d, i) {
             const other = this._discrete.charAt(0) === "x" ? "y" : "x";
