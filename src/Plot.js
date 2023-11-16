@@ -8,6 +8,7 @@ import * as d3Shape from "d3-shape";
 import {AxisBottom, AxisLeft, AxisRight, AxisTop, date} from "d3plus-axis";
 import {colorAssign, colorContrast, colorDefaults, colorLegible} from "d3plus-color";
 import {accessor, assign, configPrep, constant, elem, unique} from "d3plus-common";
+import {formatAbbreviate} from "d3plus-format";
 import * as shapes from "d3plus-shape";
 import {rtl, textWidth, TextBox} from "d3plus-text";
 const testLineShape = new shapes.Line();
@@ -155,6 +156,9 @@ export default class Plot extends Viz {
     };
     this._discreteCutoff = 100;
     this._groupPadding = 5;
+    this._labelConnectorConfig = {
+      strokeDasharray: "1 1"
+    };
     this._labelPosition = constant("auto");
     this._lineMarkerConfig = {
       fill: (d, i) => colorAssign(this._id(d, i)),
@@ -827,7 +831,7 @@ export default class Plot extends Viz {
         .render();
     }
 
-    let largestLabel;
+    let largestLabel, labelWidths = [];
     if (this._lineLabels) {
       const lineData = nest()
         .key(d => d.id)
@@ -838,6 +842,7 @@ export default class Plot extends Viz {
         const userConfig = configPrep.bind(this)(this._shapeConfig, "shape", "Line");
         testLineShape.config(userConfig);
         const lineLabelConfig = testLineShape.labelConfig();
+        const fontColorAccessor = lineLabelConfig.fontColor !== undefined ? lineLabelConfig.fontColor : testTextBox.fontColor();
         const fontSizeAccessor = lineLabelConfig.fontSize !== undefined ? lineLabelConfig.fontSize : testTextBox.fontSize();
         const fontWeightAccessor = lineLabelConfig.fontWeight !== undefined ? lineLabelConfig.fontWeight : testTextBox.fontWeight();
         const fontFamilyAccessor = lineLabelConfig.fontFamily !== undefined ? lineLabelConfig.fontFamily : testTextBox.fontFamily();
@@ -850,37 +855,46 @@ export default class Plot extends Viz {
         };
 
         const maxX = max(lineData.map(group => max(group.values.map(d => xEstimate(d.x)))));
+        
+        labelWidths = lineData
+          .map(group => {
 
-        const labelWidths = lineData.map(group => {
+            let d = group.values[group.values.length - 1];
+            let i;
+            while (d.__d3plus__ && d.data) {
+              d = d.data;
+              i = d.i;
+            }
+            const label = typeof labelFunction === "function" ? labelFunction(d, i) : labelFunction;
 
-          let d = group.values[group.values.length - 1];
-          let i;
-          while (d.__d3plus__ && d.data) {
-            d = d.data;
-            i = d.i;
-          }
-          const label = typeof labelFunction === "function" ? labelFunction(d, i) : labelFunction;
+            const fontColor = typeof fontColorAccessor === "function" ? fontColorAccessor(d, i) : fontColorAccessor;
+            const fontSize = typeof fontSizeAccessor === "function" ? fontSizeAccessor(d, i) : fontSizeAccessor;
+            const fontWeight = typeof fontWeightAccessor === "function" ? fontWeightAccessor(d, i) : fontWeightAccessor;
+            let fontFamily = typeof fontFamilyAccessor === "function" ? fontFamilyAccessor(d, i) : fontFamilyAccessor;
+            if (fontFamily instanceof Array) fontFamily = fontFamily.map(f => `'${f}'`).join(", ");
+            const labelPadding = typeof paddingAccessor === "function" ? paddingAccessor(d, i) : paddingAccessor;
 
-          const fontSize = typeof fontSizeAccessor === "function" ? fontSizeAccessor(d, i) : fontSizeAccessor;
-          const fontWeight = typeof fontWeightAccessor === "function" ? fontWeightAccessor(d, i) : fontWeightAccessor;
-          let fontFamily = typeof fontFamilyAccessor === "function" ? fontFamilyAccessor(d, i) : fontFamilyAccessor;
-          if (fontFamily instanceof Array) fontFamily = fontFamily.map(f => `'${f}'`).join(", ");
-          const labelPadding = typeof paddingAccessor === "function" ? paddingAccessor(d, i) : paddingAccessor;
+            const labelWidth = textWidth(label, {
+              "font-size": fontSize,
+              "font-family": fontFamily,
+              "font-weight": fontWeight
+            });
 
-          const labelWidth = textWidth(label, {
-            "font-size": fontSize,
-            "font-family": fontFamily,
-            "font-weight": fontWeight
-          });
+            const myMaxX = max(group.values.map(d => xEstimate(d.x)));
+            const labelY = group.values.find(d => xEstimate(d.x) === myMaxX).y;
+            return {
+              id: group.key,
+              labelWidth: labelWidth + labelPadding * 2,
+              spaceNeeded: myMaxX - maxX + labelWidth + labelPadding * 4,
+              value: labelY,
+              padding: labelPadding,
+              fontSize,
+              fontColor
+            };
 
-          const myMaxX = max(group.values.map(d => xEstimate(d.x)));
+          })
+          .sort((a, b) => b.value - a.value);
 
-          return {
-            labelWidth: labelWidth + labelPadding * 2,
-            spaceNeeded: myMaxX - maxX + labelWidth + labelPadding * 2
-          };
-
-        });
         largestLabel = max(labelWidths.map(d => d.labelWidth));
         const spaceNeeded = max(labelWidths.map(d => d.spaceNeeded));
         const labelSpace = min([spaceNeeded, width / 4]);
@@ -1075,6 +1089,41 @@ export default class Plot extends Viz {
         .render();
     }
 
+    let labelPositions = {};
+    if (labelWidths) {
+
+      const minFontSize = max(labelWidths.map(d => d.fontSize));
+      const yBuckets = range(yRange[0], yRange[1], minFontSize).reverse();
+      const bumpLimit = (yRange[1] - yRange[0]) / 8;
+      
+      /** */
+      // eslint-disable-next-line no-inner-declarations
+      function bumpPrevious(d, i, arr) {
+        if (!d.defaultY) d.defaultY = this._yAxis._getPosition(d.value);
+        if (i) {
+          const prev = arr[i - 1];
+          const {fontSize, padding} = d;
+          const y = d.newY || d.defaultY;
+          const prevY = prev.newY || prev.defaultY;
+          if (y - fontSize / 2 - padding < prevY) {
+            const newY = yBuckets.find(n => n < prevY);
+            const change = d.defaultY - newY;
+            if (change < bumpLimit) {
+              prev.newY = newY;
+              if (i) bumpPrevious(prev, i - 1, arr);
+            }
+          }
+        }
+      }
+
+      labelWidths.forEach(bumpPrevious.bind(this));
+      labelPositions = labelWidths.reduce((obj, d) => {
+        if (d.newY) obj[d.id] = d.newY;
+        return obj;
+      }, {});
+
+    }
+
     this._yFunc = y = (d, y) => {
       if (y === "y2") {
         if (y2ConfigScale === "log" && d === 0) d = y2Domain[1] < 0 ? this._y2Axis._d3ScaleNegative.domain()[0] : this._y2Axis._d3Scale.domain()[1];
@@ -1095,6 +1144,26 @@ export default class Plot extends Viz {
       .height(yRange[1] - yRange[0])
       .config(this._backgroundConfig)
       .render();
+
+    const labelConnectors = labelWidths.filter(d => d.newY !== undefined);
+    if (labelConnectors.length) {
+
+      const connectorGroup = elem("g.d3plus-plot-connectors", {parent, transition, enter: {transform}, update: {transform}}).node();
+      const data = labelConnectors.map(d => (assign({x: 0, y: d.defaultY}, d)))
+        .concat(labelConnectors.map(d => (assign({x: d.padding - 1, y: d.newY || d.defaultY}, d))));
+        
+      new shapes.Line()
+        .config({
+          data,
+          stroke: d => d.fontColor,
+          x: d => xRange[1] + d.x,
+          y: d => d.y
+        })
+        .config(this._labelConnectorConfig)
+        .select(connectorGroup)
+        .render();
+      
+    }
 
     const annotationGroup = elem("g.d3plus-plot-annotations", {parent, transition, enter: {transform}, update: {transform}}).node();
     const annotationShapes = this._annotations.map(d => d.shape);
@@ -1239,14 +1308,24 @@ export default class Plot extends Viz {
 
         s.config({
           discrete: shapeConfig.discrete || "x",
-          label: this._lineLabels ? this._drawLabel : false,
+          label: this._lineLabels ? (d, i) => {
+            const labelData = labelWidths.find(l => l.id === d.id);
+            if (labelData) {
+              const yPos = labelData.newY || labelData.defaultY;
+              const allLabels = labelWidths.filter(l => l.newY === yPos);
+              if (allLabels.length > 1) return allLabels[0].id !== d.id ? false 
+                : `+${formatAbbreviate(allLabels.length, this._locale)} ${this._translate("more")}`;
+            }
+            return this._drawLabel(d, i);
+          } : false,
           labelBounds: this._lineLabels ? (d, i, s) => {
             const [firstX, firstY] = s.points[0];
             const [lastX, lastY] = s.points[s.points.length - 1];
             const height = this._height / 4;
+            const mod = labelPositions[d.id] ? lastY - labelPositions[d.id] : 0;
             return {
               x: lastX - firstX,
-              y: lastY - firstY - height / 2,
+              y: lastY - firstY - height / 2 - mod,
               width: largestLabel,
               height
             };
@@ -1441,6 +1520,16 @@ export default class Plot extends Viz {
   */
   groupPadding(_) {
     return arguments.length ? (this._groupPadding = _, this) : this._groupPadding;
+  }
+
+  /**
+       @memberof Plot
+       @desc The d3plus-shape config used on the Line shapes created to connect lineLabels to the end of their associated Line path.
+       @param {Object} [*value*]
+       @chainable
+   */
+  labelConnectorConfig(_) {
+    return arguments.length ? (this._labelConnectorConfig = assign(this._labelConnectorConfig, _), this) : this._labelConnectorConfig;
   }
 
   /**
