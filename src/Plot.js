@@ -746,13 +746,13 @@ export default class Plot extends Viz {
 
     // sets an axis' ticks to [] if the axis scale is "Point" (discrete) and every tick String
     // is also in the barLabels Array
-    let x2Ticks = axisData.map(d => this._x2(d.data));
+    let x2Ticks = unique(axisData.map(d => d.x2));
     if (x2Scale === "Point" && x2Ticks.every(t => barLabels.includes(`${t}`))) x2Ticks = [];
-    let xTicks = axisData.map(d => this._x(d.data));
+    let xTicks = unique(axisData.map(d => d.x));
     if (xScale === "Point" && xTicks.every(t => barLabels.includes(`${t}`))) xTicks = [];
-    let y2Ticks = axisData.map(d => this._y2(d.data));
+    let y2Ticks = unique(axisData.map(d => d.y2));
     if (y2Scale === "Point" && y2Ticks.every(t => barLabels.includes(`${t}`))) y2Ticks = [];
-    let yTicks = axisData.map(d => this._y(d.data));
+    let yTicks = unique(axisData.map(d => d.y));
     if (yScale === "Point" && yTicks.every(t => barLabels.includes(`${t}`))) yTicks = [];
 
     if (showY) {
