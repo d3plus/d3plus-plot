@@ -854,8 +854,6 @@ export default class Plot extends Viz {
           return this._xTest._getPosition.bind(this._xTest)(d);
         };
 
-        const maxX = max(lineData.map(group => max(group.values.map(d => xEstimate(d.x)))));
-        
         labelWidths = lineData
           .map(group => {
 
@@ -885,18 +883,21 @@ export default class Plot extends Viz {
             return {
               id: group.key,
               labelWidth: labelWidth + labelPadding * 2,
-              spaceNeeded: myMaxX - maxX + labelWidth + labelPadding * 4,
+              spaceNeeded: labelWidth + labelPadding * 4,
               value: labelY,
               padding: labelPadding,
               fontSize,
-              fontColor
+              fontColor,
+              maxX: myMaxX,
+              xValue: max(group.values, d => d.x)
             };
 
           })
           .sort((a, b) => b.value - a.value);
 
+        const maxX = max(labelWidths, d => d.maxX);
         largestLabel = max(labelWidths.map(d => d.labelWidth));
-        const spaceNeeded = max(labelWidths.map(d => d.spaceNeeded));
+        const spaceNeeded = max(labelWidths.filter(d => d.maxX === maxX), d => d.spaceNeeded);
         const labelSpace = min([spaceNeeded, width / 4]);
         xRangeMax = width - labelSpace - this._margin.right;
       }
@@ -1092,31 +1093,39 @@ export default class Plot extends Viz {
     let labelPositions = {};
     if (labelWidths) {
 
-      const minFontSize = max(labelWidths.map(d => d.fontSize));
-      const yBuckets = range(yRange[0], yRange[1], minFontSize).reverse();
-      const bumpLimit = (yRange[1] - yRange[0]) / 8;
-      
-      /** */
-      // eslint-disable-next-line no-inner-declarations
-      function bumpPrevious(d, i, arr) {
-        if (!d.defaultY) d.defaultY = this._yAxis._getPosition(d.value);
-        if (i) {
-          const prev = arr[i - 1];
-          const {fontSize, padding} = d;
-          const y = d.newY || d.defaultY;
-          const prevY = prev.newY || prev.defaultY;
-          if (y - fontSize / 2 - padding < prevY) {
-            const newY = yBuckets.find(n => n < prevY);
-            const change = d.defaultY - newY;
-            if (change < bumpLimit) {
-              prev.newY = newY;
-              if (i) bumpPrevious(prev, i - 1, arr);
+      nest()
+        .key(d => d.xValue)
+        .entries(labelWidths)
+        .forEach(({values}) => {
+
+          const minFontSize = max(values.map(d => d.fontSize));
+          const yBuckets = range(yRange[0], yRange[1], minFontSize).reverse();
+          const bumpLimit = (yRange[1] - yRange[0]) / 8;
+          
+          /** */
+          // eslint-disable-next-line no-inner-declarations
+          function bumpPrevious(d, i, arr) {
+            if (!d.defaultY) d.defaultY = this._yAxis._getPosition(d.value);
+            if (i) {
+              const prev = arr[i - 1];
+              const {fontSize, padding} = d;
+              const y = d.newY || d.defaultY;
+              const prevY = prev.newY || prev.defaultY;
+              if (y - fontSize / 2 - padding < prevY) {
+                const newY = yBuckets.find(n => n < prevY);
+                const change = d.defaultY - newY;
+                if (change < bumpLimit) {
+                  prev.newY = newY;
+                  if (i) bumpPrevious(prev, i - 1, arr);
+                }
+              }
             }
           }
-        }
-      }
+    
+          values.forEach(bumpPrevious.bind(this));
 
-      labelWidths.forEach(bumpPrevious.bind(this));
+        });
+
       labelPositions = labelWidths.reduce((obj, d) => {
         if (d.newY) obj[d.id] = d.newY;
         return obj;
@@ -1149,14 +1158,14 @@ export default class Plot extends Viz {
     if (labelConnectors.length) {
 
       const connectorGroup = elem("g.d3plus-plot-connectors", {parent, transition, enter: {transform}, update: {transform}}).node();
-      const data = labelConnectors.map(d => (assign({x: 0, y: d.defaultY}, d)))
-        .concat(labelConnectors.map(d => (assign({x: d.padding - 1, y: d.newY || d.defaultY}, d))));
-        
+      const data = labelConnectors.map(d => (assign({x: this._xAxis._getPosition.bind(this._xAxis)(d.xValue), y: d.defaultY}, d)))
+        .concat(labelConnectors.map(d => (assign({x: this._xAxis._getPosition.bind(this._xAxis)(d.xValue) + d.padding - 1, y: d.newY || d.defaultY}, d))));
+      
       new shapes.Line()
         .config({
           data,
           stroke: d => d.fontColor,
-          x: d => xRange[1] + d.x,
+          x: d => d.x,
           y: d => d.y
         })
         .config(this._labelConnectorConfig)
