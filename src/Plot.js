@@ -165,7 +165,7 @@ export default class Plot extends Viz {
       r: constant(3)
     };
     this._lineMarkers = false;
-    this._previousAnnotations = [];
+    this._previousAnnotations = {back: [], front: []};
     this._previousShapes = [];
     this._shape = constant("Circle");
     this._shapeConfig = assign(this._shapeConfig, {
@@ -1165,33 +1165,43 @@ export default class Plot extends Viz {
       
     }
 
-    const annotationGroup = elem("g.d3plus-plot-annotations", {parent, transition, enter: {transform}, update: {transform}}).node();
-    const annotationShapes = this._annotations.map(d => d.shape);
-    this._annotations.forEach(annotation => {
-      new shapes[annotation.shape]()
-        .config(annotation)
-        .config({
-          x: d => d.x2 ? x(d.x2, "x2") : x(d.x),
-          x0: this._discrete === "x" ? d => d.x2 ? x(d.x2, "x2") : x(d.x) : x(domains.x[0]),
-          x1: this._discrete === "x" ? null : d => d.x2 ? x(d.x2, "x2") : x(d.x),
-          y: d => d.y2 ? y(d.y2, "y2") : y(d.y),
-          y0: this._discrete === "y" ? d => d.y2 ? y(d.y2, "y2") : y(d.y) : y(domains.y[1]) - yOffset,
-          y1: this._discrete === "y" ? null : d => d.y2 ? y(d.y2, "y2") : y(d.y) - yOffset
-        })
-        .select(annotationGroup)
-        .render();
+    const annotationGroupBack = elem("g.d3plus-plot-annotations", {parent, transition, enter: {transform}, update: {transform}}).node();
+    const shapeGroup = elem("g.d3plus-plot-shapes", {parent, transition, enter: {transform}, update: {transform}}).node();
+    const annotationGroupFront = elem("g.d3plus-plot-annotations-front", {parent, transition, enter: {transform}, update: {transform}}).node();
+
+    Object.keys(this._previousAnnotations).forEach(layer => {
+
+      const group = layer === "front" ? annotationGroupFront : annotationGroupBack;
+
+      const annotationData = this._annotations.filter(d => (layer === "back" && !d.layer) || d.layer === layer);
+      const annotationShapes = annotationData.map(d => d.shape);
+      annotationData.forEach(annotation => {
+        new shapes[annotation.shape]()
+          .config(annotation)
+          .config({
+            x: d => d.x2 ? x(d.x2, "x2") : x(d.x),
+            x0: this._discrete === "x" ? d => d.x2 ? x(d.x2, "x2") : x(d.x) : x(domains.x[0]),
+            x1: this._discrete === "x" ? null : d => d.x2 ? x(d.x2, "x2") : x(d.x),
+            y: d => d.y2 ? y(d.y2, "y2") : y(d.y),
+            y0: this._discrete === "y" ? d => d.y2 ? y(d.y2, "y2") : y(d.y) : y(domains.y[1]) - yOffset,
+            y1: this._discrete === "y" ? null : d => d.y2 ? y(d.y2, "y2") : y(d.y) - yOffset
+          })
+          .select(group)
+          .render();
+      });
+  
+      const exitAnnotations = this._previousAnnotations[layer].filter(d => !annotationShapes.includes(d));
+  
+      exitAnnotations.forEach(shape => {
+        new shapes[shape]()
+          .data([])
+          .select(group)
+          .render();
+      });
+  
+      this._previousAnnotations[layer] = annotationShapes;
+
     });
-
-    const exitAnnotations = this._previousAnnotations.filter(d => !annotationShapes.includes(d));
-
-    exitAnnotations.forEach(shape => {
-      new shapes[shape]()
-        .data([])
-        .select(annotationGroup)
-        .render();
-    });
-
-    this._previousAnnotations = annotationShapes;
 
     let yOffset = this._xAxis.barConfig()["stroke-width"];
     if (yOffset) yOffset /= 2;
@@ -1202,7 +1212,7 @@ export default class Plot extends Viz {
       discrete: this._discrete,
       duration: this._duration,
       label: d => this._drawLabel(d.data, d.i),
-      select: elem("g.d3plus-plot-shapes", {parent, transition, enter: {transform}, update: {transform}}).node(),
+      select: shapeGroup,
       x: d => d.x2 !== undefined ? x(d.x2, "x2") : x(d.x),
       x0: discrete === "x" ? d => d.x2 ? x(d.x2, "x2") : x(d.x) : x(typeof this._baseline === "number" ? this._baseline : domains.x[0]),
       x1: discrete === "x" ? null : d => d.x2 ? x(d.x2, "x2") : x(d.x),
@@ -1386,7 +1396,9 @@ export default class Plot extends Viz {
 
   /**
       @memberof Plot
-      @desc Allows drawing custom shapes to be used as annotations in the provided x/y plot. This method accepts custom config objects for the [Shape](http://d3plus.org/docs/#Shape) class, either a single config object or an array of config objects. Each config object requires an additional parameter, the "shape", which denotes which [Shape](http://d3plus.org/docs/#Shape) sub-class to use ([Rect](http://d3plus.org/docs/#Rect), [Line](http://d3plus.org/docs/#Line), etc). Annotations will be drawn underneath the data to be displayed.
+      @desc Allows drawing custom shapes to be used as annotations in the provided x/y plot. This method accepts custom config objects for the [Shape](http://d3plus.org/docs/#Shape) class, either a single config object or an array of config objects. Each config object requires an additional parameter, the "shape", which denotes which [Shape](http://d3plus.org/docs/#Shape) sub-class to use ([Rect](http://d3plus.org/docs/#Rect), [Line](http://d3plus.org/docs/#Line), etc).
+
+Additionally, each config object can also contain an optional "layer" key, which defines whether the annotations will be displayed in "front" or in "back" of the primary visualization shapes. This value defaults to "back" if not present.
       @param {Array|Object} *annotations* = []
       @chainable
   */
