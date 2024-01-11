@@ -472,7 +472,7 @@ export default class Plot extends Viz {
     function getAxisValues(axis) {
       const localData = this[`_${axis}Time`] ? data : axisData;
       let myData = localData
-        .filter(d => d[axis])
+        .filter(d => ![NaN, undefined, false].includes(d[axis]))
         .sort((a, b) => this[`_${axis}Sort`] ? this[`_${axis}Sort`](a.data, b.data) : a[axis] - b[axis])
         .map(d => d[axis]);
       if (this._discrete !== axis.charAt(0) && this._confidence) {
@@ -637,8 +637,8 @@ export default class Plot extends Viz {
     Object.keys(domains)
       .forEach(axis => {
         if (this[`_${axis}ConfigScale`] === "log" && domains[axis].includes(0)) {
-          if (min(domains[axis]) < 0) domains[axis][1] = max(data.map(d => d[axis]).filter(Boolean));
-          else domains[axis][0] = min(axisData.map(d => d[axis]).filter(Boolean));
+          if (min(domains[axis]) < 0) domains[axis][1] = max(data.map(d => d[axis]).filter(d => ![NaN, undefined, false].includes(d)));
+          else domains[axis][0] = min(axisData.map(d => d[axis]).filter(d => ![NaN, undefined, false].includes(d)));
         }
       });
 
