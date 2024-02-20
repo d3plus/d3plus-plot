@@ -1260,6 +1260,8 @@ export default class Plot extends Viz {
         const range = this._discrete === "x" ? xRange : yRange;
         if (scaleType !== "Point" && vals.length === 2) {
           const allPositions = Array.from(new Set(d.values.map(d => scale(d[this._discrete]))));
+          allPositions.unshift(range[0] - allPositions[0] - range[0]);
+          allPositions.push(range[1] + range[1] - allPositions[allPositions.length - 1]);
           space = allPositions.reduce((n, d, i, arr) => {
             if (i) {
               const dist = Math.abs(d - arr[i - 1]);
