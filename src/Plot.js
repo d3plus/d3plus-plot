@@ -833,9 +833,15 @@ export default class Plot extends Viz {
 
     let largestLabel, labelWidths = [];
     if (this._lineLabels) {
+
+      const labelData = data.filter((d, i) => {
+        if (d.shape !== "Line") return false;
+        return typeof this._lineLabels === "function" ? this._lineLabels(d.data, d.i) : true;
+      });
+
       const lineData = nest()
         .key(d => d.id)
-        .entries(data.filter(d => d.shape === "Line"));
+        .entries(labelData);
 
       if (lineData.length) {
 
@@ -897,9 +903,13 @@ export default class Plot extends Viz {
 
         const maxX = max(labelWidths, d => d.maxX);
         largestLabel = max(labelWidths.map(d => d.labelWidth));
-        const spaceNeeded = max(labelWidths.filter(d => d.maxX === maxX), d => d.spaceNeeded);
-        const labelSpace = min([spaceNeeded, width / 4]);
-        xRangeMax = width - labelSpace - this._margin.right;
+        const spaceNeeded = maxX === this._xTest._getRange.bind(this._xTest)()[1] 
+          ? max(labelWidths.filter(d => d.maxX === maxX), d => d.spaceNeeded)
+          : 0;
+        if (spaceNeeded) {
+          const labelSpace = min([spaceNeeded, width / 4]);
+          xRangeMax = width - labelSpace - this._margin.right;
+        }
       }
     }
 
@@ -1330,6 +1340,8 @@ export default class Plot extends Viz {
         s.config({
           discrete: shapeConfig.discrete || "x",
           label: this._lineLabels ? (d, i) => {
+            const visible = typeof this._lineLabels === "function" ? this._lineLabels(d.data, d.i) : true;
+            if (!visible) return false;
             const labelData = labelWidths.find(l => l.id === d.id);
             if (labelData) {
               const yPos = labelData.newY || labelData.defaultY;
@@ -1568,7 +1580,7 @@ Additionally, each config object can also contain an optional "layer" key, which
   /**
       @memberof Plot
       @desc Draws labels on the right side of any Line shapes that are drawn on the plot.
-      @param {Boolean} [*value* = false]
+      @param {Boolean|Function} [*value* = false]
       @chainable
   */
   lineLabels(_) {
