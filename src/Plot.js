@@ -834,7 +834,7 @@ export default class Plot extends Viz {
     let largestLabel, labelWidths = [];
     if (this._lineLabels) {
 
-      const labelData = data.filter((d, i) => {
+      const labelData = data.filter(d => {
         if (d.shape !== "Line") return false;
         return typeof this._lineLabels === "function" ? this._lineLabels(d.data, d.i) : true;
       });
