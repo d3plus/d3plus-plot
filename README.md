@@ -236,7 +236,7 @@ Creates an x/y plot based on an array of data.
 
 
 
-<a name="Plot.annotations" href="#Plot.annotations">#</a> Plot.**annotations**(*annotations*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1428)
+<a name="Plot.annotations" href="#Plot.annotations">#</a> Plot.**annotations**(*annotations*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1433)
 
 Allows drawing custom shapes to be used as annotations in the provided x/y plot. This method accepts custom config objects for the [Shape](http://d3plus.org/docs/#Shape) class, either a single config object or an array of config objects. Each config object requires an additional parameter, the "shape", which denotes which [Shape](http://d3plus.org/docs/#Shape) sub-class to use ([Rect](http://d3plus.org/docs/#Rect), [Line](http://d3plus.org/docs/#Line), etc).
 
@@ -246,7 +246,7 @@ Additionally, each config object can also contain an optional "layer" key, which
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.axisPersist" href="#Plot.axisPersist">#</a> Plot.**axisPersist**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1438)
+<a name="Plot.axisPersist" href="#Plot.axisPersist">#</a> Plot.**axisPersist**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1443)
 
 Determines whether the x and y axes should have their scales persist while users filter the data, the timeline being the prime example (set this to `true` to make the axes stay consistent when the timeline changes).
 
@@ -254,7 +254,7 @@ Determines whether the x and y axes should have their scales persist while users
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.backgroundConfig" href="#Plot.backgroundConfig">#</a> Plot.**backgroundConfig**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1448)
+<a name="Plot.backgroundConfig" href="#Plot.backgroundConfig">#</a> Plot.**backgroundConfig**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1453)
 
 A d3plus-shape configuration Object used for styling the background rectangle of the inner x/y plot (behind all of the shapes and gridlines).
 
@@ -262,7 +262,7 @@ A d3plus-shape configuration Object used for styling the background rectangle of
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.barPadding" href="#Plot.barPadding">#</a> Plot.**barPadding**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1458)
+<a name="Plot.barPadding" href="#Plot.barPadding">#</a> Plot.**barPadding**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1463)
 
 Sets the pixel space between each bar in a group of bars.
 
@@ -270,7 +270,7 @@ Sets the pixel space between each bar in a group of bars.
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.baseline" href="#Plot.baseline">#</a> Plot.**baseline**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1468)
+<a name="Plot.baseline" href="#Plot.baseline">#</a> Plot.**baseline**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1473)
 
 Sets the baseline for the x/y plot. If *value* is not specified, returns the current baseline.
 
@@ -278,7 +278,7 @@ Sets the baseline for the x/y plot. If *value* is not specified, returns the cur
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.buffer" href="#Plot.buffer">#</a> Plot.**buffer**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1478)
+<a name="Plot.buffer" href="#Plot.buffer">#</a> Plot.**buffer**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1483)
 
 Determines whether or not to add additional padding at the ends of x or y scales. The most commone use for this is in Scatter Plots, so that the shapes do not appear directly on the axis itself. The value provided can either be `true` or `false` to toggle the behavior for all shape types, or a keyed Object for each shape type (ie. `{Bar: false, Circle: true, Line: false}`).
 
@@ -286,7 +286,7 @@ Determines whether or not to add additional padding at the ends of x or y scales
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.confidence" href="#Plot.confidence">#</a> Plot.**confidence**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1507)
+<a name="Plot.confidence" href="#Plot.confidence">#</a> Plot.**confidence**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1512)
 
 Sets the confidence to the specified array of lower and upper bounds.
 
@@ -305,7 +305,7 @@ Can be called with accessor functions or static keys:
 ```
 
 
-<a name="Plot.confidenceConfig" href="#Plot.confidenceConfig">#</a> Plot.**confidenceConfig**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1526)
+<a name="Plot.confidenceConfig" href="#Plot.confidenceConfig">#</a> Plot.**confidenceConfig**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1531)
 
 If *value* is specified, sets the config method for each shape rendered as a confidence interval and returns the current class instance.
 
@@ -313,7 +313,7 @@ If *value* is specified, sets the config method for each shape rendered as a con
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.discrete" href="#Plot.discrete">#</a> Plot.**discrete**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1536)
+<a name="Plot.discrete" href="#Plot.discrete">#</a> Plot.**discrete**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1541)
 
 Sets the discrete axis to the specified string. If *value* is not specified, returns the current discrete axis.
 
@@ -321,7 +321,7 @@ Sets the discrete axis to the specified string. If *value* is not specified, ret
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.discreteCutoff" href="#Plot.discreteCutoff">#</a> Plot.**discreteCutoff**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1546)
+<a name="Plot.discreteCutoff" href="#Plot.discreteCutoff">#</a> Plot.**discreteCutoff**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1551)
 
 When the width or height of the chart is less than or equal to this pixel value, the discrete axis will not be shown. This helps produce slick sparklines. Set this value to `0` to disable the behavior entirely.
 
@@ -329,7 +329,7 @@ When the width or height of the chart is less than or equal to this pixel value,
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.groupPadding" href="#Plot.groupPadding">#</a> Plot.**groupPadding**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1556)
+<a name="Plot.groupPadding" href="#Plot.groupPadding">#</a> Plot.**groupPadding**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1561)
 
 Sets the pixel space between groups of bars.
 
@@ -337,7 +337,7 @@ Sets the pixel space between groups of bars.
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.labelConnectorConfig" href="#Plot.labelConnectorConfig">#</a> Plot.**labelConnectorConfig**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1566)
+<a name="Plot.labelConnectorConfig" href="#Plot.labelConnectorConfig">#</a> Plot.**labelConnectorConfig**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1571)
 
 The d3plus-shape config used on the Line shapes created to connect lineLabels to the end of their associated Line path.
 
@@ -345,7 +345,7 @@ The d3plus-shape config used on the Line shapes created to connect lineLabels to
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.lineLabels" href="#Plot.lineLabels">#</a> Plot.**lineLabels**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1586)
+<a name="Plot.lineLabels" href="#Plot.lineLabels">#</a> Plot.**lineLabels**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1591)
 
 Draws labels on the right side of any Line shapes that are drawn on the plot.
 
@@ -353,7 +353,7 @@ Draws labels on the right side of any Line shapes that are drawn on the plot.
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.lineMarkerConfig" href="#Plot.lineMarkerConfig">#</a> Plot.**lineMarkerConfig**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1596)
+<a name="Plot.lineMarkerConfig" href="#Plot.lineMarkerConfig">#</a> Plot.**lineMarkerConfig**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1601)
 
 Shape config for the Circle shapes drawn by the lineMarkers method.
 
@@ -361,7 +361,7 @@ Shape config for the Circle shapes drawn by the lineMarkers method.
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.lineMarkers" href="#Plot.lineMarkers">#</a> Plot.**lineMarkers**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1606)
+<a name="Plot.lineMarkers" href="#Plot.lineMarkers">#</a> Plot.**lineMarkers**([*value*]) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1611)
 
 Draws circle markers on each vertex of a Line.
 
@@ -369,7 +369,7 @@ Draws circle markers on each vertex of a Line.
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.shapeSort" href="#Plot.shapeSort">#</a> Plot.**shapeSort**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1616)
+<a name="Plot.shapeSort" href="#Plot.shapeSort">#</a> Plot.**shapeSort**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1621)
 
 A JavaScript [sort comparator function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) that receives each shape Class (ie. "Circle", "Line", etc) as it's comparator arguments. Shapes are drawn in groups based on their type, so you are defining the layering order for all shapes of said type.
 
@@ -377,7 +377,7 @@ A JavaScript [sort comparator function](https://developer.mozilla.org/en-US/docs
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.size" href="#Plot.size">#</a> Plot.**size**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1626)
+<a name="Plot.size" href="#Plot.size">#</a> Plot.**size**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1631)
 
 Sets the size of bubbles to the given Number, data key, or function.
 
@@ -385,7 +385,7 @@ Sets the size of bubbles to the given Number, data key, or function.
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.sizeMax" href="#Plot.sizeMax">#</a> Plot.**sizeMax**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1636)
+<a name="Plot.sizeMax" href="#Plot.sizeMax">#</a> Plot.**sizeMax**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1641)
 
 Sets the size scale maximum to the specified number.
 
@@ -393,7 +393,7 @@ Sets the size scale maximum to the specified number.
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.sizeMin" href="#Plot.sizeMin">#</a> Plot.**sizeMin**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1646)
+<a name="Plot.sizeMin" href="#Plot.sizeMin">#</a> Plot.**sizeMin**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1651)
 
 Sets the size scale minimum to the specified number.
 
@@ -401,7 +401,7 @@ Sets the size scale minimum to the specified number.
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.sizeScale" href="#Plot.sizeScale">#</a> Plot.**sizeScale**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1656)
+<a name="Plot.sizeScale" href="#Plot.sizeScale">#</a> Plot.**sizeScale**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1661)
 
 Sets the size scale to the specified string.
 
@@ -409,7 +409,7 @@ Sets the size scale to the specified string.
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.stacked" href="#Plot.stacked">#</a> Plot.**stacked**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1666)
+<a name="Plot.stacked" href="#Plot.stacked">#</a> Plot.**stacked**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1671)
 
 If *value* is specified, toggles shape stacking. If *value* is not specified, returns the current stack value.
 
@@ -417,7 +417,7 @@ If *value* is specified, toggles shape stacking. If *value* is not specified, re
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.stackOffset" href="#Plot.stackOffset">#</a> Plot.**stackOffset**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1676)
+<a name="Plot.stackOffset" href="#Plot.stackOffset">#</a> Plot.**stackOffset**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1681)
 
 Sets the stack offset. If *value* is not specified, returns the current stack offset function.
 
@@ -425,7 +425,7 @@ Sets the stack offset. If *value* is not specified, returns the current stack of
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.stackOrder" href="#Plot.stackOrder">#</a> Plot.**stackOrder**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1686)
+<a name="Plot.stackOrder" href="#Plot.stackOrder">#</a> Plot.**stackOrder**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1691)
 
 Sets the stack order. If *value* is not specified, returns the current stack order function.
 
@@ -433,7 +433,7 @@ Sets the stack order. If *value* is not specified, returns the current stack ord
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.x" href="#Plot.x">#</a> Plot.**x**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1701)
+<a name="Plot.x" href="#Plot.x">#</a> Plot.**x**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1706)
 
 Sets the x accessor to the specified function or number. If *value* is not specified, returns the current x accessor.
 
@@ -441,7 +441,7 @@ Sets the x accessor to the specified function or number. If *value* is not speci
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.x2" href="#Plot.x2">#</a> Plot.**x2**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1719)
+<a name="Plot.x2" href="#Plot.x2">#</a> Plot.**x2**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1724)
 
 Sets the x2 accessor to the specified function or number. If *value* is not specified, returns the current x2 accessor.
 
@@ -449,7 +449,7 @@ Sets the x2 accessor to the specified function or number. If *value* is not spec
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.xConfig" href="#Plot.xConfig">#</a> Plot.**xConfig**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1737)
+<a name="Plot.xConfig" href="#Plot.xConfig">#</a> Plot.**xConfig**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1742)
 
 A pass-through to the underlying [Axis](http://d3plus.org/docs/#Axis) config used for the x-axis. Includes additional functionality where passing "auto" as the value for the [scale](http://d3plus.org/docs/#Axis.scale) method will determine if the scale should be "linear" or "log" based on the provided data.
 
@@ -457,7 +457,7 @@ A pass-through to the underlying [Axis](http://d3plus.org/docs/#Axis) config use
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.xCutoff" href="#Plot.xCutoff">#</a> Plot.**xCutoff**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1747)
+<a name="Plot.xCutoff" href="#Plot.xCutoff">#</a> Plot.**xCutoff**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1752)
 
 When the width of the chart is less than or equal to this pixel value, and the x-axis is not the discrete axis, it will not be shown. This helps produce slick sparklines. Set this value to `0` to disable the behavior entirely.
 
@@ -465,7 +465,7 @@ When the width of the chart is less than or equal to this pixel value, and the x
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.x2Config" href="#Plot.x2Config">#</a> Plot.**x2Config**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1757)
+<a name="Plot.x2Config" href="#Plot.x2Config">#</a> Plot.**x2Config**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1762)
 
 A pass-through to the underlying [Axis](http://d3plus.org/docs/#Axis) config used for the secondary x-axis. Includes additional functionality where passing "auto" as the value for the [scale](http://d3plus.org/docs/#Axis.scale) method will determine if the scale should be "linear" or "log" based on the provided data.
 
@@ -473,7 +473,7 @@ A pass-through to the underlying [Axis](http://d3plus.org/docs/#Axis) config use
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.xDomain" href="#Plot.xDomain">#</a> Plot.**xDomain**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1767)
+<a name="Plot.xDomain" href="#Plot.xDomain">#</a> Plot.**xDomain**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1772)
 
 Sets the x domain to the specified array. If *value* is not specified, returns the current x domain. Additionally, if either value of the array is undefined, it will be calculated from the data.
 
@@ -481,7 +481,7 @@ Sets the x domain to the specified array. If *value* is not specified, returns t
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.x2Domain" href="#Plot.x2Domain">#</a> Plot.**x2Domain**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1777)
+<a name="Plot.x2Domain" href="#Plot.x2Domain">#</a> Plot.**x2Domain**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1782)
 
 Sets the x2 domain to the specified array. If *value* is not specified, returns the current x2 domain. Additionally, if either value of the array is undefined, it will be calculated from the data.
 
@@ -489,7 +489,7 @@ Sets the x2 domain to the specified array. If *value* is not specified, returns 
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.xSort" href="#Plot.xSort">#</a> Plot.**xSort**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1787)
+<a name="Plot.xSort" href="#Plot.xSort">#</a> Plot.**xSort**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1792)
 
 Defines a custom sorting comparitor function to be used for discrete x axes.
 
@@ -497,7 +497,7 @@ Defines a custom sorting comparitor function to be used for discrete x axes.
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.x2Sort" href="#Plot.x2Sort">#</a> Plot.**x2Sort**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1797)
+<a name="Plot.x2Sort" href="#Plot.x2Sort">#</a> Plot.**x2Sort**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1802)
 
 Defines a custom sorting comparitor function to be used for discrete x2 axes.
 
@@ -505,7 +505,7 @@ Defines a custom sorting comparitor function to be used for discrete x2 axes.
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.y" href="#Plot.y">#</a> Plot.**y**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1807)
+<a name="Plot.y" href="#Plot.y">#</a> Plot.**y**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1812)
 
 Sets the y accessor to the specified function or number. If *value* is not specified, returns the current y accessor.
 
@@ -513,7 +513,7 @@ Sets the y accessor to the specified function or number. If *value* is not speci
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.y2" href="#Plot.y2">#</a> Plot.**y2**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1825)
+<a name="Plot.y2" href="#Plot.y2">#</a> Plot.**y2**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1830)
 
 Sets the y2 accessor to the specified function or number. If *value* is not specified, returns the current y2 accessor.
 
@@ -521,7 +521,7 @@ Sets the y2 accessor to the specified function or number. If *value* is not spec
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.yConfig" href="#Plot.yConfig">#</a> Plot.**yConfig**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1845)
+<a name="Plot.yConfig" href="#Plot.yConfig">#</a> Plot.**yConfig**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1850)
 
 A pass-through to the underlying [Axis](http://d3plus.org/docs/#Axis) config used for the y-axis. Includes additional functionality where passing "auto" as the value for the [scale](http://d3plus.org/docs/#Axis.scale) method will determine if the scale should be "linear" or "log" based on the provided data.
 Note:* If a "domain" array is passed to the y-axis config, it will be reversed.
@@ -530,7 +530,7 @@ Note:* If a "domain" array is passed to the y-axis config, it will be reversed.
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.yCutoff" href="#Plot.yCutoff">#</a> Plot.**yCutoff**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1860)
+<a name="Plot.yCutoff" href="#Plot.yCutoff">#</a> Plot.**yCutoff**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1865)
 
 When the height of the chart is less than or equal to this pixel value, and the y-axis is not the discrete axis, it will not be shown. This helps produce slick sparklines. Set this value to `0` to disable the behavior entirely.
 
@@ -538,7 +538,7 @@ When the height of the chart is less than or equal to this pixel value, and the 
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.y2Config" href="#Plot.y2Config">#</a> Plot.**y2Config**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1870)
+<a name="Plot.y2Config" href="#Plot.y2Config">#</a> Plot.**y2Config**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1875)
 
 A pass-through to the underlying [Axis](http://d3plus.org/docs/#Axis) config used for the secondary y-axis. Includes additional functionality where passing "auto" as the value for the [scale](http://d3plus.org/docs/#Axis.scale) method will determine if the scale should be "linear" or "log" based on the provided data.
 
@@ -546,7 +546,7 @@ A pass-through to the underlying [Axis](http://d3plus.org/docs/#Axis) config use
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.yDomain" href="#Plot.yDomain">#</a> Plot.**yDomain**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1885)
+<a name="Plot.yDomain" href="#Plot.yDomain">#</a> Plot.**yDomain**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1890)
 
 Sets the y domain to the specified array. If *value* is not specified, returns the current y domain. Additionally, if either value of the array is undefined, it will be calculated from the data.
 
@@ -554,7 +554,7 @@ Sets the y domain to the specified array. If *value* is not specified, returns t
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.y2Domain" href="#Plot.y2Domain">#</a> Plot.**y2Domain**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1895)
+<a name="Plot.y2Domain" href="#Plot.y2Domain">#</a> Plot.**y2Domain**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1900)
 
 Sets the y2 domain to the specified array. If *value* is not specified, returns the current y2 domain. Additionally, if either value of the array is undefined, it will be calculated from the data.
 
@@ -562,7 +562,7 @@ Sets the y2 domain to the specified array. If *value* is not specified, returns 
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.ySort" href="#Plot.ySort">#</a> Plot.**ySort**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1905)
+<a name="Plot.ySort" href="#Plot.ySort">#</a> Plot.**ySort**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1910)
 
 Defines a custom sorting comparitor function to be used for discrete y axes.
 
@@ -570,7 +570,7 @@ Defines a custom sorting comparitor function to be used for discrete y axes.
 This is a static method of [<code>Plot</code>](#Plot), and is chainable with other methods of this Class.
 
 
-<a name="Plot.y2Sort" href="#Plot.y2Sort">#</a> Plot.**y2Sort**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1915)
+<a name="Plot.y2Sort" href="#Plot.y2Sort">#</a> Plot.**y2Sort**(*value*) [<>](https://github.com/d3plus/d3plus-plot/blob/master/src/Plot.js#L1920)
 
 Defines a custom sorting comparitor function to be used for discrete y2 axes.
 
@@ -666,4 +666,4 @@ new d3plus.AreaPlot()
 
 
 
-###### <sub>Documentation generated on Tue, 14 May 2024 19:25:39 GMT</sub>
+###### <sub>Documentation generated on Fri, 09 Aug 2024 14:18:02 GMT</sub>
