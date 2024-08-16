@@ -837,7 +837,8 @@ export default class Plot extends Viz {
     }
 
     let largestLabel, labelWidths = [];
-    if (this._lineLabels) {
+    const showLineLabels = this._lineLabels && !y2Exists;
+    if (showLineLabels) {
 
       const labelData = data.filter(d => {
         if (d.shape !== "Line") return false;
@@ -1344,7 +1345,7 @@ export default class Plot extends Viz {
 
         s.config({
           discrete: shapeConfig.discrete || "x",
-          label: this._lineLabels ? (d, i) => {
+          label: showLineLabels ? (d, i) => {
             const visible = typeof this._lineLabels === "function" ? this._lineLabels(d.data, d.i) : true;
             if (!visible) return false;
             const labelData = labelWidths.find(l => l.id === d.id);
@@ -1356,7 +1357,7 @@ export default class Plot extends Viz {
             }
             return this._drawLabel(d, i);
           } : false,
-          labelBounds: this._lineLabels ? (d, i, s) => {
+          labelBounds: showLineLabels ? (d, i, s) => {
             const [firstX, firstY] = s.points[0];
             const [lastX, lastY] = s.points[s.points.length - 1];
             const height = this._height / 4;
