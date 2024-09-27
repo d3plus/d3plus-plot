@@ -329,8 +329,7 @@ export default class Plot extends Viz {
           // hides left-most x gridline so it doesn't overlap with the y axis
           return range[0] === this._xAxis._getPosition.bind(this._xAxis)(d.id) ? "transparent" : "#eee";
         }
-      },
-      rounding: "outside"
+      }
     };
     this._xCutoff = 150;
 
@@ -338,8 +337,7 @@ export default class Plot extends Viz {
     this._x2Axis = new AxisTop().align("start");
     this._x2Test = new AxisTop().align("start").gridSize(0);
     this._x2Config = {
-      padding: 0,
-      rounding: "outside"
+      padding: 0
     };
 
     this._y = accessor("y");
@@ -353,17 +351,14 @@ export default class Plot extends Viz {
           // hides bottom-most y gridline so it doesn't overlap with the x axis
           return range[range.length - 1] === this._yAxis._getPosition.bind(this._yAxis)(d.id) ? "transparent" : "#eee";
         }
-      },
-      rounding: "outside"
+      }
     };
     this._yCutoff = 150;
 
     this._y2 = accessor("y2");
     this._y2Axis = new AxisRight().align("end");
     this._y2Test = new AxisLeft().align("end").gridSize(0);
-    this._y2Config = {
-      rounding: "outside"
-    };
+    this._y2Config = {};
 
   }
 
@@ -714,6 +709,7 @@ export default class Plot extends Viz {
     const yC = {
       data: yData,
       locale: this._locale,
+      rounding: this._yDomain ? "none" : "outside",
       scalePadding: y.padding ? y.padding() : 0
     };
     if (!showX) {
@@ -798,6 +794,7 @@ export default class Plot extends Viz {
     const xC = {
       data: xData,
       locale: this._locale,
+      rounding: this._xDomain ? "none" : "outside",
       scalePadding: x.padding ? x.padding() : 0
     };
     if (!showY) {
