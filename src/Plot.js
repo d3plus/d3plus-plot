@@ -902,7 +902,7 @@ export default class Plot extends Viz {
             };
 
           })
-          .sort((a, b) => b.value - a.value);
+          .sort((a, b) => yDomain[1] > yDomain[0] ? a.value - b.value : b.value - a.value);
 
         const maxX = max(labelWidths, d => d.maxX);
         largestLabel = max(labelWidths.map(d => d.labelWidth));
