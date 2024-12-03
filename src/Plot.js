@@ -7,7 +7,7 @@ import * as d3Shape from "d3-shape";
 
 import {AxisBottom, AxisLeft, AxisRight, AxisTop, date} from "d3plus-axis";
 import {colorAssign, colorContrast, colorDefaults, colorLegible} from "d3plus-color";
-import {accessor, assign, configPrep, constant, elem, unique} from "d3plus-common";
+import {accessor, assign, configPrep, constant, elem, merge as d3plusMerge, unique} from "d3plus-common";
 import {formatAbbreviate} from "d3plus-format";
 import * as shapes from "d3plus-shape";
 import {rtl, textWidth, TextBox} from "d3plus-text";
@@ -471,15 +471,32 @@ export default class Plot extends Viz {
      */
     function getAxisValues(axis) {
       const localData = this[`_${axis}Time`] ? data : axisData;
-      let myData = localData
-        .filter(d => ![NaN, undefined, false].includes(d[axis]))
-        .sort((a, b) => this[`_${axis}Sort`] ? this[`_${axis}Sort`](a.data, b.data) : a[axis] - b[axis])
-        .map(d => d[axis]);
+
+      const filteredData = localData
+        .filter(d => ![NaN, undefined, false].includes(d[axis]));
+
+      if (!filteredData.length) return [];
+
+      const numericValue = typeof filteredData[0][axis] === "number";
+
+      let myData = nest()
+        .key(d => d[axis])
+        .rollup(leaves => leaves.length === 1 ? leaves[0] : d3plusMerge(leaves.map(d => d.data), this._aggs))
+        .entries(filteredData)
+        .sort((a, b) => {
+          if (this[`_${axis}Sort`]) return this[`_${axis}Sort`](a.value, b.value);
+          const aKey = numericValue ? parseFloat(a.key, 10) : a.key; 
+          const bKey = numericValue ? parseFloat(b.key, 10) : b.key; 
+          return aKey - bKey;
+        })
+        .map(d => numericValue ? parseFloat(d.key, 10) : d.key);
+
       if (this._discrete !== axis.charAt(0) && this._confidence) {
         if (this._confidence[0]) myData = myData.concat(localData.map(d => d.lci));
         if (this._confidence[1]) myData = myData.concat(localData.map(d => d.hci));
       }
-      return unique(myData, d => `${d}`);
+
+      return myData;
     }
 
     const xData = getAxisValues.bind(this)("x");
@@ -904,15 +921,15 @@ export default class Plot extends Viz {
           })
           .sort((a, b) => yDomain[1] > yDomain[0] ? a.value - b.value : b.value - a.value);
 
-        const maxX = max(labelWidths, d => d.maxX);
-        largestLabel = max(labelWidths.map(d => d.labelWidth));
-        const spaceNeeded = maxX === this._xTest._getRange.bind(this._xTest)()[1] 
-          ? max(labelWidths.filter(d => d.maxX === maxX), d => d.spaceNeeded)
-          : 0;
-        if (spaceNeeded) {
-          const labelSpace = min([spaceNeeded, width / 4]);
-          xRangeMax = width - labelSpace - this._margin.right;
-        }
+          const maxX = max(labelWidths, d => d.maxX);
+          largestLabel = max(labelWidths.map(d => d.labelWidth));
+          const spaceNeeded = maxX === this._xTest._getRange.bind(this._xTest)()[1] 
+            ? max(labelWidths.filter(d => d.maxX === maxX), d => d.spaceNeeded)
+            : 0;
+          if (spaceNeeded) {
+            const labelSpace = min([spaceNeeded, width / 4]);
+            xRangeMax = width - labelSpace - this._margin.right;
+          }
       }
     }
 
