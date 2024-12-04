@@ -470,7 +470,8 @@ export default class Plot extends Viz {
      * @private
      */
     function getAxisValues(axis) {
-      const localData = this[`_${axis}Time`] ? data : axisData;
+      const timeData = this[`_${axis}Time`];
+      const localData = timeData ? data : axisData;
 
       const filteredData = localData
         .filter(d => ![NaN, undefined, false].includes(d[axis]));
@@ -479,17 +480,21 @@ export default class Plot extends Viz {
 
       const numericValue = typeof filteredData[0][axis] === "number";
 
-      let myData = nest()
-        .key(d => d[axis])
-        .rollup(leaves => leaves.length === 1 ? leaves[0] : d3plusMerge(leaves.map(d => d.data), this._aggs))
-        .entries(filteredData)
-        .sort((a, b) => {
-          if (this[`_${axis}Sort`]) return this[`_${axis}Sort`](a.value, b.value);
-          const aKey = numericValue ? parseFloat(a.key, 10) : a.key; 
-          const bKey = numericValue ? parseFloat(b.key, 10) : b.key; 
-          return aKey - bKey;
-        })
-        .map(d => numericValue ? parseFloat(d.key, 10) : d.key);
+      let myData = this._discrete === axis 
+        ? nest()
+          .key(d => d[axis])
+          .rollup(leaves => leaves.length === 1 ? leaves[0] : d3plusMerge(leaves.map(d => d.data), this._aggs))
+          .entries(filteredData)
+          .sort((a, b) => {
+            if (this[`_${axis}Sort`]) return this[`_${axis}Sort`](a.value, b.value);
+            const aKey = (timeData || numericValue) ? parseFloat(a.key, 10) : a.key; 
+            const bKey = (timeData || numericValue) ? parseFloat(b.key, 10) : b.key; 
+            return aKey - bKey;
+          })
+          .map(d => timeData ? date(d.key) : numericValue ? parseFloat(d.key, 10) : d.key)
+        : unique(filteredData
+            .sort((a, b) => this[`_${axis}Sort`] ? this[`_${axis}Sort`](a.data, b.data) : a[axis] - b[axis])
+            .map(d => d[axis]), d => `${d}`);
 
       if (this._discrete !== axis.charAt(0) && this._confidence) {
         if (this._confidence[0]) myData = myData.concat(localData.map(d => d.lci));
