@@ -885,6 +885,11 @@ export default class Plot extends Viz {
           return this._xTest._getPosition.bind(this._xTest)(d);
         };
 
+        const yEstimate = d => {
+          if (yConfigScale === "log" && d === 0) d = yDomain[0] < 0 ? this._yTest._d3Scale.domain()[1] : this._yTest._d3Scale.domain()[0];
+          return this._yTest._getPosition.bind(this._yTest)(d);
+        };
+
         labelWidths = lineData
           .map(group => {
 
@@ -909,6 +914,7 @@ export default class Plot extends Viz {
               "font-weight": fontWeight
             });
 
+            const coords = group.values.map(d => [xEstimate(d.x), yEstimate(d.y)]);
             const myMaxX = max(group.values.map(d => xEstimate(d.x)));
             const labelY = group.values.find(d => xEstimate(d.x) === myMaxX).y;
             return {
@@ -916,15 +922,31 @@ export default class Plot extends Viz {
               labelWidth: labelWidth + labelPadding * 2,
               spaceNeeded: labelWidth + labelPadding * 4,
               value: labelY,
+              yEstimate: yEstimate(labelY),
               padding: labelPadding,
               fontSize,
               fontColor,
               maxX: myMaxX,
-              xValue: max(group.values, d => d.x)
+              xValue: max(group.values, d => d.x),
+              coords
             };
 
           })
-          .sort((a, b) => yDomain[1] > yDomain[0] ? a.value - b.value : b.value - a.value);
+          .sort((a, b) => yDomain[1] > yDomain[0] ? a.value - b.value : b.value - a.value)
+          .filter((d, i, arr) => {
+            const {fontSize, id, labelWidth, maxX, yEstimate} = d;
+            const closeLabels = arr
+              .filter(l => 
+                l.id !== id && l.coords.some(c => 
+                  (c[0] > maxX || (c[0] === maxX && l.maxX !== maxX)) && 
+                  c[0] <= (maxX + labelWidth) && 
+                  c[1] <= (yEstimate + fontSize * 0.75) && 
+                  c[1] >= (yEstimate - fontSize * 0.75)
+                )
+              );
+            return closeLabels.length === 0;
+
+          });
 
           const maxX = max(labelWidths, d => d.maxX);
           largestLabel = max(labelWidths.map(d => d.labelWidth));
@@ -1054,7 +1076,7 @@ export default class Plot extends Viz {
 
     const y2Transform = `translate(-${this._margin.right}, ${this._margin.top + topOffset})`;
     const y2Group = y2Exists && elem("g.d3plus-plot-y2-axis", {parent, transition, enter: {transform: y2Transform}, update: {transform: y2Transform}});
-
+    
     this._xAxis
       .domain(xDomain)
       .height(height - (x2Height + topOffset + verticalMargin))
@@ -1361,7 +1383,7 @@ export default class Plot extends Viz {
 
           this._shapes.push(area);
         }
-
+        
         s.config({
           discrete: shapeConfig.discrete || "x",
           label: showLineLabels ? (d, i) => {
@@ -1373,8 +1395,9 @@ export default class Plot extends Viz {
               const allLabels = labelWidths.filter(l => l.newY === yPos);
               if (allLabels.length > 1) return allLabels[0].id !== d.id ? false 
                 : `+${formatAbbreviate(allLabels.length, this._locale)} ${this._translate("more")}`;
+              return this._drawLabel(d, i);
             }
-            return this._drawLabel(d, i);
+            return false;
           } : false,
           labelBounds: showLineLabels ? (d, i, s) => {
             const [firstX, firstY] = s.points[0];
