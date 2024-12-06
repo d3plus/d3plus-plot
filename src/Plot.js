@@ -480,10 +480,10 @@ export default class Plot extends Viz {
 
       const numericValue = typeof filteredData[0][axis] === "number";
 
-      let myData = this._discrete === axis 
+      let myData = this._discrete === axis
         ? nest()
           .key(d => d[axis])
-          .rollup(leaves => leaves.length === 1 ? leaves[0] : d3plusMerge(leaves.map(d => d.data), this._aggs))
+          .rollup(leaves => leaves.length === 1 ? leaves[0].data : d3plusMerge(leaves.map(d => d.data), this._aggs))
           .entries(filteredData)
           .sort((a, b) => {
             if (this[`_${axis}Sort`]) return this[`_${axis}Sort`](a.value, b.value);
